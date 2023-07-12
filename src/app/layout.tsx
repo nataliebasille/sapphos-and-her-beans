@@ -13,6 +13,8 @@ const MyApp = ({ children }: { children: ReactNode }) => {
         <title>Sappho and Her Beans - Coffee Roaster</title>
       </head>
       <body className="h-screen w-screen">
+        {/* 
+        // comment out until a header is needed
         <header>
           <nav className="flex h-14 w-full items-center bg-[#d2ac8c] px-5">
             <Image
@@ -22,9 +24,9 @@ const MyApp = ({ children }: { children: ReactNode }) => {
               width={68}
             />
           </nav>
-        </header>
+        </header> */}
         <section className="w-full">{children}</section>
-        <footer className="grid w-full grid-cols-2 justify-items-center bg-[#416f6e] p-10 text-[#D4AE8F]">
+        <footer className="w-full justify-items-center bg-[#416f6e] p-10 text-[#D4AE8F] md:grid md:grid-cols-2">
           <div>
             <h5 className="font-bold uppercase">Contact us</h5>
 
@@ -42,7 +44,7 @@ const MyApp = ({ children }: { children: ReactNode }) => {
               </a>
             </p>
           </div>
-          <div>
+          <div className="mt-5 md:mt-0">
             <h5 className="font-bold uppercase">Social</h5>
 
             <p className="mt-4">
