@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
 import { Email } from "~/icons/email";
 import { Instagram } from "~/icons/instagram";

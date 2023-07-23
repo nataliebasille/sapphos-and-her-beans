@@ -16,36 +16,29 @@ export default function Home() {
 
         <div className="flex flex-1 flex-col items-center justify-center gap-10 text-white">
           <h1 className="text-center text-4xl font-bold drop-shadow-[0_0_2px_rgba(0,0,0,1)] md:text-6xl">
-            Lorem ipsum dolor sit amet
+            A roastery focused on fresh, traceable, seasonal coffee.
           </h1>
-          <h2 className="text-center text-2xl font-bold drop-shadow-[0_0_2px_rgba(0,0,0,1)] md:text-4xl">
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat.
-          </h2>
+          {/* <h2 className="text-center text-2xl font-bold drop-shadow-[0_0_2px_rgba(0,0,0,1)] md:text-4xl">
+          A roastery focused on fresh, traceable, seasonal coffee.
+          </h2> */}
         </div>
       </div>
 
       <div className="flex flex-col gap-5 bg-[#6f5741] p-10  text-2xl tracking-wide text-white">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          Sappho And Her Beans is an LGBT and women owned small batch roastery
+          located in the greater Cleveland area. We pride ourselves on only
+          providing seasonal, traceable coffee.
         </p>
-
         <p>
-          Diam sollicitudin tempor id eu nisl nunc mi ipsum. Sapien nec sagittis
-          aliquam malesuada bibendum arcu vitae elementum curabitur. Id faucibus
-          nisl tincidunt eget nullam non nisi est sit. Nunc id cursus metus
-          aliquam eleifend mi. Viverra nibh cras pulvinar mattis nunc sed
-          blandit libero. Malesuada fames ac turpis egestas. Accumsan tortor
-          posuere ac ut consequat semper.
+          All of our coffees are roasted in a way that highlights the
+          characteristics of the beans, not our roasting equipment. We want our
+          farmer partners hard work to shine through each cup.
         </p>
-
         <p>
-          Diam quis enim lobortis scelerisque fermentum dui faucibus. Volutpat
-          ac tincidunt vitae semper quis. Nunc faucibus a pellentesque sit amet
-          porttitor eget. Erat imperdiet sed euismod nisi porta lorem mollis
-          aliquam ut.
+          Every bag of coffee that you order from us is roasted fresh when you
+          order and shipped out the next day. No best by dates here, our method
+          is designed to get your coffee to you at the peak of freshness.
         </p>
       </div>
 
