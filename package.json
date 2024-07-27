@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "admin:dev": "cd admin && npm run dev",
     "ecommerce:dev": "cd ecommerce && npm run dev"
   },
   "repository": {
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/sappho-and-her-beans/sappho#readme",
   "workspaces": [
+    "admin",
     "ecommerce"
   ]
 }
