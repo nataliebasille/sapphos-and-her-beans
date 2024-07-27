@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/sappho-and-her-beans/sappho/issues"
   },
-  "homepage": "https://github.com/sappho-and-her-beans/sappho#readme"
+  "homepage": "https://github.com/sappho-and-her-beans/sappho#readme",
+  "workspaces": [
+    "ecommerce"
+  ]
 }
