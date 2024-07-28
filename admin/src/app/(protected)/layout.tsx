@@ -22,4 +22,4 @@ export default withPageAuthRequired(
   {
     returnTo: "/",
   },
-);
+) as React.FC;

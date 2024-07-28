@@ -1,4 +1,3 @@
-import { handleAuth } from "@auth0/nextjs-auth0";
-import { type NextApiHandler } from "next";
+import { type AppRouteHandlerFn, handleAuth } from "@auth0/nextjs-auth0";
 
-export const GET = handleAuth() as NextApiHandler;
+export const GET = handleAuth() as AppRouteHandlerFn;
