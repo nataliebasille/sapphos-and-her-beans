@@ -27,7 +27,6 @@
     "baseUrl": ".",
     "paths": {
       "@db/*": ["./db/*"],
-      "@env": ["./env.mjs"],
     }
   },
   "include": [

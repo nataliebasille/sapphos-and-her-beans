@@ -1,12 +1,14 @@
-import { type Config } from 'drizzle-kit';
+import dotenv from 'dotenv';
 
-import { env } from '@env';
+const { parsed: env } = dotenv.config({ path: '../.env' });
+
+import { type Config } from 'drizzle-kit';
 
 export default {
   schema: './schema.ts',
   dialect: 'postgresql',
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url: env?.DATABASE_URL ?? '',
   },
   tablesFilter: ['sappho_*'],
 } satisfies Config;

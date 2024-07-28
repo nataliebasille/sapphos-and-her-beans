@@ -8,7 +8,8 @@
     "dev:admin": "cd admin && npm run dev",
     "dev:ecommerce": "cd ecommerce && npm run dev",
     "db:init": "cd db && ./start-database.sh",
-    "db:push": "cd db && npm run db:push"
+    "db:push": "cd db && drizzle-kit push",
+    "db:studio": "cd db && drizzle-kit studio"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,11 @@
     "ecommerce"
   ],
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
+    "@natcore/design-system-core": "https://gitpkg.now.sh/nataliebasille/natcore-design-system/packages/core?main",
     "@t3-oss/env-nextjs": "^0.11.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "install": "^0.13.0",
+    "npm": "^10.8.2"
   }
 }
