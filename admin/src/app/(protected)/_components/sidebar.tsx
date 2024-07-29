@@ -1,12 +1,13 @@
 import Image from "next/image";
+import { SidebarLink } from "./sidebar-link";
 
 export function Sidebar() {
   return (
     <>
       <div className="mx-auto">
         <Image
-          src="/images/sappho no background - cropped.png"
-          alt="Sappho"
+          src="/images/Sappho no background - cropped.png"
+          alt="Sappho - Admin"
           className="!static mx-auto !h-auto !w-[50%] border-b-[1px] border-secondary-base object-contain"
           fill
         />
@@ -18,10 +19,10 @@ export function Sidebar() {
         </h2>
       </div>
 
-      <div className="divider-surface divider my-0" />
+      <div className="my-0 border-b-[1px] border-surface-900" />
 
-      <ul className="list list-secondary">
-        <li className="list-item">Products</li>
+      <ul className="list list-secondary text-secondary-base">
+        <SidebarLink href="/products">Products</SidebarLink>
       </ul>
     </>
   );
