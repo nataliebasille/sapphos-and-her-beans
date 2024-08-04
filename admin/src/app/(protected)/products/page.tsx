@@ -1,3 +1,5 @@
+import { Form } from "~/app/_components/forms/form";
+
 export default function ProductsPage() {
-  return <div>Products Page</div>;
+  return <div>hi</div>;
 }
