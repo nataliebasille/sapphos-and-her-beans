@@ -8,12 +8,13 @@ export function ProductForm() {
       initialState={{ name: "", price: 0, tastingNotes: "" }}
     >
       {({ FormControl }) => (
-        <>
-          <input name="name" placeholder="Name" />
-          <input inputMode="numeric" name="price" placeholder="Price" />
-          <input name="tastingNotes" placeholder="Tasting Notes" />
+        <div className="flex flex-col gap-4">
+          <h3 className="self-center">Product description</h3>
+          <FormControl name="name" label="Name" />
+          <FormControl inputMode="numeric" label="Price" name="price" />
+          <FormControl name="tastingNotes" label="Tasting notes" />
           <button>Submit</button>
-        </>
+        </div>
       )}
     </Form>
   );

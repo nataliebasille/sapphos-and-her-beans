@@ -9,6 +9,8 @@ dotenv.config({path: '../.env'})
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  transpilePackages: ["@natcore/design-system-core"]
+};
 
 export default config;
