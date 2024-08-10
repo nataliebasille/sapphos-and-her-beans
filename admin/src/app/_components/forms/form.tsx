@@ -2,11 +2,15 @@ import { type FormAction, FormProvider } from "./form-provider";
 import { type ComponentType } from "react";
 import { type FormControlProps } from "./form-control";
 import { type FormErrorProps, FormError } from "./form-error";
-import { fromControl } from "./form-control-server";
+import { formControl } from "./form-control-server";
 
 type ChildrenFactoryProps<TIn> = {
   FormError: ComponentType<FormErrorProps<TIn>>;
-  FormControl: ComponentType<FormControlProps<TIn>>;
+  FormControl: <
+    TControl extends keyof JSX.IntrinsicElements | ComponentType<unknown>,
+  >(
+    props: FormControlProps<TIn, TControl>,
+  ) => React.ReactNode;
 };
 
 type ChildrenFactory<TIn> = (
@@ -23,7 +27,7 @@ export type FormProps<TIn, TResult> = {
 const WithinFormContext = <TIn, TResult>({
   children,
 }: Pick<FormProps<TIn, TResult>, "children">) => {
-  return children?.({ FormError, FormControl: fromControl.forInput<TIn>() });
+  return children?.({ FormError, FormControl: formControl.forInput<TIn>() });
 };
 
 export const Form = <TIn, TResult>({
