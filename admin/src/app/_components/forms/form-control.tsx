@@ -2,7 +2,7 @@
 
 import { twMerge } from "tailwind-merge";
 import { useFormProvider } from "./form-provider";
-import { type NestedKeyOf } from "~/server/server-form-actions/hooks/validation";
+import { type NestedKeyOf } from "~/server/server-form-actions.old/hooks/validation";
 import { type ComponentProps, type ComponentType } from "react";
 
 export type FormControlProps<
@@ -15,11 +15,10 @@ export type FormControlProps<
   control: TControl;
   controlPrefix?: React.ReactNode;
   controlSuffix?: React.ReactNode;
-} & (TControl extends keyof JSX.IntrinsicElements
-  ? JSX.IntrinsicElements[TControl & keyof JSX.IntrinsicElements]
-  : TControl extends ComponentType<unknown>
-    ? ComponentProps<TControl>
-    : Record<string, never>);
+} & (TControl extends keyof JSX.IntrinsicElements ?
+  JSX.IntrinsicElements[TControl & keyof JSX.IntrinsicElements]
+: TControl extends ComponentType<unknown> ? ComponentProps<TControl>
+: Record<string, never>);
 
 export function FormControl<
   TIn,
