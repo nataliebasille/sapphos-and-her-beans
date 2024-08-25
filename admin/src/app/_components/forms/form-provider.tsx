@@ -8,7 +8,7 @@ import {
   type ActionRequest_Result,
   type ServerAction_WithMetadata,
 } from "~/server/server-form-actions.old/actions";
-import { type ParsingErrors } from "~/server/server-form-actions.old/hooks/validation";
+import { type ParsingErrors } from "~/server/server-form-actions/validation";
 import { type GenericObject } from "~/server/server-form-actions.old/types";
 
 export type FormActionResult<TIn, TResult> = ActionRequest_Result<

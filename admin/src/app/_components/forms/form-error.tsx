@@ -2,7 +2,7 @@
 
 import { type ComponentType } from "react";
 import { useFormProvider } from "./form-provider";
-import { type NestedKeyOf } from "~/server/server-form-actions.old/hooks/validation";
+import { type NestedKeyOf } from "~/server/server-form-actions/validation";
 
 export type FormErrorProps<TIn> = {
   errorFor: NestedKeyOf<TIn>;

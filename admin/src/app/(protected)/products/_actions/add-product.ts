@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createAction } from "~/server/server-form-actions.old/actions";
-import { validation } from "~/server/server-form-actions.old/hooks/validation";
+import { validation } from "~/server/server-form-actions/validation";
 
 export const addProduct = createAction()
   .use(

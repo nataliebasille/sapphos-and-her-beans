@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev:admin": "cd admin && npm run dev",
     "dev:ecommerce": "cd ecommerce && npm run dev",
+    "test:admin": "cd admin && jest --config ../jest.config.ts",
     "db:init": "cd db && ./start-database.sh",
     "db:push": "cd db && drizzle-kit push",
     "db:studio": "cd db && drizzle-kit studio"
@@ -37,6 +38,8 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "expect-type": "^0.19.0",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2"
   }
 }

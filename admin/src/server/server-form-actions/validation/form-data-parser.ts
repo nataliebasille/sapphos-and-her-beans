@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  type infer as Infer,
   type ZodBigInt,
   type ZodBoolean,
   type ZodDate,
