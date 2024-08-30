@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { createAction } from "~/server/server-form-actions.old/actions";
-import { validation } from "~/server/server-form-actions/validation";
+import { createAction } from "~/server/server-form-actions/actions";
+import { validation } from "~/server/server-form-actions.old/validation";
 
 export const addProduct = createAction()
   .use(
@@ -14,7 +14,7 @@ export const addProduct = createAction()
       }),
     ),
   )
-  .use(async ({ context: { parsedResult } }, { ok }) => {
-    console.log(parsedResult);
-    return ok(parsedResult);
+  .use(async function* ({ context: { data } }, { ok }) {
+    console.log(data);
+    return ok(data);
   });

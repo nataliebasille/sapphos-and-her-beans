@@ -12,10 +12,20 @@ import {
   type MergeUnions,
 } from "./types";
 
-export type FormAction<TOk, TError> = (
-  previous: Result<TOk, TError>,
-  formData: FormData,
-) => Promise<Result<TOk, TError>>;
+declare const metadata: unique symbol;
+
+export type FormAction<TOk, TError, TMetadata> = {
+  (
+    previous: Result<TOk, TError>,
+    formData: FormData,
+  ): Promise<Result<TOk, TError>>;
+  [metadata]?: TMetadata;
+};
+
+export type AnyFormAction = FormAction<any, any, any>;
+
+export type FormAction_GetMetadata<TAction extends { [metadata]?: any }> =
+  TAction extends { [metadata]?: infer TMetadata } ? TMetadata : never;
 
 export type ActionRequest<TOk, TError, TContext extends GenericObject> = {
   formData: FormData;
@@ -35,8 +45,6 @@ export type ActionResult_GetContext<
 > = [TResult] extends [ActionResult<any, any, infer TContext>]
   ? MergeUnions<TContext>
   : never;
-
-declare const metadata: unique symbol;
 
 export type NextGenerator<
   TOk,
@@ -112,13 +120,13 @@ export type ActionFactory<
   TOk,
   TError,
   TContext extends GenericObject,
-> = FormAction<TOk, TError> & {
+> = FormAction<TOk, TError, TContext> & {
   use: <TReturn extends ActionHandler_Return<any, any>>(
     handler: ActionHandler<TOk, TError, TContext, TReturn>,
   ) => ActionFactory<
     ActionHandler_Return_GetOk<TReturn>,
     ActionHandler_Return_GetError<TReturn>,
-    ActionHandler_Return_GetContext<TReturn>
+    MergeContexts<TContext, ActionHandler_Return_GetContext<TReturn>>
   >;
 };
 

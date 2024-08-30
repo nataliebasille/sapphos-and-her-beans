@@ -1,40 +1,64 @@
 "use client";
 
-import { twMerge } from "tailwind-merge";
-import { useFormProvider } from "./form-provider";
-import { type NestedKeyOf } from "~/server/server-form-actions/validation";
+import { memo } from "react";
 import { type ComponentProps, type ComponentType } from "react";
+import { twMerge } from "tailwind-merge";
+import {
+  type Eager,
+  type EmptyObject,
+  type GenericObject,
+  type NestedKeyOf,
+} from "~/server/server-form-actions.old/types";
+import { useFormProvider } from "./form-provider";
 
-export type FormControlProps<
-  TIn,
-  TControl extends keyof JSX.IntrinsicElements | ComponentType<unknown>,
-> = {
-  name: NestedKeyOf<TIn>;
+type GetAttributes<T extends keyof JSX.IntrinsicElements> = Eager<
+  Omit<JSX.IntrinsicElements[T], "name">
+>;
+
+type CommonFormControlProps<TIn, TControl> = {
+  name: NestedKeyOf<TIn, File>;
   label?: React.ReactNode;
   className?: string;
+  inputClassName?: string;
   control: TControl;
   controlPrefix?: React.ReactNode;
   controlSuffix?: React.ReactNode;
-} & (TControl extends keyof JSX.IntrinsicElements
-  ? JSX.IntrinsicElements[TControl & keyof JSX.IntrinsicElements]
-  : TControl extends ComponentType<unknown>
-    ? ComponentProps<TControl>
-    : Record<string, never>);
+};
 
-export function FormControl<
+type IntrinsicElementFormControlProps<TControl> =
+  TControl extends keyof JSX.IntrinsicElements
+    ? GetAttributes<TControl & keyof JSX.IntrinsicElements>
+    : EmptyObject;
+
+type ComponentFormControlProps<TControl> =
+  TControl extends ComponentType<unknown>
+    ? ComponentProps<TControl>
+    : EmptyObject;
+
+export type FormControlProps<
   TIn,
-  TControl extends keyof JSX.IntrinsicElements | ComponentType<unknown>,
+  TControl extends keyof JSX.IntrinsicElements | ComponentType<GenericObject>,
+> = CommonFormControlProps<TIn, TControl> & {
+  inputProps: TControl extends keyof JSX.IntrinsicElements
+    ? IntrinsicElementFormControlProps<TControl>
+    : ComponentFormControlProps<TControl>;
+};
+
+export const FormControl = memo(function FormControl<
+  TIn,
+  TControl extends keyof JSX.IntrinsicElements | ComponentType<any>,
 >({
   label,
   className,
+  inputClassName,
   name,
   control: Control,
   controlPrefix,
   controlSuffix,
-  ...inputProps
+  inputProps,
 }: FormControlProps<TIn, TControl>) {
   const { errors } = useFormProvider();
-  const error = (errors as Record<string, string>)[name];
+  const error = (errors as Record<string, string>)[name as string];
   return (
     <div
       className={twMerge(
@@ -50,8 +74,8 @@ export function FormControl<
       <Control
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(inputProps as any)}
-        name={name}
-        className="form-control-input"
+        name={name as string}
+        className={twMerge("form-control-input", inputClassName)}
       />
       {controlSuffix && (
         <span className="form-control-suffix">{controlSuffix}</span>
@@ -59,4 +83,4 @@ export function FormControl<
       {error && <span className="form-control-hint">{error}</span>}
     </div>
   );
-}
+});

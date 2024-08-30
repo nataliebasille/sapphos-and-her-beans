@@ -6,8 +6,14 @@ import {
   type Result_Ok,
 } from "@nataliebasille/typescript-utils/functional/result";
 import { expectTypeOf } from "expect-type";
-import { type ActionFactory, createAction } from "./actions";
+import {
+  type ActionFactory,
+  createAction,
+  FormAction,
+  type FormAction_GetMetadata,
+} from "./actions";
 import { type EmptyObject, type GenericObject } from "./types";
+import { ok } from "assert";
 
 describe("actions", () => {
   describe("logic", () => {
@@ -401,6 +407,114 @@ describe("actions", () => {
           }>();
           return Promise.resolve(ok({}));
         });
+    });
+  });
+
+  describe("FormAction_GetMetadata", () => {
+    it("final context on action is the same as next", () => {
+      const action = createAction().use(async function* (_, { next, ok }) {
+        return yield* next({
+          one: 1,
+          two: "two",
+          three: true,
+        });
+      });
+
+      type Context = FormAction_GetMetadata<typeof action>;
+      expectTypeOf<Context>().toEqualTypeOf<{
+        one: number;
+        two: string;
+        three: boolean;
+      }>();
+    });
+
+    it("final context on action is the same as next when ok is returned", () => {
+      const action = createAction().use(async function* (_, { next, ok }) {
+        yield* next({
+          one: 1,
+          two: "two",
+          three: true,
+        });
+
+        return ok({
+          value: "hello",
+        });
+      });
+
+      type Context = FormAction_GetMetadata<typeof action>;
+      expectTypeOf<Context>().toEqualTypeOf<{
+        one: number;
+        two: string;
+        three: boolean;
+      }>();
+    });
+
+    it("final context on action is the same as next when error is returned", () => {
+      const action = createAction().use(async function* (_, { next, error }) {
+        yield* next({
+          one: 1,
+          two: "two",
+          three: true,
+        });
+
+        return error("error");
+      });
+
+      type Context = FormAction_GetMetadata<typeof action>;
+      expectTypeOf<Context>().toEqualTypeOf<{
+        one: number;
+        two: string;
+        three: boolean;
+      }>();
+    });
+
+    it("final context is combined from multiple handlers", () => {
+      const action = createAction()
+        .use(async function* (_, { next }) {
+          return yield* next({
+            one: 1,
+            two: "two",
+            three: true,
+          });
+        })
+        .use(async function* (_, { next }) {
+          return yield* next({
+            one: "string",
+            two: "another string",
+            four: false,
+          });
+        });
+
+      type Context = FormAction_GetMetadata<typeof action>;
+      expectTypeOf<Context>().toEqualTypeOf<{
+        one: string;
+        two: string;
+        three: boolean;
+        four: boolean;
+      }>();
+    });
+
+    it("final context can be inferred when second handler returns ok", () => {
+      const action = createAction()
+        .use(async function* (_, { next }) {
+          return yield* next({
+            one: 1,
+            two: "two",
+            three: true,
+          });
+        })
+        .use(async function* (_, { ok }) {
+          return ok({
+            value: "hello",
+          });
+        });
+
+      type Context = FormAction_GetMetadata<typeof action>;
+      expectTypeOf<Context>().toEqualTypeOf<{
+        one: number;
+        two: string;
+        three: boolean;
+      }>();
     });
   });
 });

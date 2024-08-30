@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { createAction } from "../../action.generators";
 import { validation } from "./validation";
 import { expectTypeOf } from "expect-type";
+import { createAction } from "../actions";
 
 describe("validation", () => {
   describe("typings", () => {

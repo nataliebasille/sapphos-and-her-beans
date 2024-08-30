@@ -1,61 +1,52 @@
 "use client";
 
 import { ok } from "@nataliebasille/typescript-utils/functional/result";
-import { createContext, useContext, useMemo, useRef } from "react";
+import {
+  createContext,
+  useActionState,
+  useContext,
+  useMemo,
+  useRef,
+} from "react";
 import { useFormState } from "react-dom";
 import {
-  type ActionRequest,
-  type ActionRequest_Result,
-  type ServerAction_WithMetadata,
-} from "~/server/server-form-actions.old/actions";
-import { type ParsingErrors } from "~/server/server-form-actions/validation";
-import { type GenericObject } from "~/server/server-form-actions.old/types";
+  type AnyFormAction,
+  type FormAction,
+} from "~/server/server-form-actions/actions";
+import { type Validation_GetSchema } from "~/server/server-form-actions.old/validation";
 
-export type FormActionResult<TIn, TResult> = ActionRequest_Result<
-  TResult,
-  ParsingErrors<TIn>
->;
-
-export type FormAction<TIn, TResult> = ServerAction_WithMetadata<
-  ActionRequest<GenericObject, TResult, ParsingErrors<TIn>>,
-  { schema: TIn }
->;
-
-type FormProviderContextProps<TAction extends FormAction<unknown, unknown>> = {
-  readonly result:
-    | (TAction extends FormAction<unknown, infer TResult> ? TResult : never)
-    | null;
-  readonly errors: ParsingErrors<
-    TAction extends FormAction<infer TIn, unknown> ? TIn : never
-  >;
+type FormProviderContextProps<
+  TAction extends FormAction<unknown, unknown, unknown>,
+> = {
+  readonly result: TAction extends FormAction<infer TOk, any, any> ? TOk : null;
+  readonly errors: TAction extends FormAction<any, infer TError, any>
+    ? TError
+    : null;
 };
 
 const FormProviderContext = createContext<
-  FormProviderContextProps<FormAction<unknown, unknown>>
+  FormProviderContextProps<AnyFormAction>
 >({
   result: false,
   errors: {},
 });
 
-type FormProviderProps<TIn, TResult> = {
+type FormProviderProps<TAction extends AnyFormAction> = {
   className?: string;
-  action: FormAction<TIn, TResult>;
-  initialState: TResult;
+  action: TAction;
+  initialState: Validation_GetSchema<TAction>;
   children?: React.ReactNode;
 };
 
-export const FormProvider = <TIn, TResult>({
+export const FormProvider = <TAction extends AnyFormAction>({
   className,
   action,
   initialState,
   children,
-}: FormProviderProps<TIn, TResult>) => {
+}: FormProviderProps<TAction>) => {
   const ref = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(
-    async (
-      previous: Awaited<FormActionResult<TIn, TResult>>,
-      data: FormData,
-    ) => {
+  const [state, formAction] = useActionState(
+    async (previous: Awaited<ReturnType<TAction>>, data: FormData) => {
       const result = await action(previous, data);
 
       // will work for now, but we should invert this dependency
@@ -65,7 +56,7 @@ export const FormProvider = <TIn, TResult>({
 
       return result;
     },
-    ok(initialState) as Awaited<FormActionResult<TIn, TResult>>,
+    ok(initialState) as Awaited<ReturnType<TAction>>,
   );
 
   const contextValue = useMemo(() => {

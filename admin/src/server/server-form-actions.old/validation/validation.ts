@@ -1,11 +1,20 @@
-import { type ActionRequest, type ActionResponse } from "../actions";
+import {
+  type FormAction,
+  type ActionRequest,
+  type ActionResponse,
+} from "../actions";
 import { type NestedKeyOf, type GenericObject } from "../types";
 import { createFormParser, type ZodSchema } from "./form-data-parser";
 import { type infer as Infer } from "zod";
 
 export type ValidationErrors<TSchema extends ZodSchema> = Partial<
-  Record<NestedKeyOf<TSchema, File>, string>
+  Record<NestedKeyOf<Infer<TSchema>, File>, string>
 >;
+
+export type Validation_GetSchema<TAction extends FormAction<any, any, any>> =
+  TAction extends FormAction<any, any, infer TContext>
+    ? Extract<TContext, { data: any }>["data"]
+    : never;
 
 export function validation<TSchema extends ZodSchema>(schema: TSchema) {
   const parser = createFormParser(schema);

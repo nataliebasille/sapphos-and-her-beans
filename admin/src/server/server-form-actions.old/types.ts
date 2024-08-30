@@ -1,6 +1,6 @@
 export type Eager<T> = T extends unknown ? { [K in keyof T]: T[K] } : never;
 export type GenericObject = Record<string, unknown>;
-export type EmptyObject = {};
+export type EmptyObject = Record<string, never>;
 
 export type MergeContexts<T extends GenericObject, U extends GenericObject> = [
   T,
@@ -18,8 +18,14 @@ export type MergeContexts<T extends GenericObject, U extends GenericObject> = [
         }
       >;
 
+type X = MergeContexts<{ one: { two: 2 } }, never>;
+
 type CommonKeys<T extends GenericObject> = keyof T;
-type AllKeys<T> = T extends any ? keyof T : never;
+type AllKeys<T> = T extends EmptyObject
+  ? never
+  : T extends any
+    ? keyof T
+    : never;
 type Subtract<A, C> = A extends C ? never : A;
 type NonCommonKeys<T extends GenericObject> = Subtract<
   AllKeys<T>,
@@ -45,12 +51,6 @@ export type MergeUnions<
         [K in NonCommon]?: PickTypeOf<T, K>;
       }
     >;
-
-type X = MergeUnions<{
-  one: 1;
-  two: "two";
-  three: true;
-}>;
 
 export type TupleIndices<T extends readonly unknown[]> =
   Extract<keyof T, `${number}`> extends `${infer N extends number}` ? N : never;

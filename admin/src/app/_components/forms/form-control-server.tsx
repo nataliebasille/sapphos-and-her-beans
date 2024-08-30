@@ -1,18 +1,21 @@
 import { type ComponentType } from "react";
 import { FormControl, type FormControlProps } from "./form-control";
-import { type FormAction } from "./form-provider";
+import {
+  type FormAction,
+  type AnyFormAction,
+} from "~/server/server-form-actions/actions";
 
 type FormControlCreator = {
-  forAction: <TAction extends FormAction<unknown, unknown>>() => <
-    TControl extends keyof JSX.IntrinsicElements | ComponentType<unknown>,
+  forAction: <TAction extends AnyFormAction>() => <
+    TControl extends keyof JSX.IntrinsicElements | ComponentType<any>,
   >(
     props: FormControlProps<
-      TAction extends FormAction<infer TIn, unknown> ? TIn : never,
+      TAction extends FormAction<infer TIn, any, any> ? TIn : never,
       TControl
     >,
   ) => React.ReactNode;
   forInput: <TIn>() => <
-    TControl extends keyof JSX.IntrinsicElements | ComponentType<unknown>,
+    TControl extends keyof JSX.IntrinsicElements | ComponentType<any>,
   >(
     props: FormControlProps<TIn, TControl>,
   ) => React.ReactNode;
