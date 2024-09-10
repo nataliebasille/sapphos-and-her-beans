@@ -12,7 +12,7 @@ import { twMerge } from "tailwind-merge";
 
 type ImageInputProps = {
   className?: string;
-  name: string;
+  name?: string;
   accept?: string;
 };
 
