@@ -1,15 +1,14 @@
 "use client";
 
-import { memo } from "react";
-import { type ComponentProps, type ComponentType } from "react";
+import { memo, type ComponentProps, type ComponentType } from "react";
 import { twMerge } from "tailwind-merge";
 import {
   type Eager,
   type EmptyObject,
   type GenericObject,
   type NestedKeyOf,
-} from "~/server/server-form-actions.old/types";
-import { useFormProvider } from "./form-provider";
+} from "~/server/action-rpc/types";
+import { useValidationError } from "./form-provider";
 
 type GetAttributes<T extends keyof JSX.IntrinsicElements> = Eager<
   Omit<JSX.IntrinsicElements[T], "name">
@@ -39,7 +38,7 @@ export type FormControlProps<
   TIn,
   TControl extends keyof JSX.IntrinsicElements | ComponentType<GenericObject>,
 > = CommonFormControlProps<TIn, TControl> & {
-  inputProps: TControl extends keyof JSX.IntrinsicElements
+  inputProps?: TControl extends keyof JSX.IntrinsicElements
     ? IntrinsicElementFormControlProps<TControl>
     : ComponentFormControlProps<TControl>;
 };
@@ -57,8 +56,7 @@ export const FormControl = memo(function FormControl<
   controlSuffix,
   inputProps,
 }: FormControlProps<TIn, TControl>) {
-  const { errors } = useFormProvider();
-  const error = (errors as Record<string, string>)[name as string];
+  const error = useValidationError(name);
   return (
     <div
       className={twMerge(
@@ -74,7 +72,7 @@ export const FormControl = memo(function FormControl<
       <Control
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(inputProps as any)}
-        name={name as string}
+        name={name}
         className={twMerge("form-control-input", inputClassName)}
       />
       {controlSuffix && (

@@ -1,20 +1,17 @@
 "use server";
 
 import { z } from "zod";
-import { createAction } from "~/server/server-form-actions/actions";
-import { validation } from "~/server/server-form-actions.old/validation";
+import { formAction } from "~/server/action-rpc/forms/form-action";
+import { rpcClient } from "~/server/rpc-client";
 
-export const addProduct = createAction()
-  .use(
-    validation(
-      z.object({
-        name: z.string().min(1),
-        price: z.number().min(1),
-        tastingNotes: z.string().min(1),
-      }),
-    ),
-  )
-  .use(async function* ({ context: { data } }, { ok }) {
-    console.log(data);
-    return ok(data);
-  });
+const AddProductSchema = z.object({
+  name: z.string().min(1),
+  price: z.number().min(1),
+  tastingNotes: z.string().min(1),
+});
+
+export const addProduct = rpcClient.action(
+  formAction(AddProductSchema, async function () {
+    return "ok";
+  }),
+);

@@ -10,12 +10,17 @@ export function ProductForm() {
       {({ FormControl }) => (
         <div className="flex flex-col gap-4">
           <h3 className="self-center">Product description</h3>
-          <FormControl control="input" type="text" name="name" label="Name" />
           <FormControl
             control="input"
-            inputMode="numeric"
+            name="name"
+            label="Name"
+            inputProps={{ type: "text" }}
+          />
+          <FormControl
+            control="input"
             label="Price"
             name="price"
+            inputProps={{ inputMode: "numeric" }}
           />
           <FormControl
             control="textarea"

@@ -13,6 +13,8 @@ import {
   type ZodType,
   type ZodTypeAny,
   type ZodUndefined,
+  type infer as Infer,
+  type SafeParseReturnType,
 } from "zod";
 
 import {
@@ -40,7 +42,9 @@ type ZodPrimitive =
 export type ZodSchema = ZodObject<any> | ZodEffects<any>;
 
 export function createFormParser<TType extends ZodSchema>(schema: TType) {
-  const parser = (formData: FormData) => {
+  const parser = (
+    formData: FormData,
+  ): Promise<SafeParseReturnType<TType, Infer<TType>>> => {
     const data = formDataToObject(formData, schema);
 
     return schema.safeParseAsync(data);
