@@ -3,7 +3,7 @@ import {
   type AnyNextResult,
   initActionFactory,
   runToCompletion,
-} from "./action-rpc";
+} from "../lib/server/action-rpc";
 
 export const rpcClient = initActionFactory().use(async function* (_, { next }) {
   try {

@@ -14,13 +14,13 @@ import {
   useState,
 } from "react";
 import { useFormState } from "react-dom";
-import { type ActionError } from "~/server/action-rpc";
+import { type ActionError } from "~/lib/server/action-rpc";
 import {
   type ValidationActionError,
   type AnyFormAction,
   type FormAction_GetInput,
-} from "~/server/action-rpc/forms/form-action";
-import { type Eager } from "~/server/action-rpc/types";
+} from "~/lib/server/action-rpc/forms/form-action";
+import { type Eager } from "~/lib/server/action-rpc/types";
 
 type FormProviderContextProps<TAction extends AnyFormAction> = {
   get: () => Awaited<ReturnType<TAction>>;

@@ -2,7 +2,7 @@ import { type ComponentType } from "react";
 import {
   type AnyFormAction,
   type FormAction_GetInput,
-} from "~/server/action-rpc/forms/form-action";
+} from "~/lib/server/action-rpc/forms/form-action";
 import { type FormControlProps } from "./form-control";
 import { formControl } from "./form-control-server";
 import { type FormErrorProps, FormError } from "./form-error";

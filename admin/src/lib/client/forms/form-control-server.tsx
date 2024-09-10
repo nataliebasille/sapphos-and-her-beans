@@ -3,7 +3,7 @@ import { FormControl, type FormControlProps } from "./form-control";
 import {
   type FormAction_GetInput,
   type AnyFormAction,
-} from "~/server/action-rpc/forms/form-action";
+} from "~/lib/server/action-rpc/forms/form-action";
 
 type FormControlCreator = {
   forAction: <TAction extends AnyFormAction>() => <

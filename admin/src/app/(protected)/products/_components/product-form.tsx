@@ -1,5 +1,4 @@
-import { Form } from "~/app/_components/forms/form";
-import { FileInput } from "~/app/_components/forms/file-input";
+import { FileInput, Form } from "~/lib/client/forms";
 import { addProduct } from "../_actions/add-product";
 
 type ProductFormProps = {

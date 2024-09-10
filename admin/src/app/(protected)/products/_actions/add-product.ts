@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { formAction } from "~/server/action-rpc/forms/form-action";
+import { formAction } from "~/lib/server/action-rpc/forms";
 import { rpcClient } from "~/server/rpc-client";
 
 const AddProductSchema = z.object({

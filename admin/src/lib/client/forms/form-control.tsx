@@ -7,7 +7,7 @@ import {
   type EmptyObject,
   type GenericObject,
   type NestedKeyOf,
-} from "~/server/action-rpc/types";
+} from "~/lib/server/action-rpc/types";
 import { useValidationError } from "./form-provider";
 import { shallowEqual } from "~/lib/utils";
 
