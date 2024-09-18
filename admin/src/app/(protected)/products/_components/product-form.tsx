@@ -1,4 +1,4 @@
-import { FileInput, Form } from "~/lib/client/forms";
+import { FileInput, Form, SubmitButton } from "~/lib/client/forms";
 import { addProduct } from "../_actions/add-product";
 
 type ProductFormProps = {
@@ -31,10 +31,12 @@ export function ProductForm({ label }: ProductFormProps) {
               <FormControl
                 control={FileInput}
                 name="image"
-                inputProps={{ accept: "image/*" }}
+                inputProps={{ uploader: "imageUploader" }}
               />
             </div>
             <div className="grid grid-cols-subgrid gap-6">
+              <FormControl control="input" label="Name" name="name" />
+
               <FormControl
                 control="input"
                 label="Price"
@@ -50,11 +52,16 @@ export function ProductForm({ label }: ProductFormProps) {
                 control="textarea"
                 name="story"
                 label="Story"
-                inputProps={{ className: "h-52 resize-none" }}
+                inputProps={{
+                  className:
+                    "h-52 resize-none transition-property-[border-color]",
+                }}
               />
             </div>
 
-            <button className="btn-primary btn col-span-2">Submit</button>
+            <SubmitButton className="btn-primary btn col-span-2">
+              Submit
+            </SubmitButton>
           </div>
         </div>
       )}

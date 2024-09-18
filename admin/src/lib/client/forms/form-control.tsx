@@ -49,7 +49,6 @@ export const FormControl = memo(
   >({
     label,
     className,
-    inputClassName,
     name,
     control: Control,
     controlPrefix,
@@ -57,6 +56,8 @@ export const FormControl = memo(
     inputProps,
   }: FormControlProps<TIn, TControl>) {
     const error = useValidationError(name);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const inputClassName = (inputProps as any)?.className as string;
     return (
       <div
         className={twMerge(

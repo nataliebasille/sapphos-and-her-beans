@@ -83,7 +83,12 @@ type UseHandlerArgs<TIn, TContext extends GenericObject> = {
   context: TContext;
 };
 
-type UseHandler<TContext extends GenericObject> = (
+export type UseHandlerContext<TContext extends GenericObject> = {
+  next: NextFunction<unknown, ActionError, TContext>;
+  error: ErrorFunction;
+};
+
+export type UseHandler<TContext extends GenericObject> = (
   args: UseHandlerArgs<unknown, TContext>,
   ctx: {
     next: NextFunction<unknown, ActionError, TContext>;

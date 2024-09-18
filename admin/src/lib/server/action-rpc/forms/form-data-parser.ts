@@ -96,13 +96,6 @@ function getSchemaShape(schema: ZodSchema): Record<string, ZodTypeAny> {
 }
 
 function transformPrimitive(value: FormDataEntryValue, schema: ZodType) {
-  const valueType = typeof value;
-  if (value !== null && valueType === "object") {
-    throw new Error(
-      `Form value types of non strings are not yet supported. Sorry :(`,
-    );
-  }
-
   return isZodNumber(schema)
     ? parseFloat(value as string) || null
     : isZodBoolean(schema)

@@ -1,143 +1,116 @@
 "use client";
 
-import {
-  type DragEventHandler,
-  memo,
-  type MouseEventHandler,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { generateReactHelpers, useDropzone } from "@uploadthing/react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import {
+  generateClientDropzoneAccept,
+  generatePermittedFileTypes,
+} from "uploadthing/client";
+import { type AppFileRouter } from "~/server/uploader/appFileUploader";
+import { ProgressBar } from "../ui/progress-bar";
+import { useSubmitToggle } from "./form-provider";
 
+const { useUploadThing: useUploader } = generateReactHelpers<AppFileRouter>();
 type ImageInputProps = {
+  uploader: Parameters<typeof useUploader>[0];
   className?: string;
-  name?: string;
-  accept?: string;
 };
 
-export const FileInput = memo(
-  ({ className, name, accept }: ImageInputProps) => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isHovering, setIsHovering] = useState(false);
-    const [fileData, setFileData] = useState<string | null>(null);
-    const hasFile = fileData !== null;
-    const setImagePreview = useCallback((file: File) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onloadend = () => {
-        setFileData(fileReader.result as string);
-      };
-    }, []);
+export const FileInput = memo(({ className, uploader }: ImageInputProps) => {
+  const { enableSubmit, disableSubmit } = useSubmitToggle();
+  const [fileData, setFileData] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const hasFile = fileData !== null;
+  const setImagePreview = useCallback((file: File) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onloadend = () => {
+      setFileData(fileReader.result as string);
+    };
+  }, []);
+  const { startUpload, routeConfig } = useUploader(uploader, {
+    onBeforeUploadBegin(files) {
+      if (files[0]) setImagePreview(files[0]);
 
-    const handleFileChange = useCallback(
-      (files: FileList) => {
-        if (files.length === 1 && fileInputRef.current) {
-          fileInputRef.current.files = files;
-          const file = files[0]!;
-          setImagePreview(file);
-        }
-      },
-      [setImagePreview],
-    );
+      setUploading(true);
+      setProgress(0);
+      disableSubmit();
+      return files;
+    },
+    onUploadProgress(p) {
+      setProgress(p);
+    },
+    onUploadError() {
+      setUploading(false);
+      enableSubmit();
+    },
+    onClientUploadComplete(res) {
+      setUploading(false);
+      enableSubmit();
+    },
+  });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (files) => {
+      void startUpload(files);
+    },
+    multiple: false,
+    accept: useMemo(
+      () =>
+        generateClientDropzoneAccept(
+          generatePermittedFileTypes(routeConfig).fileTypes,
+        ),
+      [routeConfig],
+    ),
+  });
 
-    const handleDragOver: DragEventHandler<HTMLDivElement> = useCallback(
-      (e) => {
-        e.preventDefault();
-      },
-      [],
-    );
-    const handleDragEnter: DragEventHandler<HTMLDivElement> =
-      useCallback(() => {
-        setIsHovering(true);
-      }, []);
+  const rootProps = getRootProps();
+  return (
+    <div
+      {...rootProps}
+      className={twMerge(
+        "relative col-span-full row-span-full grid h-full w-full cursor-pointer grid-cols-1 grid-rows-1 items-center justify-center overflow-hidden rounded !border-2 !border-dashed !border-secondary-border bg-secondary-base/5 transition-all duration-300",
+        className,
+      )}
+    >
+      <div
+        style={fileData ? { backgroundImage: `url(${fileData})` } : undefined}
+        className="pointer-events-none col-start-1 col-end-1 row-start-1 row-end-1 h-full w-full bg-cover bg-center bg-no-repeat"
+      />
 
-    const handleDragLeave: DragEventHandler<HTMLDivElement> =
-      useCallback(() => {
-        setIsHovering(false);
-      }, []);
+      <div className="col-start-1 col-end-1 row-start-1 row-end-1 flex flex-col gap-4 justify-self-center">
+        {!hasFile && (
+          <>
+            <span className="text-lg uppercase tracking-widest">
+              Drag and drop a file
+            </span>
+            <div className="divider divider-primary my-0">OR</div>
+            <button type="button" className={twMerge("btn text-nowrap")}>
+              Choose file
+            </button>
+          </>
+        )}
+      </div>
 
-    const handleMouseLeave: MouseEventHandler<HTMLDivElement> =
-      useCallback(() => {
-        setIsHovering(false);
-      }, []);
-
-    const handleDrop: DragEventHandler<HTMLDivElement> = useCallback(
-      (e) => {
-        e.preventDefault();
-        setIsHovering(false);
-        const files = e.dataTransfer?.files;
-        if (files) {
-          handleFileChange(files);
-        }
-      },
-      [handleFileChange],
-    );
-
-    const handleChooseFile = useCallback(() => {
-      if (fileInputRef.current) {
-        fileInputRef.current.click();
-      }
-    }, []);
-
-    const handleInputFileChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-          handleFileChange(e.target.files);
-        }
-      },
-      [handleFileChange],
-    );
-
-    return (
       <div
         className={twMerge(
-          "col-span-full row-span-full grid h-full w-full cursor-pointer grid-cols-1 grid-rows-1 items-center justify-center overflow-hidden rounded !border-2 !border-dashed !border-secondary-border bg-secondary-base/5 transition-all duration-300",
-          className,
+          "pointer-events-none col-start-1 col-end-1 row-start-1 row-end-1 h-full w-full opacity-0 transition-all duration-300",
+          // isHovering && `bg-secondary-base/20 opacity-100`,
         )}
-        onClick={handleChooseFile}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div
-          style={fileData ? { backgroundImage: `url(${fileData})` } : undefined}
-          className="pointer-events-none col-start-1 col-end-1 row-start-1 row-end-1 h-full w-full bg-cover bg-center bg-no-repeat"
-        />
+      />
+      <input {...getInputProps()} />
 
-        <div className="col-start-1 col-end-1 row-start-1 row-end-1 flex flex-col gap-4 justify-self-center">
-          {!hasFile && (
-            <>
-              <span className="text-lg uppercase tracking-widest">
-                Drag and drop a file
-              </span>
-              <div className="divider divider-primary my-0">OR</div>
-              <button type="button" className={twMerge("btn text-nowrap")}>
-                Choose file
-              </button>
-            </>
-          )}
+      {/** Uploading mask */}
+      {uploading && (
+        <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black/50 px-5">
+          <ProgressBar value={progress} className="text-center">
+            Uploading ...
+          </ProgressBar>
         </div>
-
-        <div
-          className={twMerge(
-            "pointer-events-none col-start-1 col-end-1 row-start-1 row-end-1 h-full w-full opacity-0 transition-all duration-300",
-            isHovering && `bg-secondary-base/20 opacity-100`,
-          )}
-        />
-        <input
-          ref={fileInputRef}
-          type="file"
-          name={name}
-          className="hidden"
-          accept={accept}
-          onChange={handleInputFileChange}
-        />
-      </div>
-    );
-  },
-);
+      )}
+    </div>
+  );
+});
 
 FileInput.displayName = "FileInput";

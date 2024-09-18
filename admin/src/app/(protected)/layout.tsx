@@ -7,8 +7,8 @@ import { Header } from "./_components/header";
 import { SidebarToggle } from "./_components/sidebar/sidebar-toggle";
 import { SidebarProvider } from "./_components/sidebar/sidebar-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { extractRouterConfig } from "uploadthing/server";
+import { appFileRouter } from "~/server/uploader/appFileUploader";
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,7 +20,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
          * leaked to the client. The data passed to the client is the same
          * as if you were to fetch `/api/uploadthing` directly.
          */
-        routerConfig={extractRouterConfig(ourFileRouter)}
+        routerConfig={extractRouterConfig(appFileRouter)}
       />
       <div className="layer md:layer-fixed">
         <SidebarToggle />
