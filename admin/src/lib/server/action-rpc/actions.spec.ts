@@ -241,9 +241,8 @@ describe("actions", () => {
         three: boolean;
       }>();
 
-      expectTypeOf<
-        ActionFactory_GetOut<typeof action>
-      >().toEqualTypeOf<"value for somebool">();
+      type Out = ActionFactory_GetOut<typeof action>;
+      expectTypeOf<Out>().toEqualTypeOf<"value for somebool">();
     });
 
     it("can infer context when yield* next without returning that result", () => {

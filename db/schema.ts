@@ -1,9 +1,7 @@
 import { relations, sql } from 'drizzle-orm';
 import {
-  index,
   integer,
   pgTableCreator,
-  primaryKey,
   serial,
   text,
   timestamp,
@@ -36,6 +34,8 @@ export const productVersions = createTable('product_version', {
   productId: integer('product_id').notNull(),
   name: varchar('name', { length: 255 }),
   price: integer('price').notNull(),
+  sizeOunces: integer('size_ounces').notNull(),
+  image: varchar('image', { length: 255 }).notNull(),
   tastingNotes: varchar('tasting_notes', { length: 255 }),
   story: text('story'),
   createdAt: timestamp('created_at', { withTimezone: true })

@@ -78,7 +78,7 @@ type ErrorFunction = {
   <TError extends Omit<ActionError, typeof actionError>>(error: TError): TError;
 };
 
-type UseHandlerArgs<TIn, TContext extends GenericObject> = {
+export type UseHandlerArgs<TIn, TContext extends GenericObject> = {
   input: TIn;
   context: TContext;
 };
@@ -88,31 +88,17 @@ export type UseHandlerContext<TContext extends GenericObject> = {
   error: ErrorFunction;
 };
 
-export type UseHandler<TContext extends GenericObject> = (
+export type UseHandler<
+  TNext extends NextResult<unknown, ActionError, TContext>,
+  TOut,
+  TContext extends GenericObject,
+> = (
   args: UseHandlerArgs<unknown, TContext>,
   ctx: {
     next: NextFunction<unknown, ActionError, TContext>;
     error: ErrorFunction;
   },
-) => AsyncGenerator<
-  NextResult<unknown, ActionError, TContext>,
-  unknown,
-  unknown
->;
-
-type UseHandler_GetNextContext<T extends UseHandler<any>> =
-  ReturnType<T> extends AsyncGenerator<infer Yielded, infer Returned, any>
-    ? Yielded extends NextResult<unknown, ActionError, infer TContext>
-      ? TContext
-      : never
-    : never;
-
-type UseHandler_GetOut<T extends UseHandler<any>> =
-  ReturnType<T> extends AsyncGenerator<any, infer TReturned, any>
-    ? TReturned extends NextResult<unknown, ActionError, GenericObject>
-      ? never
-      : TReturned
-    : never;
+) => AsyncGenerator<TNext, TOut, unknown>;
 
 export type ActionHandlerContext<TContext extends GenericObject> = {
   context: TContext;
@@ -124,11 +110,13 @@ export type ActionHandler<TIn, TOut, TContext extends GenericObject> = (
 ) => Promise<TOut>;
 
 export type ActionFactory<TContext extends GenericObject, TIntermediateOut> = {
-  use<THandler extends UseHandler<TContext>>(
-    handler: THandler,
+  use<TNext extends NextResult<unknown, ActionError, GenericObject>, TOut>(
+    handler: UseHandler<TNext, TOut, TContext>,
   ): ActionFactory<
-    UseHandler_GetNextContext<THandler>,
-    UseHandler_GetOut<THandler>
+    TNext extends NextResult<unknown, ActionError, infer TNextContext>
+      ? TNextContext
+      : never,
+    Exclude<TOut, NextResult<unknown, ActionError, any>>
   >;
   action<TIn = never, TOut = never>(
     handler: ActionHandler<TIn, TOut, TContext>,
@@ -146,7 +134,9 @@ export type ActionFactory_GetOut<T extends ActionFactory<any, any>> =
   T extends ActionFactory<any, infer TOut> ? TOut : never;
 
 export const initActionFactory = (): ActionFactory<EmptyObject, never> => {
-  const middleware: Array<UseHandler<GenericObject>> = [];
+  const middleware: Array<
+    UseHandler<NextResult<unknown, ActionError, any>, any, GenericObject>
+  > = [];
   const factory: ActionFactory<GenericObject, never> = {
     use(handler) {
       middleware.push(handler);
@@ -195,9 +185,21 @@ export const initActionFactory = (): ActionFactory<EmptyObject, never> => {
 
         const finalResult = await runToCompletion(next({}));
 
-        return finalResult.ok
-          ? ok(finalResult.value)
-          : error(finalResult.value);
+        if (finalResult.ok) {
+          return ok(finalResult.value);
+        }
+
+        console.log(finalResult.value);
+
+        if (actionError in finalResult.value) {
+          return error({
+            code: (finalResult.value as ActionError).code,
+            message: (finalResult.value as ActionError).message,
+            data: (finalResult.value as ActionError).data,
+          });
+        }
+
+        return error(finalResult.value);
       }) as any;
     },
   };

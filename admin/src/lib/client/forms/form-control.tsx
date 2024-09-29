@@ -66,7 +66,9 @@ export const FormControl = memo(
           className,
         )}
       >
-        {label && <span className="form-control-label">{label}</span>}
+        {label && (
+          <span className="form-control-label text-nowrap">{label}</span>
+        )}
         {controlPrefix && (
           <span className="form-control-prefix">{controlPrefix}</span>
         )}

@@ -1,5 +1,7 @@
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { FileInput, Form, SubmitButton } from "~/lib/client/forms";
-import { addProduct } from "../_actions/add-product";
+import { addProduct } from "~/server/products/actions";
 
 type ProductFormProps = {
   label: React.ReactNode;
@@ -10,7 +12,14 @@ export function ProductForm({ label }: ProductFormProps) {
     <Form<typeof addProduct>
       action={async function (formData) {
         "use server";
-        return await addProduct(formData);
+        const result = await addProduct(formData);
+        console.log(result);
+        if (result.type === "ok") {
+          revalidatePath("/products");
+          redirect("/products");
+        }
+
+        return result;
       }}
       initialState={{
         name: "",
@@ -18,6 +27,7 @@ export function ProductForm({ label }: ProductFormProps) {
         tastingNotes: "",
         story: "",
         image: "",
+        sizeOunces: 10,
       }}
     >
       {({ FormControl }) => (
@@ -37,12 +47,22 @@ export function ProductForm({ label }: ProductFormProps) {
             <div className="grid grid-cols-subgrid gap-6">
               <FormControl control="input" label="Name" name="name" />
 
-              <FormControl
-                control="input"
-                label="Price"
-                name="price"
-                inputProps={{ inputMode: "numeric" }}
-              />
+              <div className="flex gap-2">
+                <FormControl
+                  control="input"
+                  label="Price"
+                  name="price"
+                  controlPrefix="$"
+                  inputProps={{ inputMode: "numeric" }}
+                />
+                <FormControl
+                  control="input"
+                  label="Size"
+                  name="sizeOunces"
+                  controlSuffix="oz"
+                  inputProps={{ inputMode: "numeric" }}
+                />
+              </div>
               <FormControl
                 control="input"
                 name="tastingNotes"

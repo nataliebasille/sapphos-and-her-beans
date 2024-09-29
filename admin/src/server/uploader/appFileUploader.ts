@@ -1,6 +1,6 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import { protectedRpcClient } from "../rpc-client";
+import { protectedRpcClient } from "../client/rpc-client";
 const f = createUploadthing();
 
 type FileRouterInputConfig = Parameters<typeof f>[0];
