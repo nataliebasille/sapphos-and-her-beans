@@ -10,7 +10,16 @@ await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  transpilePackages: ["@natcore/design-system-core"]
+  transpilePackages: ["@natcore/design-system-core"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: 'utfs.io',
+        pathname: '/f/**'
+      }
+    ]
+  }
 };
 
 export default config;

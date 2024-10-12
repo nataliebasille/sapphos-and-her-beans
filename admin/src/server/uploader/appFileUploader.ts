@@ -20,6 +20,7 @@ function createUploader(input: FileRouterInputConfig) {
 
   return uploader
     .middleware(async () => {
+      console.log("middleware");
       const result = await uploadMiddleware();
       if (result.type === "error" || !result.value) {
         throw new UploadThingError("Unauthorized");
