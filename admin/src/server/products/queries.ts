@@ -22,11 +22,11 @@ export const listProducts = async () => {
       story: productVersions.story,
       image: productVersions.image,
       sizeOunces: productVersions.sizeOunces,
-      isNew: sql<boolean>`${products.publishedVersionId} is null`.as("isNew"),
-      hasUnpublishedChanges: or(
+      isNew: sql<boolean>`${isNull(products.publishedVersionId)}`.as("isNew"),
+      hasUnpublishedChanges: sql<boolean>`${or(
         isNull(products.publishedVersionId),
         ne(products.publishedVersionId, productVersions.id),
-      )!.as<boolean>("hasUnpublishedChanges"),
+      )}`.as("hasUnpublishedChanges"),
     })
     .from(productVersions)
     .innerJoin(
@@ -40,6 +40,8 @@ export const listProducts = async () => {
 
   return latestProducts;
 };
+
+export const getPublishableChanges = async () => {};
 
 export const getProduct = async (id: number) => {
   const result = await db.query.products.findFirst({

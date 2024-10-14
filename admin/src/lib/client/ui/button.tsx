@@ -1,3 +1,5 @@
+"use client";
+
 import { twMerge } from "tailwind-merge";
 
 type ButtonProps = {
@@ -6,32 +8,8 @@ type ButtonProps = {
   style?: "solid" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   className?: string;
+  disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-};
-
-const variantClasses: Partial<
-  Record<Exclude<ButtonProps["variant"], undefined>, string>
-> = {
-  primary: "btn-primary",
-  secondary: "btn-secondary",
-  surface: "btn-surface",
-  danger: "bg-red-700 text-white hover:bg-red-800 border-red-900",
-};
-
-const styleClasses: Partial<
-  Record<Exclude<ButtonProps["style"], undefined>, string>
-> = {
-  solid: "btn-solid",
-  outline: "btn-outline",
-  ghost: "btn-ghost",
-};
-
-const sizeClasses: Partial<
-  Record<Exclude<ButtonProps["size"], undefined>, string>
-> = {
-  sm: "btn-sm",
-  md: "btn-md",
-  lg: "btn-lg",
 };
 
 export function Button({
@@ -40,17 +18,26 @@ export function Button({
   style = "solid",
   size = "md",
   className,
+  disabled,
   onClick,
 }: ButtonProps) {
-  const variantClass = variantClasses[variant];
-  const styleClass = styleClasses[style];
-  const sizeClass = sizeClasses[size];
+  const classes = twMerge(
+    "btn",
+    variant === "primary" && "btn-primary",
+    variant === "secondary" && "btn-secondary",
+    variant === "surface" && "btn-surface",
+    variant === "danger" && "bg-red-700 text-white hover:bg-red-800",
+    style === "outline" && "btn-outline",
+    style === "ghost" && "btn-ghost",
+    variant === "primary" && style === "outline" && "hover:text-white",
+    size === "sm" && "btn-sm",
+    size === "md" && "btn-md",
+    size === "lg" && "btn-lg",
+    className,
+  );
 
   return (
-    <button
-      className={twMerge("btn", variantClass, styleClass, sizeClass, className)}
-      onClick={onClick}
-    >
+    <button className={classes} onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );

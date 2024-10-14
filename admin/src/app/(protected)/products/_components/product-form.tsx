@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { FileInput, Form, SubmitButton } from "~/lib/client/forms";
 import { addProduct } from "~/server/products/actions";
@@ -15,6 +15,7 @@ export function ProductForm({ label }: ProductFormProps) {
         const result = await addProduct(formData);
         console.log(result);
         if (result.type === "ok") {
+          revalidateTag("publish");
           revalidatePath("/products");
           redirect("/products");
         }
