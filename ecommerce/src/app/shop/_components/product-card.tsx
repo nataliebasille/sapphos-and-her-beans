@@ -5,20 +5,18 @@ import { twMerge } from "tailwind-merge";
 import { Check } from "~/app/_components/icons/check";
 import { Plus } from "~/app/_components/icons/plus";
 import { useCartStore } from "~/app/_stores/cart-provider";
+import { type Product } from "~/server/actions/products";
 
 export const ProductCard = ({
   id,
   name,
   tastingNotes,
+  sizeOunces,
   price,
-  imageSrc,
-}: {
-  id: number;
-  name: string;
-  tastingNotes: string;
-  price: number;
-  imageSrc: string;
-}) => {
+  processing,
+  country,
+  image,
+}: Product) => {
   const { addToCart } = useCartStore();
   const [added, setAdded] = useState(false);
   const handleAddToCart = useCallback(() => {
@@ -44,18 +42,28 @@ export const ProductCard = ({
 
   return (
     <div className="cursor-pointer rounded-md">
-      <div className="flex items-center bg-[#E87A01] p-3 uppercase tracking-wider text-white">
+      <div className="flex items-center bg-secondary-700 p-3 uppercase tracking-wider text-secondary-contrast-700">
         {name}
-        <span className="ml-auto text-lg">${price}</span>
+        <span className="ml-auto text-lg">
+          {sizeOunces} oz - ${price}
+        </span>
       </div>
 
       <div className="relative mb-3 aspect-square h-96 w-full">
-        <Image src={imageSrc} alt={name} className="object-cover" fill />
+        <Image src={image} alt={name ?? ""} className="object-cover" fill />
 
-        <div className="absolute bottom-0 left-0 right-0 p-3">
+        <div className="absolute bottom-0 left-0 right-0 p-3 tracking-wide">
+          <div className="card card-primary card-ghost mb-4 !text-white shadow-2xl shadow-primary-800/50 backdrop-blur">
+            <div className="card-content">
+              <div className="text-xl">{country}</div>
+              {tastingNotes}
+              <div className="mt-2 text-sm uppercase">{processing}</div>
+            </div>
+          </div>
+
           <button
             className={twMerge(
-              "btn-sm btn btn-primary flex w-full items-center justify-center uppercase tracking-wider",
+              "btn-primary btn btn-sm flex w-full items-center justify-center uppercase tracking-wider",
               added && "!bg-[#4BB543]",
             )}
             onClick={handleAddToCart}

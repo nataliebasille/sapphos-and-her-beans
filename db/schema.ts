@@ -37,6 +37,10 @@ export const productVersions = createTable('product_version', {
   sizeOunces: integer('size_ounces').notNull(),
   image: varchar('image', { length: 255 }).notNull(),
   tastingNotes: varchar('tasting_notes', { length: 255 }),
+  processing: varchar('processing', { length: 25 }),
+  country: varchar('country', { length: 100 }),
+  region: varchar('region', { length: 100 }),
+  lot: varchar('lot', { length: 100 }),
   story: text('story'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
