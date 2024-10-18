@@ -10,10 +10,10 @@ export default function ShopPage() {
   const products = useProductListStore((state) => state.products);
 
   return (
-    <PageContainer className="px-10">
+    <PageContainer className="px-4 md:px-10">
       <div
         className={twMerge(
-          "mb-10 border-b-[1px] border-black/30 md:col-span-2",
+          "mb-5 border-b-[1px] border-black/30 md:col-span-2 md:mb-10",
         )}
       >
         <Heading
@@ -24,7 +24,7 @@ export default function ShopPage() {
         </Heading>
       </div>
 
-      <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
         {products.map((product, index) => (
           <ProductCard key={index} {...product} />
         ))}

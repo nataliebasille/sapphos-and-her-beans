@@ -43,10 +43,10 @@ function CartIcon() {
   const cart = useCartStore((s) => s.cart);
 
   return (
-    <div className="relative mr-6 w-fit">
+    <div className="relative ml-auto mr-6 w-fit md:ml-0">
       <Cart className="ml-auto size-12 cursor-pointer md:ml-0" />
       {cart.length > 0 && (
-        <span className="bg-primary-600/80 text-primary-contrast-600 pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full text-xs text-white">
+        <span className="pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-primary-600/80 text-xs text-primary-contrast-600 text-white">
           {cart.length}
         </span>
       )}

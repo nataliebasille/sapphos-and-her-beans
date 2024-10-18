@@ -42,22 +42,22 @@ export const ProductCard = ({
 
   return (
     <div className="cursor-pointer rounded-md">
-      <div className="flex items-center bg-secondary-700 p-3 uppercase tracking-wider text-secondary-contrast-700">
+      <div className="flex flex-col bg-secondary-700 p-3 uppercase tracking-wider text-secondary-contrast-700 md:flex-row md:items-center">
         {name}
-        <span className="ml-auto text-lg">
+        <span className="md:ml-auto md:text-lg">
           {sizeOunces} oz - ${price}
         </span>
       </div>
 
-      <div className="relative mb-3 aspect-square h-96 w-full">
+      <div className="relative mb-3 aspect-square w-full md:h-96">
         <Image src={image} alt={name ?? ""} className="object-cover" fill />
 
         <div className="absolute bottom-0 left-0 right-0 p-3 tracking-wide">
           <div className="card card-primary card-ghost mb-4 !text-white shadow-2xl shadow-primary-800/50 backdrop-blur">
             <div className="card-content">
-              <div className="text-xl">{country}</div>
+              <div className="mb-3 text-xl">{country}</div>
+              <div className="text-xs uppercase">{processing}</div>
               {tastingNotes}
-              <div className="mt-2 text-sm uppercase">{processing}</div>
             </div>
           </div>
 
