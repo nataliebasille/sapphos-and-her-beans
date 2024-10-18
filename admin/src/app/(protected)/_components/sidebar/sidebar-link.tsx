@@ -11,7 +11,7 @@ export const SidebarLink = ({
   children: React.ReactNode;
 }) => {
   const pathname = usePathname();
-  const isActive = href === pathname;
+  const isActive = pathname.startsWith(href);
   return (
     <li
       className={twMerge(

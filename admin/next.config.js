@@ -9,6 +9,17 @@ dotenv.config({path: '../.env'})
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  transpilePackages: ["@natcore/design-system-core"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: 'utfs.io',
+        pathname: '/f/**'
+      }
+    ]
+  }
+};
 
 export default config;

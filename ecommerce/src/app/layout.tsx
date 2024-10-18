@@ -10,7 +10,8 @@ import { CartProvider } from "./_stores/cart-provider";
 
 export const metadata: Metadata = {
   title: "Sappho and her beans - Coffee Roasters",
-  description: "Sappho and her beans - Coffee Roasters",
+  description:
+    "The ecommerce store front for Sappho and her beans Coffee Roasters",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
