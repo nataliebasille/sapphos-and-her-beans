@@ -6,9 +6,7 @@ import ws from 'ws';
 import * as path from 'node:path';
 
 neonConfig.webSocketConstructor = ws;
-
-dotenv.config({ path: path.join(__dirname, './.env.production.local') });
-
+dotenv.config({ path: path.join(__dirname, '../.env.production.local') });
 const client = new Client({ connectionString: process.env.DATABASE_URL! });
 client.connect((err) => {
   if (err) console.error(err);
