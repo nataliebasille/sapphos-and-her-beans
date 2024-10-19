@@ -1,7 +1,9 @@
 "use client";
 
-import { createContext, useContext, useRef } from "react";
-import { create } from "zustand";
+import { useCallback } from "react";
+import { createStore } from "../_components/stores/create-store";
+import { useLocalStorageState } from "../_hooks/useLocalStorageState";
+import { useStore } from "../_hooks/useStore";
 import { useProductListStore } from "./product-list-provider";
 
 export type CartItem = {
@@ -9,45 +11,39 @@ export type CartItem = {
   quantity: number;
 };
 
-type CartStoreApi = {
-  cart: CartItem[];
-  addToCart: (item: CartItem) => void;
-};
+type CartStoreData = CartItem[];
 
-const createCartStore = create<CartStoreApi>();
-const CartStoreContext = createContext<ReturnType<
-  typeof createCartStore
-> | null>(null);
-
+const {
+  Provider: InternalCartProvider,
+  useStore: useCartStore,
+  useStoreApi: useCartStoreApi,
+} = createStore<CartStoreData>([]);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const products = useProductListStore((s) => s.products);
-  const storeRef = useRef<ReturnType<typeof createCartStore> | null>(null);
-
-  if (storeRef.current === null) {
-    storeRef.current = createCartStore((set) => ({
-      cart: [],
-      addToCart: (item: CartItem) =>
-        set((s) => ({
-          cart: [...s.cart, item],
-        })),
-    }));
-  }
+  const [cart, setCart] = useLocalStorageState<CartStoreData>("cart", []);
+  const onSet = useCallback(
+    (value: CartStoreData) => {
+      setCart(value);
+      return value;
+    },
+    [setCart],
+  );
 
   return (
-    <CartStoreContext.Provider value={storeRef.current}>
+    <InternalCartProvider onSet={onSet} initialValue={cart}>
       {children}
-    </CartStoreContext.Provider>
+    </InternalCartProvider>
   );
 };
 
-export function useCartStore(): CartStoreApi;
-export function useCartStore<U>(selector: (state: CartStoreApi) => U): U;
-export function useCartStore<U>(selector?: (state: CartStoreApi) => U) {
-  const store = useContext(CartStoreContext);
+export { useCartStore };
 
-  if (store === null) {
-    throw new Error("useCartStore must be used within a CartProvider");
-  }
-
-  return selector ? store(selector) : store();
+export function useAddToCart() {
+  const store = useCartStoreApi();
+  return useCallback(
+    (item: CartItem) => {
+      store.set([...store.get(), item]);
+    },
+    [store],
+  );
 }

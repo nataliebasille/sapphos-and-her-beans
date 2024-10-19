@@ -7,7 +7,7 @@ import { ProductCard } from "./_components/product-card";
 import { useProductListStore } from "../_stores/product-list-provider";
 
 export default function ShopPage() {
-  const products = useProductListStore((state) => state.products);
+  const [products] = useProductListStore((state) => state.products);
 
   return (
     <PageContainer className="px-4 md:px-10">

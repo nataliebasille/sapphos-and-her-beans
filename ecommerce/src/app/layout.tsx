@@ -22,7 +22,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <ProductListProvider products={products}>
+        <ProductListProvider initialValue={{ products }}>
           <CartProvider>
             <Cart />
             <PageHeader />

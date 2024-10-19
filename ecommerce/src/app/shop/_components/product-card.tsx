@@ -1,10 +1,11 @@
 "use client";
+
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Check } from "~/app/_components/icons/check";
 import { Plus } from "~/app/_components/icons/plus";
-import { useCartStore } from "~/app/_stores/cart-provider";
+import { useAddToCart } from "~/app/_stores/cart-provider";
 import { type Product } from "~/server/actions/products";
 
 export const ProductCard = ({
@@ -17,7 +18,7 @@ export const ProductCard = ({
   country,
   image,
 }: Product) => {
-  const { addToCart } = useCartStore();
+  const addToCart = useAddToCart();
   const [added, setAdded] = useState(false);
   const handleAddToCart = useCallback(() => {
     addToCart({

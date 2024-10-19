@@ -40,7 +40,7 @@ export const PageHeader = () => {
 };
 
 function CartIcon() {
-  const cart = useCartStore((s) => s.cart);
+  const [cart] = useCartStore();
 
   return (
     <div className="relative ml-auto mr-6 w-fit md:ml-0">
