@@ -7,7 +7,7 @@ import {
   useRef,
 } from "react";
 import {
-  StoreApi,
+  type StoreApi,
   useStore as useStoreGeneric,
 } from "~/app/_stores/creator/useStore";
 
@@ -42,16 +42,19 @@ export const createStore = <T,>(
       const get = useCallback(() => {
         return valueRef.current;
       }, []);
-      const set = useCallback((changes: Partial<T>) => {
-        valueRef.current = [additionalOptions?.onSet, opt?.onSet].reduce(
-          (value, onSet) => (onSet ? onSet(value) : value),
-          {
-            ...valueRef.current,
-            ...changes,
-          },
-        );
-        subscriptionHandlers.current?.forEach((h) => h(valueRef.current));
-      }, []);
+      const set = useCallback(
+        (changes: Partial<T>) => {
+          valueRef.current = [additionalOptions?.onSet, opt?.onSet].reduce(
+            (value, onSet) => (onSet ? onSet(value) : value),
+            {
+              ...valueRef.current,
+              ...changes,
+            },
+          );
+          subscriptionHandlers.current?.forEach((h) => h(valueRef.current));
+        },
+        [additionalOptions?.onSet],
+      );
       const subscribe = useCallback((callback: (value: T) => void) => {
         subscriptionHandlers.current?.add(callback);
         return () => subscriptionHandlers.current?.delete(callback);
@@ -69,6 +72,8 @@ export const createStore = <T,>(
       );
     },
   );
+
+  Provider.displayName = "StoreProvider";
 
   const useStoreApi = () => {
     const store = useContext(StoreContext);
