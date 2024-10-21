@@ -4,11 +4,12 @@ import {
   useCallback,
   useEffect,
   useState,
+  useRef,
 } from "react";
 
 export type StoreApi<T> = {
   get: () => T;
-  set: (value: T) => void;
+  set: (value: Partial<T>) => void;
   subscribe: (callback: (value: T) => void) => () => void;
 };
 
@@ -26,15 +27,19 @@ export function useStore(
   store: StoreApi<unknown>,
   selector?: (state: unknown) => unknown,
 ) {
-  selector = selector ?? IDENTITY;
+  const selectorRef = useRef(selector ?? IDENTITY);
 
-  const [value, setValue] = useState(() => selector(store.get()));
+  const [value, setValue] = useState(() => selectorRef.current(store.get()));
+
+  useEffect(() => {
+    selectorRef.current = selector ?? IDENTITY;
+  });
 
   useEffect(() => {
     return store.subscribe((state) => {
-      setValue(selector(state));
+      setValue(selectorRef.current(state));
     });
-  }, [selector, store]);
+  }, [store]);
 
   const setState: Dispatch<SetStateAction<unknown>> = useCallback(
     (newValueOrAction) => {
@@ -42,7 +47,7 @@ export function useStore(
         typeof newValueOrAction === "function" ?
           newValueOrAction(value)
         : newValueOrAction;
-      store.set(newValue);
+      store.set(newValue as Partial<unknown>);
     },
     [value, store],
   );

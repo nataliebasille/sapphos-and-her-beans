@@ -8,6 +8,7 @@ export const useLocalStorageState = <T>(
     useCallback(
       (onChange) => {
         const onStorageChange = (event: StorageEvent) => {
+          console.log(event);
           if (event.key === key) {
             onChange(); // Notify the component when data changes
           }
@@ -26,7 +27,9 @@ export const useLocalStorageState = <T>(
     () => {
       return localStorage.getItem(key);
     },
-    () => undefined,
+    () => {
+      return undefined;
+    },
   );
 
   const value = useMemo(() => {

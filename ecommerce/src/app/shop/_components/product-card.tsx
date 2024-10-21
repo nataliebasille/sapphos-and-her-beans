@@ -21,8 +21,7 @@ export const ProductCard = ({
   const addToCart = useAddToCart();
   const [added, setAdded] = useState(false);
   const handleAddToCart = useCallback(() => {
-    addToCart({
-      id,
+    addToCart(id, {
       quantity: 1,
     });
     setAdded(true);

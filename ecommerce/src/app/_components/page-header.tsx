@@ -4,7 +4,11 @@ import { twMerge } from "tailwind-merge";
 import { Cart } from "./icons/cart";
 import { NavMenu } from "./nav-menu";
 import { usePathname, useRouter } from "next/navigation";
-import { useCartStore } from "../_stores/cart-provider";
+import {
+  cartQuantity,
+  useCartStore,
+  useOpenCart,
+} from "../_stores/cart-provider";
 
 export const PageHeader = () => {
   const path = usePathname();
@@ -40,14 +44,15 @@ export const PageHeader = () => {
 };
 
 function CartIcon() {
-  const [cart] = useCartStore();
+  const [quantity] = useCartStore(cartQuantity);
+  const openCart = useOpenCart();
 
   return (
-    <div className="relative ml-auto mr-6 w-fit md:ml-0">
+    <div className="relative ml-auto mr-6 w-fit md:ml-0" onClick={openCart}>
       <Cart className="ml-auto size-12 cursor-pointer md:ml-0" />
-      {cart.length > 0 && (
+      {quantity > 0 && (
         <span className="pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-primary-600/80 text-xs text-primary-contrast-600 text-white">
-          {cart.length}
+          {quantity}
         </span>
       )}
     </div>
