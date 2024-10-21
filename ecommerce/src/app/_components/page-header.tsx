@@ -4,11 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { Cart } from "./icons/cart";
 import { NavMenu } from "./nav-menu";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  cartQuantity,
-  useCartStore,
-  useOpenCart,
-} from "../_stores/cart-provider";
+import { cartQuantity, useCartSelector, useOpenCart } from "../_stores/cart";
 
 export const PageHeader = () => {
   const path = usePathname();
@@ -44,7 +40,7 @@ export const PageHeader = () => {
 };
 
 function CartIcon() {
-  const [quantity] = useCartStore(cartQuantity);
+  const quantity = useCartSelector(cartQuantity);
   const openCart = useOpenCart();
 
   return (

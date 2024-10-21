@@ -2,18 +2,18 @@
 
 import { twMerge } from "tailwind-merge";
 import {
-  CartItem,
+  type CartItem,
   cartQuantity,
-  useCartStore,
-  useCloseCart,
-} from "../_stores/cart-provider";
+  useCartSelector,
+} from "../_stores/cart/cart-provider";
 import { memo } from "react";
 import { Heading } from "./heading";
 import { Close } from "./icons/close";
-import { useProductListStore } from "../_stores/product-list-provider";
+import { useProduct } from "../_stores/products/queries";
+import { useCloseCart } from "../_stores/cart";
 
 export const Cart = () => {
-  const [isOpen] = useCartStore((s) => s.opened);
+  const isOpen = useCartSelector((s) => s.opened);
   return (
     <>
       {isOpen && (
@@ -32,8 +32,8 @@ export const Cart = () => {
 };
 
 const CartItemList = memo(function CartItemList() {
-  const [quantity] = useCartStore(cartQuantity);
-  const [cart] = useCartStore((s) => s.cart);
+  const quantity = useCartSelector(cartQuantity);
+  const cart = useCartSelector((s) => s.cart);
   const closeCart = useCloseCart();
   return (
     <>
@@ -56,8 +56,6 @@ const CartItemList = memo(function CartItemList() {
 const CartItemDisplay = memo(function CartItem({
   id,
 }: CartItem & { id: string }) {
-  const [product] = useProductListStore(({ products }) =>
-    products.find((x) => x.id === +id),
-  );
+  const product = useProduct(+id);
   return <div>{product?.name}</div>;
 });

@@ -8,8 +8,8 @@ import {
 } from "react";
 import {
   type StoreApi,
-  useStore as useStoreGeneric,
-} from "~/app/_stores/creator/useStore";
+  useSelector as useSelectorGeneric,
+} from "~/app/_stores/_creator/useSelector";
 
 type CreateStoreOptions<T> = {
   onSet?: (value: T) => T;
@@ -85,12 +85,12 @@ export const createStore = <T,>(
     return store;
   };
 
-  const useStore = <U = T,>(selector?: (state: T) => U) => {
-    return useStoreGeneric(
+  const useSelector = <U,>(selector: (state: T) => U) => {
+    return useSelectorGeneric(
       useStoreApi(),
       selector ?? (IDENTITY as (state: T) => U),
     );
   };
 
-  return { Provider, useStoreApi, useStore };
+  return { Provider, useStoreApi, useSelector };
 };

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Check } from "~/app/_components/icons/check";
 import { Plus } from "~/app/_components/icons/plus";
-import { useAddToCart } from "~/app/_stores/cart-provider";
+import { useAddToCart } from "~/app/_stores/cart";
 import { type Product } from "~/server/actions/products";
 
 export const ProductCard = ({

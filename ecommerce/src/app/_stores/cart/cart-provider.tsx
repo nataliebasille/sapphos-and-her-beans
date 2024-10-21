@@ -1,27 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocalStorageState } from "../_hooks/useLocalStorageState";
-import { createStore } from "./creator/create-store";
-import { useProductListStore } from "./product-list-provider";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocalStorageState } from "../../_hooks/useLocalStorageState";
+import { createStore } from "../_creator/create-store";
+import { useProductsSelector } from "../products/products-provider";
+import { useProductList } from "../products/queries";
 
 export type CartItem = {
   quantity: number;
 };
 
-type CartStoreData = { cart: Record<number, CartItem>; opened: boolean };
+export type CartStoreData = { cart: Record<number, CartItem>; opened: boolean };
 
 const IS_SERVER = typeof window === "undefined";
 const {
   Provider: InternalCartProvider,
-  useStore: useCartStore,
+  useSelector: useCartSelector,
   useStoreApi: useCartStoreApi,
 } = createStore<CartStoreData>({
   cart: {},
   opened: false,
 });
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const products = useProductListStore((s) => s.products);
+  const products = useProductList();
   const [cartItems, setCartItems] = useLocalStorageState<CartStoreData["cart"]>(
     "cart-items",
     {},
@@ -85,45 +86,7 @@ function LoadCart({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export { useCartStore };
-
-export function useAddToCart() {
-  const store = useCartStoreApi();
-  return useCallback(
-    (productId: number, item: CartItem) => {
-      const storeValue = store.get();
-      const currentItem = storeValue.cart[productId] ?? { quantity: 0 };
-      const updatedItem = {
-        ...currentItem,
-        quantity: currentItem.quantity + item.quantity,
-      };
-      currentItem.quantity += item.quantity;
-      store.set({
-        cart: {
-          ...storeValue.cart,
-          [productId]: updatedItem,
-        },
-      });
-    },
-    [store],
-  );
-}
-
-export function useOpenCart() {
-  const store = useCartStoreApi();
-
-  return useCallback(() => {
-    store.set({ opened: true });
-  }, [store]);
-}
-
-export function useCloseCart() {
-  const store = useCartStoreApi();
-
-  return useCallback(() => {
-    store.set({ opened: false });
-  }, [store]);
-}
+export { useCartSelector, useCartStoreApi };
 
 export function cartQuantity(state: CartStoreData) {
   return Object.values(state.cart).reduce(
