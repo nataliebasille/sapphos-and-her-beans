@@ -38,3 +38,25 @@ export function useCloseCart() {
     store.set({ opened: false });
   }, [store]);
 }
+
+export function useSetCartItemQuantity() {
+  const store = useCartStoreApi();
+
+  return useCallback(
+    (id: number, quantity: number) => {
+      const storeValue = store.get();
+      const currentItem = storeValue.cart[id] ?? { quantity: 0 };
+      const updatedItem = {
+        ...currentItem,
+        quantity,
+      };
+      store.set({
+        cart: {
+          ...storeValue.cart,
+          [id]: updatedItem,
+        },
+      });
+    },
+    [store],
+  );
+}

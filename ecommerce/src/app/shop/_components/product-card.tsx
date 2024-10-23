@@ -50,7 +50,13 @@ export const ProductCard = ({
       </div>
 
       <div className="relative mb-3 aspect-square w-full md:h-96">
-        <Image src={image} alt={name ?? ""} className="object-cover" fill />
+        <Image
+          src={image}
+          alt={name ?? ""}
+          className="object-cover"
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+        />
 
         <div className="absolute bottom-0 left-0 right-0 p-3 tracking-wide">
           <div className="card card-primary card-ghost mb-4 !text-white shadow-2xl shadow-primary-800/50 backdrop-blur">
