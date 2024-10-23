@@ -39,7 +39,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <InternalCartProvider
       onSet={onSet}
-      initialValue={{ cart: cartItems, opened: true }}
+      initialValue={{ cart: cartItems, opened: false }}
     >
       <LoadCart>{children}</LoadCart>
     </InternalCartProvider>
