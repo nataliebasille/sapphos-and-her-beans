@@ -4,10 +4,10 @@ import { twMerge } from "tailwind-merge";
 import { PageContainer } from "../_components/page-container";
 import { Heading } from "../_components/heading";
 import { ProductCard } from "./_components/product-card";
-import { useProductListStore } from "../_stores/product-list-provider";
+import { useProductList } from "../_stores/products";
 
 export default function ShopPage() {
-  const products = useProductListStore((state) => state.products);
+  const products = useProductList();
 
   return (
     <PageContainer className="px-4 md:px-10">
