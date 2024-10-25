@@ -87,9 +87,9 @@ const CartItemList = memo(function CartItemList() {
   const total = useCartTotalFormatted();
   return (
     <>
-      <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50 md:grid-cols-[12rem_1fr]">
+      <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50">
         <div
-          className="grid grid-cols-[6rem_1fr] grid-rows-[min-content] gap-4"
+          className="grid grid-cols-[6rem_1fr] grid-rows-[min-content] gap-4 md:grid-cols-[12rem_1fr]"
           style={{ gridRow: `span ${cartItems.length}` }}
         >
           {cartItems.map(([id, item]) => {
@@ -141,8 +141,10 @@ const CartItemDisplay = memo(function CartItem({
           />
         </div>
         <div className="flex flex-col">
-          <div className="font-bold uppercase md:text-2xl">
-            {item.product?.name}
+          <div className="flex flex-col font-bold uppercase md:block md:text-2xl">
+            <span>{item.product?.name}</span>
+            <span className="hidden md:inline">{" - "}</span>
+            <span>{item.product?.sizeOunces}oz</span>
           </div>
           <div className="mt-2 text-base md:text-lg">
             {item.product?.country}
@@ -158,6 +160,7 @@ const CartItemDisplay = memo(function CartItem({
               value={item.quantity}
               onChange={handleQuantityChange}
             />
+            <span className="ml-2 text-xl">x ${item.product?.price}</span>
             <button
               className="btn btn-ghost btn-sm ml-auto"
               onClick={handleRemoveItem}
