@@ -23,8 +23,12 @@ export const QuantitySelector = ({
     [onChange, value],
   );
   const handleSet = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) =>
-      onChange(parseInt(e.target.value, 10)),
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(e.target.value, 10);
+      if (!isNaN(value) && value > 0) {
+        onChange(value);
+      }
+    },
     [onChange],
   );
 
