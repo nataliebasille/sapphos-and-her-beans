@@ -1,56 +1,112 @@
 "use client";
 
 import Image from "next/image";
-import { memo, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { memo, useCallback, useMemo, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import {
   useCartItem,
+  useCartQuantity,
+  useCartTotalFormatted,
   useCloseCart,
+  useRemoveCartItem,
   useSetCartItemQuantity,
 } from "../_stores/cart";
-import {
-  type CartItem,
-  cartQuantity,
-  useCartSelector,
-} from "../_stores/cart/cart-provider";
+import { type CartItem, useCartSelector } from "../_stores/cart/cart-provider";
 import { Close } from "./icons/close";
 import { QuantitySelector } from "./quantity-selector";
-import { Cart as CartIcon } from "./icons/cart";
+import { CartIcon } from "./cart-icon";
+import { useOnClickOutside } from "../_hooks/useOnClickOutside";
 
 export const Cart = () => {
+  const closeCart = useCloseCart();
+  const quantity = useCartQuantity();
   const isOpen = useCartSelector((s) => s.opened);
+
+  const cartRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(cartRef, closeCart);
+
   return (
     <>
       {isOpen && (
         <div className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-black/40" />
       )}
       <div
+        ref={cartRef}
         className={twMerge(
-          "fixed bottom-0 right-0 top-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5 md:px-4",
+          "fixed bottom-0 right-0 top-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5",
           isOpen && "translate-x-0 shadow-lg shadow-primary-900",
         )}
       >
-        <CartItemList />
+        <div className="flex h-full flex-col">
+          <div className="mb-0 flex items-center border-b-[1px] border-slate-800/30 px-4 py-4 text-2xl">
+            <CartIcon className="mr-2" />
+            <div className="-mb-[2px] flex-1 text-nowrap text-center">
+              Your shopping bag
+            </div>
+            <Close
+              className="ml-auto size-10 cursor-pointer"
+              onClick={closeCart}
+            />
+          </div>
+
+          {quantity === 0 ?
+            <CartEmpty />
+          : <CartItemList />}
+        </div>
       </div>
     </>
   );
 };
 
-const CartItemList = memo(function CartItemList() {
-  const quantity = useCartSelector(cartQuantity);
-  const cart = useCartSelector((s) => s.cart);
+const CartEmpty = memo(function CartEmpty() {
   const closeCart = useCloseCart();
+  const router = useRouter();
+  const handleExplore = useCallback(() => {
+    closeCart();
+    router.push("/shop");
+  }, [router, closeCart]);
+  return (
+    <div className="flex flex-col items-center justify-center p-5">
+      <div className="text-center text-xl opacity-75">
+        Your shopping bag is empty
+      </div>
+      <button
+        className="btn-primary btn btn-ghost btn-lg mt-5 uppercase"
+        onClick={handleExplore}
+      >
+        Explore our coffee
+      </button>
+    </div>
+  );
+});
+
+const CartItemList = memo(function CartItemList() {
+  const cart = useCartSelector((s) => s.cart);
+  const cartItems = useMemo(() => Object.entries(cart), [cart]);
+  const total = useCartTotalFormatted();
   return (
     <>
-      <div className="mb-0 flex items-center border-b-[1px] border-slate-800/30 px-4 py-4 text-2xl">
-        <CartIcon className="mr-2 size-8" />
-        <div className="-mb-[2px] self-end">Your shopping bag ({quantity})</div>
-        <Close className="ml-auto size-8 cursor-pointer" onClick={closeCart} />
+      <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50 md:grid-cols-[12rem_1fr]">
+        <div
+          className="grid grid-cols-[6rem_1fr] grid-rows-[min-content] gap-4"
+          style={{ gridRow: `span ${cartItems.length}` }}
+        >
+          {cartItems.map(([id, item]) => {
+            return <CartItemDisplay key={id} id={id} {...item} />;
+          })}
+        </div>
       </div>
-      <div className="grid grid-cols-[6rem_1fr] gap-4 p-2 md:grid-cols-[12rem_1fr]">
-        {Object.entries(cart).map(([id, item]) => {
-          return <CartItemDisplay key={id} id={id} {...item} />;
-        })}
+      <div className="flex items-center gap-3 border-b-[1px] border-t-[1px] border-primary-300/50 p-2">
+        <div className="mx-auto flex flex-col text-xl">
+          <span className="text-sm font-bold uppercase text-surface-contrast-50/50">
+            Total
+          </span>
+          {total}
+        </div>
+        <button className="btn-primary btn btn-lg flex-initial md:w-auto md:min-w-[250px]">
+          Checkout {"->"}
+        </button>
       </div>
     </>
   );
@@ -61,6 +117,8 @@ const CartItemDisplay = memo(function CartItem({
 }: CartItem & { id: string }) {
   const item = useCartItem(+id);
   const setQuantity = useSetCartItemQuantity();
+  const removeItem = useRemoveCartItem();
+
   const handleQuantityChange = useCallback(
     (quantity: number) => {
       setQuantity(+id, quantity);
@@ -68,8 +126,12 @@ const CartItemDisplay = memo(function CartItem({
     [id, setQuantity],
   );
 
+  const handleRemoveItem = useCallback(() => {
+    removeItem(+id);
+  }, [id, removeItem]);
+
   return item ?
-      <div className="card col-span-2 grid h-fit grid-cols-subgrid bg-surface-900/30 p-2">
+      <div className="card col-span-2 grid h-fit grid-cols-subgrid border-surface-800 bg-surface-200 p-2 shadow-sm shadow-primary-50/50">
         <div className="relative">
           <Image
             alt={item.product?.name ?? ""}
@@ -82,18 +144,26 @@ const CartItemDisplay = memo(function CartItem({
           <div className="font-bold uppercase md:text-2xl">
             {item.product?.name}
           </div>
-          <div className="mt-2 text-sm md:text-lg">{item.product?.country}</div>
+          <div className="mt-2 text-base md:text-lg">
+            {item.product?.country}
+          </div>
           <div className="mt-2 text-xs uppercase">
             {item.product?.processing}
           </div>
           <div className="text-sm md:text-base">
             {item.product?.tastingNotes}
           </div>
-          <div className="mt-auto pt-1">
+          <div className="mt-auto flex items-center pt-1">
             <QuantitySelector
               value={item.quantity}
               onChange={handleQuantityChange}
             />
+            <button
+              className="btn btn-ghost btn-sm ml-auto"
+              onClick={handleRemoveItem}
+            >
+              Remove
+            </button>
           </div>
         </div>
       </div>

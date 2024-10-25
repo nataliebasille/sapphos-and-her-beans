@@ -1,15 +1,16 @@
 "use client";
 
-import { twMerge } from "tailwind-merge";
-import { Cart } from "./icons/cart";
-import { NavMenu } from "./nav-menu";
 import { usePathname, useRouter } from "next/navigation";
-import { cartQuantity, useCartSelector, useOpenCart } from "../_stores/cart";
+import { twMerge } from "tailwind-merge";
+import { useOpenCart } from "../_stores/cart";
+import { CartIcon } from "./cart-icon";
+import { NavMenu } from "./nav-menu";
 
 export const PageHeader = () => {
   const path = usePathname();
   const router = useRouter();
   const contrast = path === "/" ? "white" : "black";
+  const openCart = useOpenCart();
   return (
     <header
       className={twMerge(
@@ -21,7 +22,6 @@ export const PageHeader = () => {
       )}
     >
       <NavMenu contrast={contrast} />
-
       <button
         className={twMerge(
           "ml-auto mr-6 hidden text-nowrap rounded-full border px-4 py-2 text-base uppercase transition-all duration-300 md:block",
@@ -34,23 +34,7 @@ export const PageHeader = () => {
         Where to find us
       </button>
 
-      <CartIcon />
+      <CartIcon onClick={openCart} className="cursor-pointer" />
     </header>
   );
 };
-
-function CartIcon() {
-  const quantity = useCartSelector(cartQuantity);
-  const openCart = useOpenCart();
-
-  return (
-    <div className="relative ml-auto mr-6 w-fit md:ml-0" onClick={openCart}>
-      <Cart className="ml-auto size-12 cursor-pointer md:ml-0" />
-      {quantity > 0 && (
-        <span className="pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-primary-600/80 text-xs text-primary-contrast-600 text-white">
-          {quantity}
-        </span>
-      )}
-    </div>
-  );
-}

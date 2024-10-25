@@ -60,3 +60,22 @@ export function useSetCartItemQuantity() {
     [store],
   );
 }
+
+export function useRemoveCartItem() {
+  const store = useCartStoreApi();
+
+  return useCallback(
+    (id: number) => {
+      const storeValue = store.get();
+      const currentItem = storeValue.cart[id];
+      if (!currentItem) {
+        return;
+      }
+      const { [id]: _, ...cart } = storeValue.cart;
+      store.set({
+        cart,
+      });
+    },
+    [store],
+  );
+}
