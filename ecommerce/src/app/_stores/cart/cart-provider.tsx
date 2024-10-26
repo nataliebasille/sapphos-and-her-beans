@@ -30,26 +30,25 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     CartStoreData["cart"]
   >("cart-items", {});
 
-  const cartItems = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(cartItemsStorage).filter(([id]) => productIds.has(id)),
-      ),
-    [cartItemsStorage, productIds],
-  );
-
   const onSet = useCallback(
     (value: CartStoreData) => {
-      setCartItemsStorage(value.cart);
-      return value;
+      const newValue = {
+        ...value,
+        cart: ensureOnlyValidCartItems(value.cart, productIds),
+      };
+      setCartItemsStorage(newValue.cart);
+      return newValue;
     },
-    [setCartItemsStorage],
+    [productIds, setCartItemsStorage],
   );
 
   return (
     <InternalCartProvider
       onSet={onSet}
-      initialValue={{ cart: cartItems, opened: false }}
+      initialValue={{
+        cart: ensureOnlyValidCartItems(cartItemsStorage, productIds),
+        opened: false,
+      }}
     >
       <LoadCart>{children}</LoadCart>
     </InternalCartProvider>
@@ -102,5 +101,14 @@ export function cartQuantity(state: CartStoreData) {
   return Object.values(state.cart).reduce(
     (acc, item) => acc + item.quantity,
     0,
+  );
+}
+
+function ensureOnlyValidCartItems(
+  cart: CartStoreData["cart"],
+  productIds: Set<string>,
+) {
+  return Object.fromEntries(
+    Object.entries(cart).filter(([id]) => productIds.has(id)),
   );
 }

@@ -128,7 +128,7 @@ const CartItemDisplay = memo(function CartItem({
 
   const handleQuantityChange = useCallback(
     (quantity: number) => {
-      setQuantity(+id, quantity);
+      setQuantity(id, quantity);
     },
     [id, setQuantity],
   );
