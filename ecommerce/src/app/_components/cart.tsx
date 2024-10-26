@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { memo, useCallback, useMemo, useRef } from "react";
 import { twMerge } from "tailwind-merge";
@@ -85,6 +86,7 @@ const CartItemList = memo(function CartItemList() {
   const cart = useCartSelector((s) => s.cart);
   const cartItems = useMemo(() => Object.entries(cart), [cart]);
   const total = useCartTotalFormatted();
+  const closeCart = useCloseCart();
   return (
     <>
       <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50">
@@ -104,9 +106,14 @@ const CartItemList = memo(function CartItemList() {
           </span>
           {total}
         </div>
-        <button className="btn-primary btn btn-lg flex-initial md:w-auto md:min-w-[250px]">
+        <Link
+          href="/checkout/cart"
+          className="btn-primary btn btn-lg flex-initial md:w-auto md:min-w-[250px]"
+          prefetch
+          onClick={closeCart}
+        >
           Checkout {"->"}
-        </button>
+        </Link>
       </div>
     </>
   );
