@@ -9,12 +9,14 @@ export default function HomePage() {
           src="/images/beans.jpg"
           alt="Sappho and her beans"
           fill
+          priority
         />
         <Image
           className="object-contain"
           src="/images/sappho no background.png"
           alt="Sappho"
           fill
+          priority
         />
       </div>
     </main>

@@ -115,7 +115,7 @@ const CartItemList = memo(function CartItemList() {
 const CartItemDisplay = memo(function CartItem({
   id,
 }: CartItem & { id: string }) {
-  const item = useCartItem(+id);
+  const item = useCartItem(id);
   const setQuantity = useSetCartItemQuantity();
   const removeItem = useRemoveCartItem();
 
@@ -137,7 +137,7 @@ const CartItemDisplay = memo(function CartItem({
             alt={item.product?.name ?? ""}
             src={item.product?.image ?? ""}
             fill
-            objectFit="cover"
+            className="object-cover"
           />
         </div>
         <div className="flex flex-col">

@@ -5,7 +5,7 @@ export const useProductList = () => {
   return useProductsSelector((s) => s.products);
 };
 
-export const useProduct = (id: number) => {
+export const useProduct = (id: string) => {
   return useProductsSelector(
     useCallback(({ products }) => products.find((x) => x.id === id), [id]),
   );
