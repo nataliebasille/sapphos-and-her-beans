@@ -144,7 +144,7 @@ const CartItemDisplay = memo(function CartItem({
           <div className="flex flex-col font-bold uppercase md:block md:text-2xl">
             <span>{item.product?.name}</span>
             <span className="hidden md:inline">{" - "}</span>
-            <span>{item.product?.sizeOunces}oz</span>
+            <span className="normal-case">{item.product?.sizeOunces}oz</span>
           </div>
           <div className="mt-2 text-base md:text-lg">
             {item.product?.country}

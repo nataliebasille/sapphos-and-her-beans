@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorageState } from "../../_hooks/useLocalStorageState";
 import { createStore } from "../_creator/create-store";
 import { useProductList } from "../products/queries";
@@ -22,17 +22,28 @@ const {
 });
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const products = useProductList();
-  const [cartItems, setCartItems] = useLocalStorageState<CartStoreData["cart"]>(
-    "cart-items",
-    {},
+  const productIds = useMemo(
+    () => new Set(products.map((p) => p.id)),
+    [products],
+  );
+  const [cartItemsStorage, setCartItemsStorage] = useLocalStorageState<
+    CartStoreData["cart"]
+  >("cart-items", {});
+
+  const cartItems = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(cartItemsStorage).filter(([id]) => productIds.has(id)),
+      ),
+    [cartItemsStorage, productIds],
   );
 
   const onSet = useCallback(
     (value: CartStoreData) => {
-      setCartItems(value.cart);
+      setCartItemsStorage(value.cart);
       return value;
     },
-    [setCartItems],
+    [setCartItemsStorage],
   );
 
   return (
