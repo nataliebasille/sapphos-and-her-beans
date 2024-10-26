@@ -4,7 +4,7 @@ import { type CartItem, useCartStoreApi } from "./cart-provider";
 export function useAddToCart() {
   const store = useCartStoreApi();
   return useCallback(
-    (productId: number, item: CartItem) => {
+    (productId: string, item: CartItem) => {
       const storeValue = store.get();
       const currentItem = storeValue.cart[productId] ?? { quantity: 0 };
       const updatedItem = {

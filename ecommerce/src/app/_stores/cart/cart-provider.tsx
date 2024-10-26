@@ -3,14 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalStorageState } from "../../_hooks/useLocalStorageState";
 import { createStore } from "../_creator/create-store";
-import { useProductsSelector } from "../products/products-provider";
 import { useProductList } from "../products/queries";
 
 export type CartItem = {
   quantity: number;
 };
 
-export type CartStoreData = { cart: Record<number, CartItem>; opened: boolean };
+export type CartStoreData = { cart: Record<string, CartItem>; opened: boolean };
 
 const IS_SERVER = typeof window === "undefined";
 const {

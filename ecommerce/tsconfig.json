@@ -28,6 +28,7 @@
     "paths": {
       "@db": ["../db"],
       "@db/*": ["../db/*"],
+      "@stripe": ["../stripe"],
       "@env": ["src/env.mjs"],
       "~/*": ["./src/*"]
     }

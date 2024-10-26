@@ -3,7 +3,7 @@ import { useProduct, useProductsSelector } from "../products";
 import { useCartSelector, type CartStoreData } from "./cart-provider";
 import { type Product } from "~/server/actions/products";
 
-export function useCartItem(id: number) {
+export function useCartItem(id: string) {
   const product = useProduct(id);
   const item = useCartSelector((s) => s.cart[id]);
 
