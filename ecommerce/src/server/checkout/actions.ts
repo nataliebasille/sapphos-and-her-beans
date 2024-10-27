@@ -25,7 +25,6 @@ export const initiateCheckout = initActionFactory().action(
       })
       .then((r) => new Map(r.data.map((p) => [p.id, p] as const)));
 
-    console.log(input);
     const response = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
       mode: "payment",
@@ -36,6 +35,8 @@ export const initiateCheckout = initActionFactory().action(
       })),
       redirect_on_completion: "never",
     });
+
+    console.log(response);
 
     return response.client_secret;
   },
