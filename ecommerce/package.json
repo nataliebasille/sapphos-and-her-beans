@@ -14,6 +14,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@nataliebasille/typescript-utils": "^1.1.5",
     "@natcore/design-system-core": "https://gitpkg.now.sh/nataliebasille/natcore-design-system/packages/core?main",
     "@natcore/typescript-utils": "github:nataliebasille/natcore-typescript-utils",
     "@stripe/react-stripe-js": "^2.8.1",
