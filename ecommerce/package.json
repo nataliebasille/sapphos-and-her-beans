@@ -16,6 +16,8 @@
   "dependencies": {
     "@natcore/design-system-core": "https://gitpkg.now.sh/nataliebasille/natcore-design-system/packages/core?main",
     "@natcore/typescript-utils": "github:nataliebasille/natcore-typescript-utils",
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.9.0",
     "@t3-oss/env-nextjs": "^0.10.1",
     "bufferutil": "^4.0.8",
     "dotenv": "^16.4.5",
@@ -28,7 +30,7 @@
     "stripe": "^17.2.1",
     "tailwind-merge": "^2.4.0",
     "ws": "^8.18.0",
-    "zod": "^3.23.3",
+    "zod": "^3.23.8",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

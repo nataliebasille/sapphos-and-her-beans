@@ -2,8 +2,6 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { PageHeader } from "./_components/page-header";
-import { Cart } from "./_components/cart";
 import { getProducts } from "~/server/actions/products";
 import { ProductsProvider } from "./_stores/products/products-provider";
 import { CartProvider } from "./_stores/cart/cart-provider";
@@ -23,11 +21,7 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <ProductsProvider initialValue={{ products }}>
-          <CartProvider>
-            <Cart />
-            <PageHeader />
-            {children}
-          </CartProvider>
+          <CartProvider>{children}</CartProvider>
         </ProductsProvider>
       </body>
     </html>

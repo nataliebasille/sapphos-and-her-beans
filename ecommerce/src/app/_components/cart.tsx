@@ -94,8 +94,8 @@ const CartItemList = memo(function CartItemList() {
           className="grid grid-cols-[6rem_1fr] grid-rows-[min-content] gap-4 md:grid-cols-[12rem_1fr]"
           style={{ gridRow: `span ${cartItems.length}` }}
         >
-          {cartItems.map(([id, item]) => {
-            return <CartItemDisplay key={id} id={id} {...item} />;
+          {cartItems.map(([id, item], index) => {
+            return <CartItemDisplay key={id} index={index} id={id} {...item} />;
           })}
         </div>
       </div>
@@ -109,7 +109,6 @@ const CartItemList = memo(function CartItemList() {
         <Link
           href="/checkout/cart"
           className="btn-primary btn btn-lg flex-initial md:w-auto md:min-w-[250px]"
-          prefetch
           onClick={closeCart}
         >
           Checkout {"->"}
@@ -121,7 +120,8 @@ const CartItemList = memo(function CartItemList() {
 
 const CartItemDisplay = memo(function CartItem({
   id,
-}: CartItem & { id: string }) {
+  index,
+}: CartItem & { id: string; index: number }) {
   const item = useCartItem(id);
   const setQuantity = useSetCartItemQuantity();
   const removeItem = useRemoveCartItem();
@@ -139,6 +139,12 @@ const CartItemDisplay = memo(function CartItem({
 
   return item ?
       <div className="card col-span-2 grid h-fit grid-cols-subgrid border-surface-800 bg-surface-200 p-2 shadow-sm shadow-primary-50/50">
+        <input type="hidden" name={`items.${index}.id`} value={id} />
+        <input
+          type="hidden"
+          name={`items.${index}.quantity`}
+          value={item.quantity}
+        />
         <div className="relative">
           <Image
             alt={item.product?.name ?? ""}

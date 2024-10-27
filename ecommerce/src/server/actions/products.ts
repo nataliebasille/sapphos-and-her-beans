@@ -1,4 +1,4 @@
-import { stripe } from "@stripe";
+import { stripe } from "@stripe-client";
 import { unstable_cache } from "next/cache";
 import "server-only";
 
@@ -22,7 +22,6 @@ export const getProducts = unstable_cache(
       active: true,
       expand: ["data.default_price"],
     });
-    ("/images/placeholder coffee bag.jpg");
 
     return products.data.map(
       (p) =>

@@ -3,10 +3,10 @@
 import { usePathname, useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { useOpenCart } from "../_stores/cart";
-import { CartIcon } from "./cart-icon";
-import { NavMenu } from "./nav-menu";
+import { NavMenu } from "../_components/nav-menu";
+import { CartIcon } from "../_components/cart-icon";
 
-export const PageHeader = () => {
+export const ShopHeader = () => {
   const path = usePathname();
   const router = useRouter();
   const contrast = path === "/" ? "white" : "black";

@@ -28,8 +28,9 @@
     "paths": {
       "@db": ["../db"],
       "@db/*": ["../db/*"],
-      "@stripe": ["../stripe"],
+      "@stripe-client": ["../lib/stripe"],
       "@env": ["src/env.mjs"],
+      "@action-rpc": ["../lib/action-rpc"],
       "~/*": ["./src/*"]
     }
   },

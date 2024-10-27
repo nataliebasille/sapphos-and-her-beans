@@ -28,6 +28,7 @@
     "baseUrl": ".",
     "paths": {
       "@db/*": ["./db/*"],
+      "@stripe": ["./lib/stripe"],
     }
   },
   "include": [
