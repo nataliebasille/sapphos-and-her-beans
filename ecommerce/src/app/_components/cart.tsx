@@ -173,7 +173,7 @@ const CartItemDisplay = memo(function CartItem({
               value={item.quantity}
               onChange={handleQuantityChange}
             />
-            <span className="ml-2 text-xl">x ${item.product?.price}</span>
+            <span className="ml-2 md:text-xl">x ${item.product?.price}</span>
             <button
               className="btn btn-ghost btn-sm ml-auto"
               onClick={handleRemoveItem}
