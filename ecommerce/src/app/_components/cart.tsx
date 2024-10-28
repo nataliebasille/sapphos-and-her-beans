@@ -18,6 +18,7 @@ import { Close } from "./icons/close";
 import { QuantitySelector } from "./quantity-selector";
 import { CartIcon } from "./cart-icon";
 import { useOnClickOutside } from "../_hooks/useOnClickOutside";
+import { ArrowRightIcon } from "./icons/arrow-right";
 
 export const Cart = () => {
   const closeCart = useCloseCart();
@@ -108,10 +109,11 @@ const CartItemList = memo(function CartItemList() {
         </div>
         <Link
           href="/checkout/cart"
-          className="btn-primary btn btn-lg flex-initial md:w-auto md:min-w-[250px]"
+          className="btn-primary btn flex w-[175px] flex-initial items-center uppercase tracking-wider md:w-auto md:min-w-[200px]"
           onClick={closeCart}
         >
-          Checkout {"->"}
+          Checkout{" "}
+          <ArrowRightIcon className="ml-auto size-6 font-bold md:size-8" />
         </Link>
       </div>
     </>
