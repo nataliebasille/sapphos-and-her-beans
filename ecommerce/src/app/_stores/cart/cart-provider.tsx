@@ -9,7 +9,11 @@ export type CartItem = {
   quantity: number;
 };
 
-export type CartStoreData = { cart: Record<string, CartItem>; opened: boolean };
+export type CartStoreData = {
+  cart: Record<string, CartItem>;
+  opened: boolean;
+  hydrated: boolean;
+};
 
 const IS_SERVER = typeof window === "undefined";
 const {
@@ -19,6 +23,7 @@ const {
 } = createStore<CartStoreData>({
   cart: {},
   opened: false,
+  hydrated: false,
 });
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const products = useProductList();
@@ -48,6 +53,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       initialValue={{
         cart: ensureOnlyValidCartItems(cartItemsStorage, productIds),
         opened: false,
+        hydrated: false,
       }}
     >
       <LoadCart>{children}</LoadCart>
@@ -77,7 +83,7 @@ function LoadCart({ children }: { children: React.ReactNode }) {
 
     if (clientHydrationDone && !itemsHaveBeenSet.current) {
       itemsHaveBeenSet.current = true;
-      setCart({ cart: cartItems });
+      setCart({ cart: cartItems, hydrated: true });
     }
   }, [cartItems, setCart, clientHydrationDone]);
 

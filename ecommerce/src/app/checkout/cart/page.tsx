@@ -1,48 +1,35 @@
 "use client";
-import {
-  EmbeddedCheckout,
-  EmbeddedCheckoutProvider,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { useCartSelector } from "~/app/_stores/cart";
-import { initiateCheckoutSession } from "../_actions/initiate_checkout_session";
-import { updateCheckoutSessionShipping } from "../_actions/update_checkout_session_shipping";
+import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
+import { CheckoutForm } from "../_components/checkout-form";
 
 export default function CheckoutCartPage() {
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY ?? "",
-    {
-      betas: ["embedded_checkout_byol_beta_1"],
-    },
-  );
-  const cart = useCartSelector((s) => s.cart);
+  const cartStore = useCartStoreApi();
+
   return (
-    <EmbeddedCheckoutProvider
-      stripe={stripePromise}
-      options={{
-        fetchClientSecret: async () => {
-          const response = await initiateCheckoutSession({
-            items: Object.entries(cart).map(([id, item]) => ({
-              id,
-              quantity: item.quantity,
-            })),
+    <CheckoutForm
+      items={async () => {
+        const cartItems = await Promise.resolve().then(() => {
+          const value = cartStore.get();
+
+          if (value.hydrated) {
+            return value.cart;
+          }
+
+          return new Promise<typeof value.cart>((resolve) => {
+            const unsubscribe = cartStore.subscribe((value) => {
+              if (value.hydrated) {
+                resolve(value.cart);
+                unsubscribe();
+              }
+            });
           });
+        });
 
-          return response.value ?? "";
-        },
-        onShippingDetailsChange: async (details) => {
-          const result = await updateCheckoutSessionShipping(details);
-
-          return result.type === "ok" ?
-              result.value
-            : {
-                type: "reject",
-                errorMessage: "Something went wrong. Please try again.",
-              };
-        },
+        return Object.entries(cartItems).map(([id, item]) => ({
+          id,
+          quantity: item.quantity,
+        }));
       }}
-    >
-      <EmbeddedCheckout />
-    </EmbeddedCheckoutProvider>
+    />
   );
 }

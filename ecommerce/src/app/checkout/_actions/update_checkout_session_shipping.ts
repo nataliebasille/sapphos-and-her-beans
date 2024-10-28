@@ -2,7 +2,7 @@
 
 import { initActionFactory } from "@action-rpc";
 import { stripe } from "@stripe-client";
-import { StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
+import { type StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
 
 export const updateCheckoutSessionShipping = initActionFactory().action(
   async (input: StripeEmbeddedCheckoutShippingDetailsChangeEvent) => {
@@ -10,6 +10,9 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
 
     await stripe.checkout.sessions.update(checkoutSessionId, {
       collected_information: {
+        // Stripe's typings seem to be wrong between the types for the
+        // shipping_details and collected_information properties
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
         shipping_details: shippingDetails as any,
       },
       shipping_options: [
