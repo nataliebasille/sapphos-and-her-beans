@@ -38,6 +38,9 @@
     "dotenv": "^16.4.5",
     "install": "^0.13.0",
     "npm": "^10.8.2",
+    "server-only": "^0.0.1",
+    "shippo": "^2.7.0",
+    "stripe": "^16.9.0-beta.1",
     "ws": "^8.18.0"
   },
   "devDependencies": {

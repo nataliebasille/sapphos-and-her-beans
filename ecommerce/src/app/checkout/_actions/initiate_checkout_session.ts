@@ -1,10 +1,8 @@
 "use server";
-"use server";
 
-import { z } from "zod";
-import { formAction, initActionFactory } from "@action-rpc";
+import { initActionFactory } from "@action-rpc";
 import { stripe } from "@stripe-client";
-import { redirect } from "next/navigation";
+import { z } from "zod";
 
 const initiateCheckoutSchema = z.object({
   items: z.array(
@@ -15,10 +13,10 @@ const initiateCheckoutSchema = z.object({
   ),
 });
 
-export type InitiateCheckout = z.infer<typeof initiateCheckoutSchema>;
+export type InitiateCheckoutSession = z.infer<typeof initiateCheckoutSchema>;
 
-export const initiateCheckout = initActionFactory().action(
-  async (input: InitiateCheckout) => {
+export const initiateCheckoutSession = initActionFactory().action(
+  async (input: InitiateCheckoutSession) => {
     const activeProducts = await stripe.products
       .list({
         active: true,
@@ -34,9 +32,15 @@ export const initiateCheckout = initActionFactory().action(
         quantity: item.quantity,
       })),
       redirect_on_completion: "never",
+      permissions: {
+        update: {
+          shipping_details: "server_only",
+        },
+      },
+      shipping_address_collection: {
+        allowed_countries: ["US"],
+      },
     });
-
-    console.log(response);
 
     return response.client_secret;
   },
