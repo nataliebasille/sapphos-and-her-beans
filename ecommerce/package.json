@@ -17,6 +17,7 @@
     "@nataliebasille/typescript-utils": "^1.1.5",
     "@natcore/design-system-core": "https://gitpkg.now.sh/nataliebasille/natcore-design-system/packages/core?main",
     "@natcore/typescript-utils": "github:nataliebasille/natcore-typescript-utils",
+    "@sentry/nextjs": "^8.35.0",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.9.0",
     "@t3-oss/env-nextjs": "^0.10.1",
