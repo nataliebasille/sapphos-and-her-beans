@@ -78,7 +78,7 @@ const MobileNavMenu = ({ contrast }: NavMenuProps) => {
       />
       <div
         className={twMerge(
-          "fixed bottom-0 top-0 w-full -translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:hidden",
+          "fixed bottom-0 top-0 h-[100dvh] w-full -translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:hidden",
           isOpen && "translate-x-0",
         )}
       >
