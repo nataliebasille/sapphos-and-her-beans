@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Fragment } from "react";
 import { twMerge } from "tailwind-merge";
-import { Heading } from "../../_components/heading";
+import { Heading } from "../_components/heading";
 
 const cites = [
   {

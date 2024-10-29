@@ -5,6 +5,9 @@ import { type Metadata } from "next";
 import { getProducts } from "~/server/actions/products";
 import { ProductsProvider } from "./_stores/products/products-provider";
 import { CartProvider } from "./_stores/cart/cart-provider";
+import { Cart } from "./_components/cart";
+import { ShopHeader } from "./shop-header";
+import { ShopPageContainer } from "./shop-page-container";
 
 export const metadata: Metadata = {
   title: "Sappho and her beans - Coffee Roasters",
@@ -21,7 +24,11 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <ProductsProvider initialValue={{ products }}>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <Cart />
+            <ShopHeader />
+            <ShopPageContainer>{children}</ShopPageContainer>
+          </CartProvider>
         </ProductsProvider>
       </body>
     </html>

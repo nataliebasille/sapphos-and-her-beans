@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { memo, useCallback, useMemo, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import {
+  useCartIsDisabled,
   useCartItem,
   useCartQuantity,
   useCartTotalFormatted,
@@ -23,7 +24,8 @@ import { ArrowRightIcon } from "./icons/arrow-right";
 export const Cart = () => {
   const closeCart = useCloseCart();
   const quantity = useCartQuantity();
-  const isOpen = useCartSelector((s) => s.opened);
+  const isDisabled = useCartIsDisabled();
+  const isOpen = useCartSelector((s) => s.opened) && !isDisabled;
 
   const cartRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(cartRef, closeCart);
@@ -88,6 +90,11 @@ const CartItemList = memo(function CartItemList() {
   const cartItems = useMemo(() => Object.entries(cart), [cart]);
   const total = useCartTotalFormatted();
   const closeCart = useCloseCart();
+
+  const handleCheckoutClick = useCallback(() => {
+    closeCart();
+  }, [closeCart]);
+
   return (
     <>
       <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50">
@@ -110,7 +117,7 @@ const CartItemList = memo(function CartItemList() {
         <Link
           href="/checkout/cart"
           className="btn-primary btn flex w-[175px] flex-initial items-center uppercase tracking-wider md:w-auto md:min-w-[200px]"
-          onClick={closeCart}
+          onClick={handleCheckoutClick}
         >
           Checkout{" "}
           <ArrowRightIcon className="ml-auto size-6 font-bold md:size-8" />

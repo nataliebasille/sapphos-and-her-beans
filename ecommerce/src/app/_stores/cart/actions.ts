@@ -79,3 +79,11 @@ export function useRemoveCartItem() {
     [store],
   );
 }
+
+export function useEmptyCart() {
+  const store = useCartStoreApi();
+
+  return useCallback(() => {
+    store.set({ cart: {} });
+  }, [store]);
+}

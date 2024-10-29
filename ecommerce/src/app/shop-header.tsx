@@ -2,15 +2,18 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import { useOpenCart } from "../_stores/cart";
-import { NavMenu } from "../_components/nav-menu";
-import { CartIcon } from "../_components/cart-icon";
+import { useCartIsDisabled, useOpenCart } from "./_stores/cart";
+import { NavMenu } from "./_components/nav-menu";
+import { CartIcon } from "./_components/cart-icon";
+import Image from "next/image";
 
 export const ShopHeader = () => {
   const path = usePathname();
   const router = useRouter();
   const contrast = path === "/" ? "white" : "black";
   const openCart = useOpenCart();
+  const isDisabled = useCartIsDisabled();
+
   return (
     <header
       className={twMerge(
@@ -22,6 +25,15 @@ export const ShopHeader = () => {
       )}
     >
       <NavMenu contrast={contrast} />
+      <div className="relative -z-10 h-full flex-1 px-2">
+        <Image
+          src="/images/sappho black logo cropped.png"
+          alt="Sappho logo"
+          width={125}
+          height={100}
+          className="absolute left-[50%] top-[50%] mx-auto -translate-x-1/2 -translate-y-1/2"
+        />
+      </div>
       <button
         className={twMerge(
           "ml-auto mr-6 hidden text-nowrap rounded-full border px-4 py-2 text-base uppercase transition-all duration-300 md:block",
@@ -34,7 +46,10 @@ export const ShopHeader = () => {
         Where to find us
       </button>
 
-      <CartIcon onClick={openCart} className="cursor-pointer" />
+      <CartIcon
+        onClick={openCart}
+        className={twMerge("cursor-pointer", isDisabled && "invisible")}
+      />
     </header>
   );
 };

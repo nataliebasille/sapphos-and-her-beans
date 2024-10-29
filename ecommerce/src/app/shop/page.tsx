@@ -1,8 +1,8 @@
 "use client";
 
 import { twMerge } from "tailwind-merge";
-import { Heading } from "../../_components/heading";
-import { useProductList } from "../../_stores/products";
+import { Heading } from "../_components/heading";
+import { useProductList } from "../_stores/products";
 import { ProductCard } from "./_components/product-card";
 
 export default function ShopPage() {
