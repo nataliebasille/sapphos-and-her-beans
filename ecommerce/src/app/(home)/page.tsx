@@ -3,12 +3,14 @@ import { getProducts } from "~/server/actions/products";
 import { Heading } from "../_components/heading";
 import { ProductCard } from "../_components/product-card";
 import Link from "next/link";
+import { FacebookIcon } from "../_components/icons/facebook";
+import { InstagramIcon } from "../_components/icons/instagram";
 
 export default async function HomePage() {
   const products = (await getProducts()).filter((x) => x.featured);
   return (
     <main className="flex flex-col text-white">
-      <div className="relative h-[92dvh] w-full">
+      <div className="relative flex h-[92dvh] w-full flex-col items-center justify-center">
         <Image
           className="object-cover brightness-50"
           src="/images/beans.jpg"
@@ -16,13 +18,29 @@ export default async function HomePage() {
           fill
           priority
         />
-        <Image
-          className="object-contain"
-          src="/images/sappho no background.png"
-          alt="Sappho"
-          fill
-          priority
-        />
+        <div className="relative h-[33dvh] w-full">
+          <Image
+            className="object-contain px-5"
+            src="/images/Sappho no background - cropped.png"
+            alt="Sappho"
+            fill
+            priority
+          />
+        </div>
+        <div className="relative z-10 flex justify-center gap-8">
+          <a
+            href="https://www.facebook.com/p/Sappho-and-her-beans-100094171081242/"
+            target="_blank"
+          >
+            <FacebookIcon className="size-12 text-white" />
+          </a>
+          <a
+            href="https://www.instagram.com/sapphoandherbeans/"
+            target="_blank"
+          >
+            <InstagramIcon className="size-12 text-white" />
+          </a>
+        </div>
       </div>
 
       <div className="relative grid grid-cols-1 flex-row-reverse bg-primary-base !pb-12 tracking-widest text-primary-contrast-base sm:px-20 md:grid-cols-[3fr_2fr] md:gap-4 md:py-4">
