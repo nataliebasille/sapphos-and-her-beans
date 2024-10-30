@@ -3,7 +3,7 @@
 import { twMerge } from "tailwind-merge";
 import { Heading } from "../_components/heading";
 import { useProductList } from "../_stores/products";
-import { ProductCard } from "./_components/product-card";
+import { ProductCard } from "../_components/product-card";
 
 export default function ShopPage() {
   const products = useProductList();

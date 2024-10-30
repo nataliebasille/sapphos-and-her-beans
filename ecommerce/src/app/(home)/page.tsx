@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { getProducts } from "~/server/actions/products";
 import { Heading } from "../_components/heading";
+import { ProductCard } from "../_components/product-card";
+import Link from "next/link";
 
 export default async function HomePage() {
   const products = (await getProducts()).filter((x) => x.featured);
@@ -52,39 +54,44 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* <div className="bg-surface-base p-8 text-surface-contrast-base">
-        <div className="mb-5 border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
-          <Heading
-            level={3}
-            className="mb-0 text-center uppercase tracking-wide md:text-left"
-          >
+      <div className="bg-surface-base p-8 text-surface-contrast-base">
+        <div className="mb-5 flex items-center border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
+          <Heading level={3} className="mb-0 uppercase tracking-wide">
             Featured
           </Heading>
+
+          <Link
+            href="/shop"
+            className="btn-primary btn btn-outline btn-lg mb-2 ml-auto uppercase"
+          >
+            Shop All
+          </Link>
         </div>
 
-        <div className="grid justify-items-center gap-20 px-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-x-20 md:gap-y-12 lg:grid-cols-3 lg:gap-x-8 xl:gap-x-20">
           {products.map((product) => (
-            <div
-              key={product.id}
-              className="overflow-hidden rounded-2xl shadow-xl shadow-primary-700/25"
-            >
-              <div className="relative aspect-square h-96 w-full">
-                <Image
-                  src={product.image}
-                  alt={product.name ?? ""}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
+            <ProductCard key={product.id} {...product} />
+            // <div
+            //   key={product.id}
+            //   className="overflow-hidden rounded-2xl shadow-xl shadow-primary-700/25"
+            // >
+            //   <div className="relative aspect-square h-96 w-full">
+            //     <Image
+            //       src={product.image}
+            //       alt={product.name ?? ""}
+            //       fill
+            //       className="object-cover"
+            //       priority
+            //     />
+            //   </div>
 
-              <div className="text-nowrap bg-secondary-700 p-4 text-xl uppercase text-secondary-contrast-700">
-                {product.name}
-              </div>
-            </div>
+            //   <div className="text-nowrap bg-secondary-700 p-4 text-xl uppercase text-secondary-contrast-700">
+            //     {product.name}
+            //   </div>
+            // </div>
           ))}
         </div>
-      </div> */}
+      </div>
     </main>
   );
 }
