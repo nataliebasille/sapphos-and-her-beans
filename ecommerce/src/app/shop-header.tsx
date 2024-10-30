@@ -6,7 +6,7 @@ import { useCartIsDisabled, useOpenCart } from "./_stores/cart";
 import { NavMenu } from "./_components/nav-menu";
 import { CartIcon } from "./_components/cart-icon";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 export const ShopHeader = () => {
   const path = usePathname();
@@ -15,7 +15,11 @@ export const ShopHeader = () => {
   const contrast = isHome ? "white" : "black";
   const openCart = useOpenCart();
   const isDisabled = useCartIsDisabled();
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(true);
+
+  useLayoutEffect(() => {
+    setScrolled(window.scrollY > 0);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -34,7 +38,7 @@ export const ShopHeader = () => {
   return (
     <header
       className={twMerge(
-        "fixed top-0 z-50 flex w-full items-center border-b-[1px] py-4 backdrop-blur-xl backdrop-opacity-0 transition-[backdrop-filter] duration-200",
+        "fixed top-0 z-50 flex w-full items-center border-b-[1px] py-4 backdrop-blur-xl backdrop-opacity-0 transition-all duration-300",
         !isHome && "bg-[#F7DCDF]",
         scrolled && "backdrop-opacity-100",
         contrast === "white" ?

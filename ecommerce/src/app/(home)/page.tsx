@@ -1,6 +1,9 @@
 import Image from "next/image";
+import { getProducts } from "~/server/actions/products";
+import { Heading } from "../_components/heading";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = (await getProducts()).filter((x) => x.featured);
   return (
     <main className="flex flex-col text-white">
       <div className="relative h-[92dvh] w-full">
@@ -20,9 +23,9 @@ export default function HomePage() {
         />
       </div>
 
-      <div className="relative grid grid-cols-1 flex-row-reverse bg-primary-base tracking-widest text-primary-contrast-base sm:px-20 md:grid-cols-[3fr_2fr] md:gap-4 md:p-4 md:px-36">
+      <div className="relative grid grid-cols-1 flex-row-reverse bg-primary-base !pb-12 tracking-widest text-primary-contrast-base sm:px-20 md:grid-cols-[3fr_2fr] md:gap-4 md:py-4">
         <div className="row-start-2 flex min-w-0 flex-col gap-10 p-0 pb-8 font-thin sm:px-8 md:row-start-1 md:mr-24 md:p-0 md:pt-14 xl:mr-40">
-          <span className="flex flex-col items-center justify-center text-center text-4xl lg:text-5xl xl:text-6xl">
+          <span className="flex flex-col items-center justify-center text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
             <span className="text-nowrap">Unique coffee</span>
             <span className="divider divider-secondary w-1/3 !self-center text-sm !font-thin text-white xl:text-base">
               AND
@@ -48,6 +51,40 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* <div className="bg-surface-base p-8 text-surface-contrast-base">
+        <div className="mb-5 border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
+          <Heading
+            level={3}
+            className="mb-0 text-center uppercase tracking-wide md:text-left"
+          >
+            Featured
+          </Heading>
+        </div>
+
+        <div className="grid justify-items-center gap-20 px-12">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="overflow-hidden rounded-2xl shadow-xl shadow-primary-700/25"
+            >
+              <div className="relative aspect-square h-96 w-full">
+                <Image
+                  src={product.image}
+                  alt={product.name ?? ""}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+
+              <div className="text-nowrap bg-secondary-700 p-4 text-xl uppercase text-secondary-contrast-700">
+                {product.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div> */}
     </main>
   );
 }

@@ -14,6 +14,7 @@ export type Product = {
   region?: string;
   lot?: string;
   story?: string;
+  featured?: boolean;
 };
 
 export const getProducts = unstable_cache(
@@ -38,7 +39,8 @@ export const getProducts = unstable_cache(
           country: p.metadata.country,
           region: p.metadata.region,
           lot: p.metadata.lot,
-          story: p.description ?? undefined,
+          story: p.metadata.story,
+          featured: p.metadata.featured === "true",
         }) satisfies Product,
     );
   },
