@@ -87,8 +87,8 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       );
 
       return {
-        type: "error",
-        message: "Unable to find shipping rate for this address",
+        type: "reject" as const,
+        errorMessage: "Unable to find shipping rate for this address",
       };
     }
 
