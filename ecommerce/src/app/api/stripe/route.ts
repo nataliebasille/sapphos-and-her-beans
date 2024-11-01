@@ -2,8 +2,27 @@ import { shippo } from "@shippo";
 import { stripe } from "@stripe";
 import { type Stripe } from "stripe";
 
+const stripeEndpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
 export async function POST(request: Request) {
-  const event = (await request.json()) as Stripe.Event;
+  const body = await request.text();
+  const sig = request.headers.get("stripe-signature");
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      sig ?? "",
+      stripeEndpointSecret,
+    );
+  } catch (err: unknown) {
+    return new Response(
+      `Webhook Error: ${(err as { message: string }).message}`,
+      {
+        status: 400,
+      },
+    );
+  }
 
   const handler =
     stripeWebhookHandlers[event.type as keyof typeof stripeWebhookHandlers];
