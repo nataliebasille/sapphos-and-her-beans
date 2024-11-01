@@ -1,7 +1,7 @@
 "use server";
 
 import { initActionFactory } from "@action-rpc";
-import { stripe } from "@stripe-client";
+import { stripe } from "@stripe";
 import { z } from "zod";
 
 const initiateCheckoutSchema = z.object({

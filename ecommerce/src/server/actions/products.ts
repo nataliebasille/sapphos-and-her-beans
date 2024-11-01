@@ -1,6 +1,6 @@
-import { stripe } from "@stripe-client";
-import { unstable_cache } from "next/cache";
 import "server-only";
+import { stripe } from "@stripe";
+import { unstable_cache } from "next/cache";
 
 export type Product = {
   id: string;
