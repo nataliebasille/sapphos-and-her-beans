@@ -65,12 +65,13 @@ export function useRemoveCartItem() {
   const store = useCartStoreApi();
 
   return useCallback(
-    (id: number) => {
+    (id: string) => {
       const storeValue = store.get();
       const currentItem = storeValue.cart[id];
       if (!currentItem) {
         return;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [id]: _, ...cart } = storeValue.cart;
       store.set({
         cart,
