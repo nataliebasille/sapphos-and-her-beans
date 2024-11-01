@@ -17,6 +17,7 @@ export type InitiateCheckoutSession = z.infer<typeof initiateCheckoutSchema>;
 
 export const initiateCheckoutSession = initActionFactory().action(
   async (input: InitiateCheckoutSession) => {
+    console.log("initiate checkout session", input);
     const activeProducts = await stripe.products
       .list({
         active: true,
@@ -41,6 +42,8 @@ export const initiateCheckoutSession = initActionFactory().action(
         allowed_countries: ["US"],
       },
     });
+
+    console.log("stripe response", response);
 
     return response.client_secret;
   },
