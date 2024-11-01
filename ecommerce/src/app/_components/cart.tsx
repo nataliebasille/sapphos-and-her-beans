@@ -143,7 +143,7 @@ const CartItemDisplay = memo(function CartItem({
   );
 
   const handleRemoveItem = useCallback(() => {
-    removeItem(+id);
+    removeItem(id);
   }, [id, removeItem]);
 
   return item ?
