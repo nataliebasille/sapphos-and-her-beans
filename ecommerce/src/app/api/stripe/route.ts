@@ -34,7 +34,6 @@ const stripeWebhookHandlers = {
 
     const labelId = shippingDetails.metadata.shippo_shipping_rate_id;
 
-    console.log("shippo label id", labelId);
     await shippo.transactions.create({
       rate: labelId!,
       labelFileType: "PNG",
