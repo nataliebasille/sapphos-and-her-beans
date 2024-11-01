@@ -44,8 +44,8 @@ export const ProductCard = ({
     <div className="cursor-pointer rounded-md">
       <div className="flex flex-col bg-secondary-700 p-3 uppercase tracking-wider text-secondary-contrast-700 md:flex-row md:items-center">
         {name}
-        <span className="md:ml-auto md:text-lg">
-          {sizeOunces} oz - ${price}
+        <span className="normal-case md:ml-auto md:text-lg">
+          {sizeOunces}oz - ${price}
         </span>
       </div>
 

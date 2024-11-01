@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useProduct, useProductsSelector } from "../products";
 import { useCartSelector, type CartStoreData } from "./cart-provider";
 import { type Product } from "~/server/actions/products";
+import { usePathname } from "next/navigation";
 
 export function useCartItem(id: string) {
   const product = useProduct(id);
@@ -39,6 +40,11 @@ export function useCartTotalFormatted() {
       }).format(total),
     [total],
   );
+}
+
+export function useCartIsDisabled() {
+  const path = usePathname();
+  return path.includes("/checkout");
 }
 
 export function cartQuantity(state: CartStoreData) {

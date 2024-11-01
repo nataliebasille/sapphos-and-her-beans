@@ -28,6 +28,8 @@
     "baseUrl": ".",
     "paths": {
       "@db/*": ["./db/*"],
+      "@stripe": ["./lib/stripe"],
+      "@shippo": ["./lib/shippo"],
     }
   },
   "include": [

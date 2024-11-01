@@ -1,12 +1,10 @@
 "use client";
-import { useCallback, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { Close } from "./icons/close";
 import { Hamburger } from "./icons/hamburger";
 import { NavLink } from "./navlink";
-import Image from "next/image";
-import { twMerge } from "tailwind-merge";
-import { useBreakpoint } from "~/app/_hooks/useBreakpoint";
-import { useIsServer } from "../_hooks/useIsServer";
-import { Close } from "./icons/close";
 
 const navigationItems = [
   {
@@ -80,7 +78,7 @@ const MobileNavMenu = ({ contrast }: NavMenuProps) => {
       />
       <div
         className={twMerge(
-          "fixed bottom-0 top-0 w-full -translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:hidden",
+          "fixed bottom-0 top-0 h-[100dvh] w-full -translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:hidden",
           isOpen && "translate-x-0",
         )}
       >

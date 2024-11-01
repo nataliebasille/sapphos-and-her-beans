@@ -1,8 +1,7 @@
-import { twMerge } from "tailwind-merge";
-import { Heading } from "../_components/heading";
-import { PageContainer } from "../_components/page-container";
 import Image from "next/image";
 import { Fragment } from "react";
+import { twMerge } from "tailwind-merge";
+import { Heading } from "../_components/heading";
 
 const cites = [
   {
@@ -76,7 +75,7 @@ const cites = [
 
 export default function LocationsPage() {
   return (
-    <PageContainer>
+    <>
       {cites
         .filter((x) => x.locations.length > 0)
         .map(({ city, locations }, index) => (
@@ -106,7 +105,7 @@ export default function LocationsPage() {
             ))}
           </Fragment>
         ))}
-    </PageContainer>
+    </>
   );
 }
 

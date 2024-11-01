@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { memo, useCallback, useMemo, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import {
+  useCartIsDisabled,
   useCartItem,
   useCartQuantity,
   useCartTotalFormatted,
@@ -17,11 +19,13 @@ import { Close } from "./icons/close";
 import { QuantitySelector } from "./quantity-selector";
 import { CartIcon } from "./cart-icon";
 import { useOnClickOutside } from "../_hooks/useOnClickOutside";
+import { ArrowRightIcon } from "./icons/arrow-right";
 
 export const Cart = () => {
   const closeCart = useCloseCart();
   const quantity = useCartQuantity();
-  const isOpen = useCartSelector((s) => s.opened);
+  const isDisabled = useCartIsDisabled();
+  const isOpen = useCartSelector((s) => s.opened) && !isDisabled;
 
   const cartRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(cartRef, closeCart);
@@ -85,6 +89,12 @@ const CartItemList = memo(function CartItemList() {
   const cart = useCartSelector((s) => s.cart);
   const cartItems = useMemo(() => Object.entries(cart), [cart]);
   const total = useCartTotalFormatted();
+  const closeCart = useCloseCart();
+
+  const handleCheckoutClick = useCallback(() => {
+    closeCart();
+  }, [closeCart]);
+
   return (
     <>
       <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50">
@@ -92,8 +102,8 @@ const CartItemList = memo(function CartItemList() {
           className="grid grid-cols-[6rem_1fr] grid-rows-[min-content] gap-4 md:grid-cols-[12rem_1fr]"
           style={{ gridRow: `span ${cartItems.length}` }}
         >
-          {cartItems.map(([id, item]) => {
-            return <CartItemDisplay key={id} id={id} {...item} />;
+          {cartItems.map(([id, item], index) => {
+            return <CartItemDisplay key={id} index={index} id={id} {...item} />;
           })}
         </div>
       </div>
@@ -104,9 +114,14 @@ const CartItemList = memo(function CartItemList() {
           </span>
           {total}
         </div>
-        <button className="btn-primary btn btn-lg flex-initial md:w-auto md:min-w-[250px]">
-          Checkout {"->"}
-        </button>
+        <Link
+          href="/checkout/cart"
+          className="btn-primary btn flex w-[175px] flex-initial items-center uppercase tracking-wider md:w-auto md:min-w-[200px]"
+          onClick={handleCheckoutClick}
+        >
+          Checkout{" "}
+          <ArrowRightIcon className="ml-auto size-6 font-bold md:size-8" />
+        </Link>
       </div>
     </>
   );
@@ -114,14 +129,15 @@ const CartItemList = memo(function CartItemList() {
 
 const CartItemDisplay = memo(function CartItem({
   id,
-}: CartItem & { id: string }) {
+  index,
+}: CartItem & { id: string; index: number }) {
   const item = useCartItem(id);
   const setQuantity = useSetCartItemQuantity();
   const removeItem = useRemoveCartItem();
 
   const handleQuantityChange = useCallback(
     (quantity: number) => {
-      setQuantity(+id, quantity);
+      setQuantity(id, quantity);
     },
     [id, setQuantity],
   );
@@ -132,6 +148,12 @@ const CartItemDisplay = memo(function CartItem({
 
   return item ?
       <div className="card col-span-2 grid h-fit grid-cols-subgrid border-surface-800 bg-surface-200 p-2 shadow-sm shadow-primary-50/50">
+        <input type="hidden" name={`items.${index}.id`} value={id} />
+        <input
+          type="hidden"
+          name={`items.${index}.quantity`}
+          value={item.quantity}
+        />
         <div className="relative">
           <Image
             alt={item.product?.name ?? ""}
@@ -144,7 +166,7 @@ const CartItemDisplay = memo(function CartItem({
           <div className="flex flex-col font-bold uppercase md:block md:text-2xl">
             <span>{item.product?.name}</span>
             <span className="hidden md:inline">{" - "}</span>
-            <span>{item.product?.sizeOunces}oz</span>
+            <span className="normal-case">{item.product?.sizeOunces}oz</span>
           </div>
           <div className="mt-2 text-base md:text-lg">
             {item.product?.country}
@@ -160,7 +182,7 @@ const CartItemDisplay = memo(function CartItem({
               value={item.quantity}
               onChange={handleQuantityChange}
             />
-            <span className="ml-2 text-xl">x ${item.product?.price}</span>
+            <span className="ml-2 md:text-xl">x ${item.product?.price}</span>
             <button
               className="btn btn-ghost btn-sm ml-auto"
               onClick={handleRemoveItem}

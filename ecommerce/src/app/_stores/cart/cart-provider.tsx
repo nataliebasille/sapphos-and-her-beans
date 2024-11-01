@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorageState } from "../../_hooks/useLocalStorageState";
 import { createStore } from "../_creator/create-store";
 import { useProductList } from "../products/queries";
@@ -9,7 +9,11 @@ export type CartItem = {
   quantity: number;
 };
 
-export type CartStoreData = { cart: Record<string, CartItem>; opened: boolean };
+export type CartStoreData = {
+  cart: Record<string, CartItem>;
+  opened: boolean;
+  hydrated: boolean;
+};
 
 const IS_SERVER = typeof window === "undefined";
 const {
@@ -19,26 +23,38 @@ const {
 } = createStore<CartStoreData>({
   cart: {},
   opened: false,
+  hydrated: false,
 });
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const products = useProductList();
-  const [cartItems, setCartItems] = useLocalStorageState<CartStoreData["cart"]>(
-    "cart-items",
-    {},
+  const productIds = useMemo(
+    () => new Set(products.map((p) => p.id)),
+    [products],
   );
+  const [cartItemsStorage, setCartItemsStorage] = useLocalStorageState<
+    CartStoreData["cart"]
+  >("cart-items", {});
 
   const onSet = useCallback(
     (value: CartStoreData) => {
-      setCartItems(value.cart);
-      return value;
+      const newValue = {
+        ...value,
+        cart: ensureOnlyValidCartItems(value.cart, productIds),
+      };
+      setCartItemsStorage(newValue.cart);
+      return newValue;
     },
-    [setCartItems],
+    [productIds, setCartItemsStorage],
   );
 
   return (
     <InternalCartProvider
       onSet={onSet}
-      initialValue={{ cart: cartItems, opened: false }}
+      initialValue={{
+        cart: ensureOnlyValidCartItems(cartItemsStorage, productIds),
+        opened: false,
+        hydrated: false,
+      }}
     >
       <LoadCart>{children}</LoadCart>
     </InternalCartProvider>
@@ -52,7 +68,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 function LoadCart({ children }: { children: React.ReactNode }) {
   const [clientHydrationDone, setClientHydrationDone] = useState(false);
   const itemsHaveBeenSet = useRef(false);
-  const doubleUseEffectPassResolved = useRef(false);
+  const doubleUseEffectPassResolved = useRef(
+    process.env.NODE_ENV === "production",
+  );
   const [cartItems] = useLocalStorageState<CartStoreData["cart"]>(
     "cart-items",
     {},
@@ -67,7 +85,7 @@ function LoadCart({ children }: { children: React.ReactNode }) {
 
     if (clientHydrationDone && !itemsHaveBeenSet.current) {
       itemsHaveBeenSet.current = true;
-      setCart({ cart: cartItems });
+      setCart({ cart: cartItems, hydrated: true });
     }
   }, [cartItems, setCart, clientHydrationDone]);
 
@@ -91,5 +109,14 @@ export function cartQuantity(state: CartStoreData) {
   return Object.values(state.cart).reduce(
     (acc, item) => acc + item.quantity,
     0,
+  );
+}
+
+function ensureOnlyValidCartItems(
+  cart: CartStoreData["cart"],
+  productIds: Set<string>,
+) {
+  return Object.fromEntries(
+    Object.entries(cart).filter(([id]) => productIds.has(id)),
   );
 }

@@ -43,7 +43,7 @@ export function useSetCartItemQuantity() {
   const store = useCartStoreApi();
 
   return useCallback(
-    (id: number, quantity: number) => {
+    (id: string, quantity: number) => {
       const storeValue = store.get();
       const currentItem = storeValue.cart[id] ?? { quantity: 0 };
       const updatedItem = {
@@ -78,4 +78,12 @@ export function useRemoveCartItem() {
     },
     [store],
   );
+}
+
+export function useEmptyCart() {
+  const store = useCartStoreApi();
+
+  return useCallback(() => {
+    store.set({ cart: {} });
+  }, [store]);
 }
