@@ -7,6 +7,7 @@ import { NavMenu } from "./_components/nav-menu";
 import { CartIcon } from "./_components/cart-icon";
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState } from "react";
+import Link from "next/link";
 
 export const ShopHeader = () => {
   const path = usePathname();
@@ -48,7 +49,7 @@ export const ShopHeader = () => {
     >
       <NavMenu contrast={contrast} />
       {!isHome && (
-        <div className="relative -z-10 h-full flex-1 px-2">
+        <Link href="/" prefetch className="relative -z-10 h-full flex-1 px-2">
           <Image
             src="/images/sappho black logo cropped.png"
             alt="Sappho logo"
@@ -56,7 +57,7 @@ export const ShopHeader = () => {
             height={100}
             className="absolute left-[50%] top-[50%] mx-auto -translate-x-1/2 -translate-y-1/2"
           />
-        </div>
+        </Link>
       )}
       <button
         className={twMerge(
