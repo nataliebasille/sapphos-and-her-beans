@@ -1,20 +1,29 @@
 import { shippo } from "@shippo";
 import { stripe } from "@stripe";
+import { headers } from "next/headers";
 import { type Stripe } from "stripe";
 
 const stripeEndpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
 export async function POST(request: Request) {
+  if (!stripeEndpointSecret) {
+    return new Response("Stripe endpoint secret not set", {
+      status: 500,
+    });
+  }
+
   const body = await request.text();
-  const sig = request.headers.get("stripe-signature");
+  const sig = headers().get("stripe-signature");
+
+  if (!sig) {
+    return new Response("No signature header", {
+      status: 400,
+    });
+  }
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig ?? "",
-      stripeEndpointSecret,
-    );
+    event = stripe.webhooks.constructEvent(body, sig, stripeEndpointSecret);
   } catch (err: unknown) {
     return new Response(
       `Webhook Error: ${(err as { message: string }).message}`,
