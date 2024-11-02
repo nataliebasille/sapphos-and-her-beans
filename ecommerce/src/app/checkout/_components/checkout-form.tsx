@@ -27,7 +27,7 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const itemsFetcherRef = useRef(itemsFetcher);
   const [items, setItems] = useState(
-    typeof itemsFetcher === "function" ? "loading" : itemsFetcher,
+    typeof itemsFetcher === "function" ? ("loading" as const) : itemsFetcher,
   );
 
   const stripePromise = loadStripe(
@@ -67,9 +67,6 @@ export function CheckoutForm({
         stripe={stripePromise}
         options={{
           fetchClientSecret: async () => {
-            const items = await (typeof itemsFetcher === "function" ?
-              itemsFetcher()
-            : Promise.resolve(itemsFetcher));
             const response = await initiateCheckoutSession({
               items,
             });
