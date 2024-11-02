@@ -3,14 +3,13 @@
 import {
   EmbeddedCheckout,
   EmbeddedCheckoutProvider,
-  useStripe,
 } from "@stripe/react-stripe-js";
-import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js";
-import { initiateCheckoutSession } from "../_actions/initiate_checkout_session";
-import { updateCheckoutSessionShipping } from "../_actions/update_checkout_session_shipping";
+import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useRef, useState } from "react";
 import { ShoppingBagEmpty } from "~/app/_components/shopping-bag-empty";
 import { Spinner } from "~/app/_components/spinner";
+import { initiateCheckoutSession } from "../_actions/initiate_checkout_session";
+import { updateCheckoutSessionShipping } from "../_actions/update_checkout_session_shipping";
 
 type CheckoutItem = { id: string; quantity: number };
 
