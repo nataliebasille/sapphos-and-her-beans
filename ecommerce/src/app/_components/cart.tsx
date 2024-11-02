@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { memo, useCallback, useMemo, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import {
@@ -20,6 +19,7 @@ import { QuantitySelector } from "./quantity-selector";
 import { CartIcon } from "./cart-icon";
 import { useOnClickOutside } from "../_hooks/useOnClickOutside";
 import { ArrowRightIcon } from "./icons/arrow-right";
+import { ShoppingBagEmpty } from "./shopping-bag-empty";
 
 export const Cart = () => {
   const closeCart = useCloseCart();
@@ -55,35 +55,13 @@ export const Cart = () => {
           </div>
 
           {quantity === 0 ?
-            <CartEmpty />
+            <ShoppingBagEmpty />
           : <CartItemList />}
         </div>
       </div>
     </>
   );
 };
-
-const CartEmpty = memo(function CartEmpty() {
-  const closeCart = useCloseCart();
-  const router = useRouter();
-  const handleExplore = useCallback(() => {
-    closeCart();
-    router.push("/shop");
-  }, [router, closeCart]);
-  return (
-    <div className="flex flex-col items-center justify-center p-5">
-      <div className="text-center text-xl opacity-75">
-        Your shopping bag is empty
-      </div>
-      <button
-        className="btn-primary btn btn-ghost btn-lg mt-5 uppercase"
-        onClick={handleExplore}
-      >
-        Explore our coffee
-      </button>
-    </div>
-  );
-});
 
 const CartItemList = memo(function CartItemList() {
   const cart = useCartSelector((s) => s.cart);
