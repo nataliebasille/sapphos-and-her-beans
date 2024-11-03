@@ -24,7 +24,14 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <head>
-        <Script type="text/javascript" src="/heap_load.js"></Script>
+        <Script
+          type="text/javascript"
+          src={
+            process.env.NODE_ENV === "production" ?
+              "/head_load_prod.js"
+            : "/head_load_dev.js"
+          }
+        ></Script>
       </head>
       <body>
         <ProductsProvider initialValue={{ products }}>
