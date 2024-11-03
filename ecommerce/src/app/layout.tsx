@@ -22,6 +22,9 @@ export default async function RootLayout({
   const products = await getProducts();
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
+      <head>
+        <script type="text/javascript" src="/heap_load.js"></script>
+      </head>
       <body>
         <ProductsProvider initialValue={{ products }}>
           <CartProvider>
