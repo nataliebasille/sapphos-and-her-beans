@@ -8,6 +8,7 @@ import { CartProvider } from "./_stores/cart/cart-provider";
 import { Cart } from "./_components/cart";
 import { ShopHeader } from "./shop-header";
 import { ShopPageContainer } from "./shop-page-container";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Sappho and her beans - Coffee Roasters",
@@ -23,7 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <head>
-        <script type="text/javascript" src="/heap_load.js"></script>
+        <Script type="text/javascript" src="/heap_load.js"></Script>
       </head>
       <body>
         <ProductsProvider initialValue={{ products }}>
