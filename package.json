@@ -7,6 +7,7 @@
     "test": "jest",
     "dev:admin": "cd admin && npm run dev",
     "dev:ecommerce": "cd ecommerce && npm run dev",
+    "dev:labels": "cd labels && npm run dev",
     "test:admin": "cd admin && jest --config ../jest.config.ts",
     "db:init": "cd db && ./start-database.sh",
     "db:push": "cd db && drizzle-kit push",
