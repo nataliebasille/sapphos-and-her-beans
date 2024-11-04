@@ -1,4 +1,5 @@
 import { twMerge } from "tailwind-merge";
+import type { JSX } from "react";
 type HeadingProps = {
   children: React.ReactNode;
   level: 1 | 2 | 3 | 4 | 5 | 6;

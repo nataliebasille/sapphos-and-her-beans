@@ -69,7 +69,7 @@ function LoadCart({ children }: { children: React.ReactNode }) {
   const [clientHydrationDone, setClientHydrationDone] = useState(false);
   const itemsHaveBeenSet = useRef(false);
   const doubleUseEffectPassResolved = useRef(
-    process.env.NODE_ENV === "production",
+    true, //process.env.NODE_ENV === "production",
   );
   const [cartItems] = useLocalStorageState<CartStoreData["cart"]>(
     "cart-items",

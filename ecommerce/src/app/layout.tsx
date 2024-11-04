@@ -27,7 +27,7 @@ export default async function RootLayout({
         <Script
           type="text/javascript"
           src={
-            process.env.NODE_ENV === "production" ?
+            process.env.DEPLOYMENT_TYPE === "PRODUCTION" ?
               "/heap_load_prod.js"
             : "/heap_load_dev.js"
           }
