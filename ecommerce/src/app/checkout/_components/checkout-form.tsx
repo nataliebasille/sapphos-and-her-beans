@@ -38,12 +38,12 @@ export function CheckoutForm({
     },
   );
 
-  const handleOnComplete = useCallback(async () => {
+  const handleOnComplete = useCallback(() => {
     if (sessionIdRef.current) {
-      identifyUserAfterCheckout({
+      void identifyUserAfterCheckout({
         checkoutSessionId: sessionIdRef.current!,
       }).then((result) => {
-        if (result.type === "ok" && result.value) {
+        if (result.value) {
           window.heap.identify(result.value);
         }
       });

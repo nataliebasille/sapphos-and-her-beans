@@ -9,8 +9,6 @@ export const identifyUserAfterCheckout = initActionFactory().action(
       input.checkoutSessionId,
     );
 
-    console.log("response", response);
-
     return response.customer_details?.email;
   },
 );

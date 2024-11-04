@@ -43,8 +43,6 @@ export const initiateCheckoutSession = initActionFactory().action(
       },
     });
 
-    console.log("stripe response", response);
-
     return response.client_secret;
   },
 );
