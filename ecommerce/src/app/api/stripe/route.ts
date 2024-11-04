@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.text();
-  const sig = headers().get("stripe-signature");
+  const sig = (await headers()).get("stripe-signature");
 
   if (!sig) {
     return new Response("No signature header", {

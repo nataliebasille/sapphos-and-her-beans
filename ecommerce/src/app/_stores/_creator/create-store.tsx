@@ -33,7 +33,7 @@ export const createStore = <T,>(
       ...additionalOptions
     }: StoreProviderProps<T>) => {
       const valueRef = useRef<T>(initialValueProp ?? initialValue);
-      const subscriptionHandlers = useRef<Set<(value: T) => void>>();
+      const subscriptionHandlers = useRef<Set<(value: T) => void>>(undefined);
 
       if (!subscriptionHandlers.current) {
         subscriptionHandlers.current = new Set();
