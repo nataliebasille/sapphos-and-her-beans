@@ -41,7 +41,7 @@ export function CheckoutForm({
   const handleOnComplete = useCallback(() => {
     if (sessionIdRef.current) {
       void identifyUserAfterCheckout({
-        checkoutSessionId: sessionIdRef.current!,
+        checkoutSessionId: sessionIdRef.current,
       }).then((result) => {
         if (result.value) {
           window.heap.identify(result.value);
