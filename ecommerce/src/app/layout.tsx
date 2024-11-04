@@ -28,8 +28,8 @@ export default async function RootLayout({
           type="text/javascript"
           src={
             process.env.NODE_ENV === "production" ?
-              "/head_load_prod.js"
-            : "/head_load_dev.js"
+              "/heap_load_prod.js"
+            : "/heap_load_dev.js"
           }
         ></Script>
       </head>

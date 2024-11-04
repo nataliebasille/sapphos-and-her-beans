@@ -30,6 +30,7 @@
       "@db/*": ["./db/*"],
       "@stripe": ["./lib/stripe"],
       "@shippo": ["./lib/shippo"],
+      "@custom-types/*": ["./lib/typings/*"]
     }
   },
   "include": [
@@ -39,7 +40,10 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
-, "../db/index.ts", "../db/schema.ts"  ],
+    ".next/types/**/*.ts",
+    "../db/index.ts",
+    "../db/schema.ts",
+    "./lib/typings/*.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
