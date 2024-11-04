@@ -5,11 +5,12 @@ import {
   EmbeddedCheckoutProvider,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ShoppingBagEmpty } from "~/app/_components/shopping-bag-empty";
 import { Spinner } from "~/app/_components/spinner";
 import { initiateCheckoutSession } from "../_actions/initiate_checkout_session";
 import { updateCheckoutSessionShipping } from "../_actions/update_checkout_session_shipping";
+import { identifyUserAfterCheckout } from "../_actions/identify_user_after_checkout";
 
 type CheckoutItem = { id: string; quantity: number };
 
@@ -24,6 +25,7 @@ export function CheckoutForm({
   className,
   onComplete,
 }: CheckoutFormProps) {
+  const sessionIdRef = useRef<string | null>(null);
   const itemsFetcherRef = useRef(itemsFetcher);
   const [items, setItems] = useState(
     typeof itemsFetcher === "function" ? ("loading" as const) : itemsFetcher,
@@ -35,6 +37,20 @@ export function CheckoutForm({
       betas: ["embedded_checkout_byol_beta_1"],
     },
   );
+
+  const handleOnComplete = useCallback(() => {
+    if (sessionIdRef.current) {
+      void identifyUserAfterCheckout({
+        checkoutSessionId: sessionIdRef.current,
+      }).then((result) => {
+        if (result.value) {
+          window.heap.identify(result.value);
+        }
+      });
+    }
+
+    onComplete?.();
+  }, [onComplete]);
 
   useEffect(() => {
     let isMounted = true;
@@ -73,8 +89,8 @@ export function CheckoutForm({
             return response.value ?? "";
           },
           onShippingDetailsChange: async (details) => {
+            sessionIdRef.current = details.checkoutSessionId;
             const result = await updateCheckoutSessionShipping(details);
-
             return result.type === "ok" ?
                 result.value
               : {
@@ -82,7 +98,7 @@ export function CheckoutForm({
                   errorMessage: "Something went wrong. Please try again.",
                 };
           },
-          onComplete,
+          onComplete: handleOnComplete,
         }}
       >
         <EmbeddedCheckout className={className} />

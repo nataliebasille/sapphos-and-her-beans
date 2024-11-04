@@ -43,7 +43,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
-, "src/app/_stores/cart-provider.tsz"  ],
+    ".next/types/**/*.ts",
+    "../lib/typings/*.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
