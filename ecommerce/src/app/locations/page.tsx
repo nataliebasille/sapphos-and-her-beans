@@ -164,7 +164,7 @@ function Location({
           href={`https://maps.google.com/?q=${mapsQuery ?? `${name} ${address}`}`}
           target="_blank"
         >
-          <Heading level={5} className="whitespace-pre-line">
+          <Heading level={5} className="mt-2 whitespace-pre-line">
             {address}
           </Heading>
         </a>
