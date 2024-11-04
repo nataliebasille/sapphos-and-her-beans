@@ -96,7 +96,7 @@ export default function LocationsPage() {
 
             {locations.map((location, locationIndex) => (
               <Location
-                key={index}
+                key={locationIndex}
                 imageSrc={location.imageSrc}
                 name={location.name}
                 address={location.address}
