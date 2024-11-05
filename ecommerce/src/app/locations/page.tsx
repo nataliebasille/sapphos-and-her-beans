@@ -13,6 +13,8 @@ const cities = [
         imageSrc: "/images/northside market place.jpg",
         website: "https://www.northsidemarketplace.com/",
         mapsQuery: "northside market place akron oh",
+        description:
+          "The location that started it all - our home base! Here you'll find our entire seasonally rotating catalog along with select coffees presented in a variety of ways from drip to lattes to even in cocktails with our partner NOMZ in the main food court.",
       },
       {
         name: "Little Blue Pastries & Cafe",
@@ -27,11 +29,13 @@ const cities = [
     city: "Cleveland, OH",
     locations: [
       {
-        name: "The Shops - Hanger 3 - City Goods",
+        name: "The Westside Cleveland Outpost",
         address: "1442 West. 28th St., Hanger 3, Cleveland, OH 44113",
         imageSrc: "/images/funkiniland.jpeg",
         mapsQuery: "City Goods Hanger 3 1442 West. 28th St.",
         website: "https://red-burgundy-m29y.squarespace.com/the-shops",
+        description:
+          "Seasonal rotation of our entire whole bean catalog. Grinder on site if needed.",
       },
       {
         name: "The Grocery - City Goods",
@@ -111,13 +115,15 @@ export default function LocationsPage() {
               </Heading>
             </div>
 
-            {locations.map((location, locationIndex) => (
-              <Location
-                key={locationIndex}
-                {...location}
-                orientation={locationIndex % 2 === 0 ? "left" : "right"}
-              />
-            ))}
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-0">
+              {locations.map((location, locationIndex) => (
+                <Location
+                  key={locationIndex}
+                  {...location}
+                  index={locationIndex}
+                />
+              ))}
+            </div>
           </Fragment>
         ))}
     </>
@@ -125,7 +131,7 @@ export default function LocationsPage() {
 }
 
 type LocationProps = (typeof cities)[number]["locations"][number] & {
-  orientation?: "left" | "right";
+  index: number;
 };
 
 function Location({
@@ -134,13 +140,21 @@ function Location({
   address,
   website,
   mapsQuery,
-  orientation = "left",
+  description,
+  index,
 }: LocationProps) {
+  const orientation = index % 2 === 1 ? "right" : "left";
   return (
-    <div className="w-full md:flex">
+    <div className="grid grid-cols-subgrid md:col-span-2">
+      <a className="px-2 text-center md:hidden" href={website} target="_blank">
+        <Heading level={4} className="mb-1 font-bold md:mb-4 md:font-normal">
+          {name}
+        </Heading>
+      </a>
+
       <div
         className={twMerge(
-          "relative aspect-square h-64 w-full md:h-[450px] md:w-1/2",
+          "relative aspect-square h-64 w-full md:h-[450px]",
           orientation === "right" && "md:order-last",
         )}
       >
@@ -148,7 +162,35 @@ function Location({
           <Image src={imageSrc} alt={name} className="object-cover" fill />
         </a>
       </div>
-      <div
+
+      <div className="grid grid-cols-subgrid grid-rows-[max-content_max-content_max-content] content-center px-7 md:px-10">
+        <a className="hidden md:block" href={website} target="_blank">
+          <Heading level={2} className="mb-0 md:mb-4">
+            {name}
+          </Heading>
+        </a>
+
+        <a
+          href={`https://maps.google.com/?q=${mapsQuery ?? `${name} ${address}`}`}
+          target="_blank"
+        >
+          <Heading level={5} className="mt-2 whitespace-pre-line">
+            {address}
+          </Heading>
+        </a>
+
+        {description && (
+          <p className="mt-1 whitespace-pre-line text-justify leading-7 tracking-wider md:mt-4">
+            {description}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+{
+  /* <div
         className={twMerge(
           "w-full self-center px-4 pb-10 pt-6 md:w-1/2 md:px-14 md:pb-0 md:pt-0",
           orientation === "right" && "md:order-first",
@@ -168,7 +210,11 @@ function Location({
             {address}
           </Heading>
         </a>
-      </div>
-    </div>
-  );
+
+        {description && (
+          <p className="mt-4 whitespace-pre-line text-justify leading-7 tracking-wider">
+            {description}
+          </p>
+        )}
+      </div> */
 }
