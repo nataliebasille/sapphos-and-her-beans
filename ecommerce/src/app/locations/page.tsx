@@ -13,8 +13,8 @@ const cities = [
         imageSrc: "/images/northside market place.jpg",
         website: "https://www.northsidemarketplace.com/",
         mapsQuery: "northside market place akron oh",
-        description:
-          "The location that started it all - our home base! Here you'll find our entire seasonally rotating catalog along with select coffees presented in a variety of ways from drip to lattes to even in cocktails with our partner NOMZ in the main food court.",
+        description: `The location that started it all - our home base! 
+          Here you'll find our entire seasonally rotating catalog. We are proud to be the featured coffee partner of NOMZ.`,
       },
       {
         name: "Little Blue Pastries & Cafe",
@@ -22,6 +22,7 @@ const cities = [
         imageSrc: "/images/little blue.jpg",
         website:
           "https://www.facebook.com/p/little-blue-pastries-cafe-100082812447513/",
+        description: `Here you'll find our seasonally rotating catalog. Little Blue proudly serves our coffee on drip along side their wonderful breakfast and lunch options.`,
       },
     ],
   },
@@ -35,7 +36,7 @@ const cities = [
         mapsQuery: "City Goods Hanger 3 1442 West. 28th St.",
         website: "https://red-burgundy-m29y.squarespace.com/the-shops",
         description:
-          "Seasonal rotation of our entire whole bean catalog. Grinder on site if needed.",
+          "Here you'll find our seasonally rotating catalog. Grinder on site if needed.",
       },
       {
         name: "The Grocery - City Goods",
@@ -43,6 +44,7 @@ const cities = [
         imageSrc: "/images/the grocery.png",
         mapsQuery: "The Grocery 1442 West. 28th St.",
         website: "https://red-burgundy-m29y.squarespace.com/the-grocery",
+        description: `Here you'll find our seasonally rotating catalog. Along side other phenomenal local grocery brands`,
       },
       {
         name: "The Lounge - City Goods",
