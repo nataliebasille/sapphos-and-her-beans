@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getProducts } from "~/server/actions/products";
+import { getProducts } from "~/server/products/get_products";
 import { Heading } from "../_components/heading";
 import { ProductCard } from "../_components/product-card";
 import Link from "next/link";

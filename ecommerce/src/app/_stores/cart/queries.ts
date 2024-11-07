@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useProduct, useProductsSelector } from "../products";
 import { useCartSelector, type CartStoreData } from "./cart-provider";
-import { type Product } from "~/server/actions/products";
+import { type Product } from "~/server/products/get_products";
 import { usePathname } from "next/navigation";
 
 export function useCartItem(id: string) {

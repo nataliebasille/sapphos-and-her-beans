@@ -1,11 +1,12 @@
 "use server";
 
+import "server-only";
 import { initActionFactory } from "@action-rpc";
 import { stripe, type Stripe } from "@stripe";
 import { shippo } from "@shippo";
 import { type StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
 import { type ParcelCreateRequest, type AddressCreateRequest } from "shippo";
-import { getProducts, type Product } from "~/server/actions/products";
+import { getProducts, type Product } from "~/server/products/get_products";
 import * as Sentry from "@sentry/nextjs";
 
 const addressFrom = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { type Product } from "~/server/actions/products";
+import { type Product } from "~/server/products/get_products";
 import { createStore } from "../_creator/create-store";
 
 export type ProductsStoreData = {

@@ -1,5 +1,5 @@
 "use server";
-
+import "server-only";
 import { initActionFactory } from "@action-rpc";
 import { stripe } from "@stripe";
 

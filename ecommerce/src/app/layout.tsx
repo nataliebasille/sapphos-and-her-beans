@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { getProducts } from "~/server/actions/products";
+import { getProducts } from "~/server/products/get_products";
 import { ProductsProvider } from "./_stores/products/products-provider";
 import { CartProvider } from "./_stores/cart/cart-provider";
 import { Cart } from "./_components/cart";

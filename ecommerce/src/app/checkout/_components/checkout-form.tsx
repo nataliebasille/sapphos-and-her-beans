@@ -8,9 +8,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ShoppingBagEmpty } from "~/app/_components/shopping-bag-empty";
 import { Spinner } from "~/app/_components/spinner";
-import { initiateCheckoutSession } from "../_actions/initiate_checkout_session";
-import { updateCheckoutSessionShipping } from "../_actions/update_checkout_session_shipping";
-import { identifyUserAfterCheckout } from "../_actions/identify_user_after_checkout";
+import { initiateCheckoutSession } from "../../../server/checkout/initiate_checkout_session";
+import { updateCheckoutSessionShipping } from "../../../server/checkout/update_checkout_session_shipping";
+import { identifyUserAfterCheckout } from "../../../server/checkout/identify_user_after_checkout";
 
 type CheckoutItem = { id: string; quantity: number };
 
