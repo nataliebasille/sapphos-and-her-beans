@@ -105,7 +105,7 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
           shipping_rate_data: {
             type: "fixed_amount",
             fixed_amount: {
-              amount: parseFloat(uspsShippingRate.amount) * 100,
+              amount: Math.floor(parseFloat(uspsShippingRate.amount) * 100),
               currency: uspsShippingRate?.currency,
             },
             display_name: uspsShippingRate.servicelevel.name ?? "Shipping",
