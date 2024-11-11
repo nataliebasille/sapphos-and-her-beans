@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
 import { initActionFactory } from "@action-rpc";
-import { stripe } from "@stripe";
+import { stripe } from "~/server/+utils/stripe";
 
 export const identifyUserAfterCheckout = initActionFactory().action(
   async (input: { checkoutSessionId: string }) => {

@@ -1,5 +1,5 @@
 import "server-only";
-import { stripe } from "@stripe";
+import { stripe } from "~/server/+utils/stripe";
 import { unstable_cache } from "next/cache";
 
 export type Product = {

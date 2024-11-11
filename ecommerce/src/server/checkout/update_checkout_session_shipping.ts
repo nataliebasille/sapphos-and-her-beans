@@ -2,7 +2,7 @@
 
 import "server-only";
 import { initActionFactory } from "@action-rpc";
-import { stripe, type Stripe } from "@stripe";
+import { stripe, type Stripe } from "~/server/+utils/stripe";
 import { shippo } from "@shippo";
 import { type StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
 import { type ParcelCreateRequest, type AddressCreateRequest } from "shippo";

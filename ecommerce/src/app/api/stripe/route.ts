@@ -1,5 +1,5 @@
 import { shippo } from "@shippo";
-import { stripe } from "@stripe";
+import { stripe } from "~/server/+utils/stripe";
 import { headers } from "next/headers";
 import { type Stripe } from "stripe";
 
