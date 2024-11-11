@@ -131,3 +131,5 @@ dist
 
 # sentry
 .env.sentry-build-plugin
+
+.DS_Store
