@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/sappho-and-her-beans/sappho#readme",
   "workspaces": [
-    "admin",
+    "apps/admin",
     "apps/ecommerce"
   ],
   "dependencies": {

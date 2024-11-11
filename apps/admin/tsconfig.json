@@ -1,12 +1,12 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     /* Path Aliases */
     "noErrorTruncation": true,
     "baseUrl": ".",
     "paths": {
-      "@db": ["../db"],
-      "@db/*": ["../db/*"],
+      "@db": ["../../db"],
+      "@db/*": ["../../db/*"],
       "@env": ["src/env.mjs"],
       "~/*": ["./src/*"]
     }
