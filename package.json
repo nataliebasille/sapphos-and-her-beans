@@ -15,7 +15,7 @@
     "db:studio": "cd db && drizzle-kit studio",
     "db:generate:migration": "cd db && drizzle-kit generate",
     "db:migrate": "NODE_ENV=production tsx ./db/migrate/index.ts",
-    "postinstall": "npm install stripe@16.12.0-beta.1 --workspace ecommerce"
+    "postinstall": "npm install stripe@16.12.0-beta.1 --workspace apps/ecommerce"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/sappho-and-her-beans/sappho#readme",
   "workspaces": [
     "admin",
-    "ecommerce"
+    "apps/ecommerce"
   ],
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",

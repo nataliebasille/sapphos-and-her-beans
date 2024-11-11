@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     /* Base Options: */
     "esModuleInterop": true,
@@ -27,13 +27,13 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@db": ["../db"],
-      "@db/*": ["../db/*"],
+      "@db": ["../../db"],
+      "@db/*": ["../../db/*"],
       "@env": ["src/env.mjs"],
-      "@action-rpc": ["../lib/action-rpc"],
+      "@action-rpc": ["../../lib/action-rpc"],
       "~/*": ["./src/*"],
-      "@stripe": ["../lib/stripe"],
-      "@shippo": ["../lib/shippo"]
+      "@stripe": ["../../lib/stripe"],
+      "@shippo": ["../../lib/shippo"]
     }
   },
   "include": [
@@ -44,7 +44,7 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts",
-    "../lib/typings/*.d.ts"
+    "../../lib/typings/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }
