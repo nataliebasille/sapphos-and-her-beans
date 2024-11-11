@@ -78,7 +78,6 @@ export function CheckoutForm({
         <Spinner />
       </div>
     : items.length > 0 ?
-      // @ts-expect-error EmbeddedCheckoutProvider has incorrect types in react 19
       <EmbeddedCheckoutProvider
         stripe={stripePromise}
         options={{
