@@ -15,6 +15,7 @@ export type Product = {
   lot?: string;
   story?: string;
   featured?: boolean;
+  isDecaf: boolean;
 };
 
 export const getProducts = unstable_cache(
@@ -41,6 +42,7 @@ export const getProducts = unstable_cache(
           lot: p.metadata.lot,
           story: p.metadata.story,
           featured: p.metadata.featured === "true",
+          isDecaf: p.metadata.decaf === "true",
         }) satisfies Product,
     );
   },
