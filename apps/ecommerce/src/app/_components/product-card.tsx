@@ -17,6 +17,7 @@ export const ProductCard = ({
   processing,
   country,
   image,
+  isDecaf,
 }: Product) => {
   const addToCart = useAddToCart();
   const [added, setAdded] = useState(false);
@@ -66,6 +67,12 @@ export const ProductCard = ({
               {tastingNotes}
             </div>
           </div>
+
+          {isDecaf && (
+            <div className="absolute right-8 top-6 rounded-full border-[1px] border-surface-500 bg-primary-800/60 px-6 py-2 text-sm font-bold uppercase text-primary-contrast-800">
+              decaf
+            </div>
+          )}
 
           <button
             className={twMerge(
