@@ -18,6 +18,11 @@ const baseConfig = {
         protocol: "https",
         hostname: 'utfs.io',
         pathname: '/f/**'
+      },
+      {
+        protocol: "https",
+        hostname: 'utfs.io',
+        pathname: '/a/ns7k7p5vvb/**'
       }
     ]
   }
