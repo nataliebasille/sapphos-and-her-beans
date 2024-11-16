@@ -28,6 +28,7 @@ export const initiateCheckoutSession = initActionFactory().action(
     const response = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
       mode: "payment",
+      allow_promotion_codes: true,
       line_items: input.items.map((item) => ({
         price:
           (activeProducts.get(item.id)!.default_price as string) ?? undefined,
