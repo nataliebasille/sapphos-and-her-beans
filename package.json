@@ -9,7 +9,7 @@
     "dev:ecommerce": "cd apps/ecommerce && npm run dev",
     "dev:labels": "cd apps/labels && npm run dev",
     "test:admin": "cd apps/admin && jest --config ../jest.config.ts",
-    "db:init": "cd db && ./start-database.sh",
+    "db:init": "npx cross-env ./db/start-database.sh",
     "db:push": "cd db && drizzle-kit push",
     "db:seed": "tsx ./db/migrate/seed.ts",
     "db:studio": "cd db && drizzle-kit studio",
