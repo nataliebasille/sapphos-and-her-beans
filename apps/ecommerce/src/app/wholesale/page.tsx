@@ -1,11 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { Heading } from "../_components/heading";
-import { useProductList } from "../_stores/products";
-import { ProductCard } from "../_components/product-card";
 
 export default function WholesalesPage() {
-  const products = useProductList();
-
   return (
     <div className="px-4 md:px-10">
       <div
@@ -19,6 +15,10 @@ export default function WholesalesPage() {
         >
           Wholesale
         </Heading>
+      </div>
+
+      <div className="text-4xl text-slate-600/80 uppercase tracking-wide text-center">
+        Coming soon
       </div>
 
       {/* <div className="grid gap-4 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
