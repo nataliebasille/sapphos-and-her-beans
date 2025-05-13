@@ -82,4 +82,19 @@ export const coffeeDescriptions = {
     size: '12',
     traceable: '329 Members',
   },
+
+  Totutla: {
+    country: 'Mexico',
+    color: 'cyan',
+    farm: 'Red de Totutla',
+    tastingNotes:
+      'Almond, chocolate covered white cherry, chardonnay, raisin, lemon',
+    processing: 'Washed',
+    lot: 'Totutla Community',
+    region: 'Totula, Puebla',
+    varietals: 'Typica, Bourbon, Caturra',
+    altitude: '1200 - 1450',
+    size: '10',
+    traceable: '11 Families',
+  },
 };
