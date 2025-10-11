@@ -8,7 +8,6 @@ import { useProductList } from "../_stores/products";
 export default function ShopPage() {
   const products = useProductList();
 
-  console.log("products", products);
   return (
     <div className="px-4 md:px-10">
       <div

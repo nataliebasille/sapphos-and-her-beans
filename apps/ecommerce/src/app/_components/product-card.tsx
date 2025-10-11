@@ -11,6 +11,7 @@ import {
   type LegacyProduct,
   type Product,
 } from "~/app/_stores/products";
+import { BrandingStylizedFont } from "../fonts";
 
 const ProductCard_OLD = ({
   id,
@@ -264,12 +265,12 @@ function WebsiteLabel(coffee: Product) {
       >
         {/* {"score" in coffee && (
           <div
-            style={{ fontFamily: "fantasy" }}
             className={twMerge(
               `absolute left-0 top-0 flex aspect-square w-14 flex-col items-center justify-center rounded-br-xl border-2 border-l-0 border-t-0 font-bold leading-none tracking-wider`,
               COLOR_CLASSES[coffee.color].textDarkest,
               COLOR_CLASSES[coffee.color].borderDarkest,
               COLOR_CLASSES[coffee.color].bgNormal,
+              BrandingStylizedFont.className,
             )}
           >
             <span className="text-xl tracking-widest">{coffee.score}</span>{" "}
@@ -279,12 +280,12 @@ function WebsiteLabel(coffee: Product) {
 
         {coffee.size !== "singleserve" && (
           <div
-            style={{ fontFamily: "fantasy" }}
             className={twMerge(
               `absolute left-0 top-0 flex items-center justify-center rounded-br-lg border-2 border-l-0 border-t-0 px-4 pt-1 text-2xl font-bold tracking-wider`,
               COLOR_CLASSES[coffee.color].textDarkest,
               COLOR_CLASSES[coffee.color].bgNormal,
               COLOR_CLASSES[coffee.color].borderDarkest,
+              BrandingStylizedFont.className,
             )}
           >
             <span>{coffee.size}</span>
@@ -316,15 +317,27 @@ function WebsiteLabel(coffee: Product) {
 
                 <span className="self-end">single serve coffee bag</span>
               </span>
+
+              <div
+                className={twMerge(
+                  "ml-2 self-start rounded-b-lg border-2 border-t-0 px-4 pt-1 text-2xl font-bold tracking-wider",
+                  COLOR_CLASSES[coffee.color].textDarkest,
+                  COLOR_CLASSES[coffee.color].bgNormal,
+                  COLOR_CLASSES[coffee.color].borderDarkest,
+                  BrandingStylizedFont.className,
+                )}
+              >
+                ${coffee.price}
+              </div>
             </div>
           )}
 
           <div className="flex flex-1 items-center">
             <div
-              style={{ fontFamily: "fantasy" }}
               className={twMerge(
-                "flex w-full items-center gap-4 px-2 font-bold",
+                "flex w-full items-center gap-4 px-2 font-bold tracking-widest",
                 coffee.size !== "singleserve" && "mt-[3rem]",
+                BrandingStylizedFont.className,
               )}
             >
               <div
