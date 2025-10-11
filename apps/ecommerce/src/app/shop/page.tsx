@@ -2,12 +2,13 @@
 
 import { twMerge } from "tailwind-merge";
 import { Heading } from "../_components/heading";
-import { useProductList } from "../_stores/products";
 import { ProductCard } from "../_components/product-card";
+import { useProductList } from "../_stores/products";
 
 export default function ShopPage() {
   const products = useProductList();
 
+  console.log("products", products);
   return (
     <div className="px-4 md:px-10">
       <div
@@ -24,8 +25,8 @@ export default function ShopPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
-        {products.map((product, index) => (
-          <ProductCard key={index} {...product} />
+        {products.map((product) => (
+          <ProductCard key={product.id} {...product} />
         ))}
       </div>
     </div>

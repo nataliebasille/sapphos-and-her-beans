@@ -1,14 +1,14 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
+import type { Metadata } from "next";
+import Script from "next/script";
 import { getProducts } from "~/server/products/get_products";
-import { ProductsProvider } from "./_stores/products/products-provider";
-import { CartProvider } from "./_stores/cart/cart-provider";
 import { Cart } from "./_components/cart";
+import { CartProvider } from "./_stores/cart/cart-provider";
+import { ProductsProvider } from "./_stores/products/products-provider";
 import { ShopHeader } from "./shop-header";
 import { ShopPageContainer } from "./shop-page-container";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Sappho and her beans - Coffee Roasters",

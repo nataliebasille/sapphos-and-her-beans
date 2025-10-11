@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { memo, useCallback, useMemo, useRef } from "react";
 import { twMerge } from "tailwind-merge";
+import { useOnClickOutside } from "../_hooks/useOnClickOutside";
 import {
   useCartIsDisabled,
   useCartItem,
@@ -14,11 +15,11 @@ import {
   useSetCartItemQuantity,
 } from "../_stores/cart";
 import { type CartItem, useCartSelector } from "../_stores/cart/cart-provider";
+import { isLegacyProduct } from "../_stores/products";
+import { CartIcon } from "./cart-icon";
+import { ArrowRightIcon } from "./icons/arrow-right";
 import { Close } from "./icons/close";
 import { QuantitySelector } from "./quantity-selector";
-import { CartIcon } from "./cart-icon";
-import { useOnClickOutside } from "../_hooks/useOnClickOutside";
-import { ArrowRightIcon } from "./icons/arrow-right";
 import { ShoppingBagEmpty } from "./shopping-bag-empty";
 
 export const Cart = () => {
@@ -132,19 +133,34 @@ const CartItemDisplay = memo(function CartItem({
           name={`items.${index}.quantity`}
           value={item.quantity}
         />
-        <div className="relative">
-          <Image
-            alt={item.product?.name ?? ""}
-            src={item.product?.image ?? ""}
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="flex flex-col">
+        {item.product?.image && (
+          <div className="relative">
+            <Image
+              alt={item.product?.name ?? ""}
+              src={item.product?.image ?? ""}
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
+        <div
+          className={twMerge(
+            "flex flex-col",
+            !item.product?.image && "col-span-2",
+          )}
+        >
           <div className="flex flex-col font-bold uppercase md:block md:text-2xl">
             <span>{item.product?.name}</span>
-            <span className="hidden md:inline">{" - "}</span>
-            <span className="normal-case">{item.product?.sizeOunces}oz</span>
+            {item.product && isLegacyProduct(item.product) && (
+              <>
+                <span className="hidden md:inline">{" - "}</span>
+                <span className="normal-case">
+                  {item.product &&
+                    isLegacyProduct(item.product) &&
+                    `${item.product?.sizeOunces}oz`}
+                </span>
+              </>
+            )}
           </div>
           <div className="mt-2 text-base md:text-lg">
             {item.product?.country}
@@ -162,6 +178,7 @@ const CartItemDisplay = memo(function CartItem({
             />
             <span className="ml-2 md:text-xl">x ${item.product?.price}</span>
             <button
+              type="button"
               className="btn btn-ghost btn-sm ml-auto"
               onClick={handleRemoveItem}
             >

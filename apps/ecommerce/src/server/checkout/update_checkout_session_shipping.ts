@@ -2,12 +2,21 @@
 
 import "server-only";
 import { initActionFactory } from "@action-rpc";
-import { stripe, type Stripe } from "~/server/+utils/stripe";
-import { shippo } from "@shippo";
-import { type StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
-import { type ParcelCreateRequest, type AddressCreateRequest } from "shippo";
-import { getProducts, type Product } from "~/server/products/get_products";
 import * as Sentry from "@sentry/nextjs";
+import { shippo } from "@shippo";
+import type { StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
+import type {
+  AddressCreateRequest,
+  ParcelCreateFromTemplateRequest,
+  ParcelCreateRequest,
+} from "shippo";
+import { isProduct } from "~/app/_stores/products";
+import { type Stripe, stripe } from "~/server/+utils/stripe";
+import {
+  getProducts,
+  type LegacyProduct,
+  type Product,
+} from "~/server/products/get_products";
 
 const addressFrom = {
   name: "Sappho and her beans",
@@ -15,10 +24,14 @@ const addressFrom = {
   phone: "(419) 673-5073",
   country: "US",
   state: "OH",
-  city: "Akron",
-  street1: "21 Furnace St",
-  zip: "44308",
+  city: "Cleveland",
+  street1: "2808 Church Ave",
+  zip: "44113",
 } satisfies AddressCreateRequest;
+
+const MIN_SINGLE_SERVE_FOR_INDIVIDUAL_PACKAGE = 20;
+const SINGLE_SERVE_WEIGHT_GRAMS = 14;
+const MAX_PACKAGE_WEIGHT_GRAMS = 1700;
 
 export const updateCheckoutSessionShipping = initActionFactory().action(
   async (input: StripeEmbeddedCheckoutShippingDetailsChangeEvent) => {
@@ -36,49 +49,133 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       zip: input.shippingDetails.address.postal_code ?? undefined,
     };
 
-    const packages = lineItems.reduce((resultArray, item, index) => {
-      const chunkIndex = Math.floor(
-        index / 5 /*5 is the number of items per package*/,
-      );
-
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []; // start a new chunk
-      }
-
-      resultArray[chunkIndex].push(item);
-
-      return resultArray;
-    }, [] as Stripe.LineItem[][]);
-
     const products = (await getProducts()).reduce((acc, product) => {
       acc.set(product.id, product);
       return acc;
-    }, new Map<string, Product>());
+    }, new Map<string, Product | LegacyProduct>());
+
+    const [singleServeLineItems, nonSingleServeLineItems] = lineItems.reduce(
+      (acc, item) => {
+        const product = products.get(item.price!.product as string);
+
+        if (product && isProduct(product) && product.size === "singleserve") {
+          acc[0].push(item);
+        } else {
+          const size = getSizeInGrams(product);
+
+          if (size) {
+            acc[1][size]?.push(item);
+          }
+        }
+        return acc;
+      },
+      [
+        [],
+        {
+          "250": [],
+          "100": [],
+        },
+      ] as [Stripe.LineItem[], Record<"250" | "100", Stripe.LineItem[]>],
+    );
+
+    const numberOf250g = nonSingleServeLineItems["250"].reduce(
+      (acc, item) => acc + (item?.quantity ?? 0),
+      0,
+    );
+    const numberOf100g = nonSingleServeLineItems["100"].reduce(
+      (acc, item) => acc + (item?.quantity ?? 0),
+      0,
+    );
+    const numberOfNonSingleServeItems = numberOf250g + numberOf100g;
+    const numberOfSingleServeItems = singleServeLineItems.reduce(
+      (acc, item) => acc + (item?.quantity ?? 0),
+      0,
+    );
+
+    console.log("numberOfSingleServeItems", numberOfSingleServeItems);
+    console.log("numberOfNonSingleServeItems", numberOfNonSingleServeItems);
+    console.log("numberOf250g", numberOf250g);
+    console.log("numberOf100g", numberOf100g);
+
+    const singleServePackaging =
+      // If there are enough single serve items to ship them individually,
+      // or if there are no non-single-serve items at all, ship single-serve items individually
+      (
+        singleServeLineItems.length >=
+          MIN_SINGLE_SERVE_FOR_INDIVIDUAL_PACKAGE ||
+        numberOfNonSingleServeItems === 0
+      ) ?
+        [
+          {
+            massUnit: "g",
+            weight: `${singleServeLineItems.length * SINGLE_SERVE_WEIGHT_GRAMS}`,
+            template: "USPS_SmallFlatRateEnvelope",
+          } satisfies ParcelCreateFromTemplateRequest,
+        ]
+      : [];
+
+    const numberOf250gPerPackage = Math.floor(MAX_PACKAGE_WEIGHT_GRAMS / 250);
+    const numberOf100gPerPackage = Math.floor(
+      (MAX_PACKAGE_WEIGHT_GRAMS - numberOf250gPerPackage * 250) / 100,
+    );
+
+    console.log(numberOf250gPerPackage);
+    console.log(numberOf100gPerPackage);
+
+    const packages: ParcelCreateRequest[] = [];
+
+    if (numberOfNonSingleServeItems > 0) {
+      let current250gCount = numberOf250g;
+      let current100gCount = numberOf100g;
+
+      console.log("current250gCount", current250gCount);
+      console.log("current100gCount", current100gCount);
+
+      while (current250gCount > 0 || current100gCount > 0) {
+        const numberOf250gForThisPackage = Math.min(
+          current250gCount,
+          numberOf250gPerPackage,
+        );
+        console.log("numberOf250gForThisPackage", numberOf250gForThisPackage);
+        const numberOf100gForThisPackage = Math.min(
+          current100gCount,
+          Math.floor(
+            (MAX_PACKAGE_WEIGHT_GRAMS - numberOf250gForThisPackage * 250) / 100,
+          ),
+        );
+        console.log("numberOf100gForThisPackage", numberOf100gForThisPackage);
+
+        current250gCount -= numberOf250gForThisPackage;
+        current100gCount -= numberOf100gForThisPackage;
+
+        packages.push({
+          length: "10",
+          width: "6",
+          height: "6",
+          distanceUnit: "in",
+          weight: `${numberOf250gForThisPackage * 250 + numberOf100gForThisPackage * 100}`,
+          massUnit: "g",
+        });
+      }
+    }
+
+    console.log(packages);
 
     const shippingOptions = await shippo.shipments.create({
       addressFrom,
       addressTo,
-      parcels: packages.map(
-        (items) =>
-          ({
-            length: "10",
-            width: "6",
-            height: "6",
-            distanceUnit: "in",
-            weight:
-              items.reduce((acc, item) => {
-                const product = products.get(item.price!.product as string);
-
-                return acc + parseInt(product?.sizeOunces ?? "0", 10);
-              }, 0) + "",
-            massUnit: "oz",
-          }) satisfies ParcelCreateRequest,
-      ),
+      parcels: [...singleServePackaging, ...packages],
     });
 
-    const uspsShippingRate = shippingOptions.rates.find(
-      (x) => x.provider === "USPS" && x.servicelevel.token === "usps_priority",
-    );
+    const uspsShippingRate =
+      shippingOptions.rates.find(
+        (x) =>
+          x.provider === "USPS" && x.servicelevel.token === "usps_priority",
+      ) ??
+      shippingOptions.rates.find((x) => x.attributes.includes("BESTVALUE")) ??
+      shippingOptions.rates[0];
+
+    console.log("uspsShippingRate", shippingOptions.rates);
 
     if (!uspsShippingRate) {
       Sentry.captureException(
@@ -130,3 +227,17 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
     return { type: "accept" } as const;
   },
 );
+
+function getSizeInGrams(product: Product | LegacyProduct | undefined) {
+  if (!product || !isProduct(product)) {
+    return undefined;
+  }
+
+  if (product.size === "singleserve") {
+    return undefined;
+  } else if (product.size.endsWith("g")) {
+    return `${parseInt(product.size.slice(0, -1), 10) === 100 ? 100 : 250}` as const; // get the numeric part
+  } else {
+    return "250" as const;
+  }
+}

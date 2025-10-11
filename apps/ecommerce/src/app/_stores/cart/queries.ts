@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { useProduct, useProductsSelector } from "../products";
-import { useCartSelector, type CartStoreData } from "./cart-provider";
-import { type Product } from "~/server/products/get_products";
 import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import type { Product } from "~/app/_stores/products";
+import { useProduct, useProductsSelector } from "../products";
+import { type CartStoreData, useCartSelector } from "./cart-provider";
 
 export function useCartItem(id: string) {
   const product = useProduct(id);
@@ -56,7 +56,7 @@ export function cartQuantity(state: CartStoreData) {
 
 export function cartTotal(
   { cart }: CartStoreData,
-  products: Record<string, Product>,
+  products: Record<string, Pick<Product, "price">>,
 ) {
   return Object.entries(cart).reduce(
     (acc, [productId, item]) =>

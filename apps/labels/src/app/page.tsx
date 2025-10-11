@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { PropsWithChildren } from 'react';
 import { coffeeDescriptions } from './coffee_descriptions';
 
 type Coffee = (typeof coffeeDescriptions)[keyof typeof coffeeDescriptions];
@@ -6,22 +7,17 @@ type Coffee = (typeof coffeeDescriptions)[keyof typeof coffeeDescriptions];
 export default function Home() {
   return (
     <div className='grid grid-cols-1 gap-3 justify-center items-center place-items-center h-full w-full'>
-      <Label {...coffeeDescriptions.Totutla} />
+      <WebsiteImage {...coffeeDescriptions.MexicoTotutla} />
     </div>
   );
 }
 
-{
-  /* <Label {...coffeeDescriptions.Brazil} />
-      <Label {...coffeeDescriptions.Colombia} />
-      <Label {...coffeeDescriptions.Ethiopia} />
-      <Label {...coffeeDescriptions.Mexico} />
-      <Label {...coffeeDescriptions.EthiopiaDecaf} /> */
-}
-
 const Label = (coffee: Coffee) => {
+  const isLimitedEdition: boolean =
+    'limited' in coffee && coffee.limited === true;
   return (
-    <div className='w-[4in] h-[6in] overflow-hidden flex flex-col'>
+    <div className='relative w-[4in] h-[6in] overflow-hidden flex flex-col'>
+      {isLimitedEdition && <Banner>Limited Edition</Banner>}
       <div
         className='w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150'
         style={{
@@ -32,68 +28,133 @@ const Label = (coffee: Coffee) => {
         // 5x3 inch labels
         className={`relative w-full h-3/5 border-8 border-t-0 border-${coffee.color}-900 bg-${coffee.color}-50 flex flex-col`}
       >
+        <div className='absolute flex-1 p-2 flex flex-col'>
+          <div className='relative w-[58px] h-[58px]'>
+            <Image
+              src='/site qr code.png'
+              alt='qr-code'
+              fill
+              className={`object-contain border-${coffee.color}-900 border-2`}
+            />
+          </div>
+          <span
+            className={`text-${coffee.color}-950 text-[10px] tracking-wide font-bold pl-2`}
+          >
+            FIND ME
+          </span>
+        </div>
+        {'score' in coffee && (
+          <div
+            style={{ fontFamily: 'fantasy' }}
+            className={`absolute top-0 left-1/2 leading-none  -translate-x-1/2 -translate-y-1/2 w-16 font-bold text-${coffee.color}-950 border-2 border-${coffee.color}-950 bg-${coffee.color}-200 rounded-full w-16 aspect-square flex flex-col justify-center items-center tracking-wide font-bold`}
+          >
+            <span className='text-base'>{coffee.score}</span>{' '}
+            <span className='text-[10px] tracking-widest'>pts</span>
+          </div>
+        )}
         <div
-          className={`absolute top-0 right-0 bg-${coffee.color}-900 w-[48px] h-[36px] flex justify-center items-center text-${coffee.color}-50 font-bold`}
+          style={{ fontFamily: 'fantasy' }}
+          className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-${coffee.color}-950 border-2 border-t-0 border-r-0 rounded-bl-md border-${coffee.color}-950 bg-${coffee.color}-200 font-bold pt-1`}
         >
-          {coffee.size}oz
+          {coffee.size}
         </div>
         <div className='flex flex-initial'>
-          <div className='flex-1 p-2 flex flex-col'>
-            <div className='relative w-[64px] h-[64px]'>
-              <Image
-                src='/site qr code.png'
-                alt='qr-code'
-                fill
-                className={`object-contain border-${coffee.color}-900 border-2`}
+          <div
+            style={{ fontFamily: 'fantasy' }}
+            className='w-full mt-[4.5rem] flex gap-4 px-2 items-center'
+          >
+            <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
+              <div
+                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
+              />
+              <div
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
               />
             </div>
-            <span
-              className={`text-${coffee.color}-950 text-xs tracking-wide font-bold pl-2`}
-            >
-              FIND ME
-            </span>
-          </div>
-          <div style={{ fontFamily: 'fantasy' }} className='w-3/4 ml-auto mt-8'>
-            <div
-              className={`text-4xl uppercase font-bold text-center text-${coffee.color}-950 pt-3`}
-            >
-              {coffee.country}
-            </div>
-            <div className='text-xl tracking-widest'>
+
+            <div className='flex-1'>
               <div
-                className={`relative h-[36px] font-bold flex justify-center items-end text-center bg-${coffee.color}-900 text-white rounded-l-full`}
+                className={`text-2xl max-w-[250px] uppercase font-bold text-center text-${coffee.color}-950 flex justify-center items-center `}
+              >
+                {coffee.country}
+              </div>
+              <div
+                className={`relative text-lg tracking-widest flex-initial h-[36px] font-bold flex justify-center items-end text-center text-${coffee.color}-950 -mt-3 text-nowrap`}
               >
                 {coffee.farm}
               </div>
             </div>
+
+            <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
+              <div
+                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
+              />
+              <div
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
+              />
+            </div>
           </div>
         </div>
 
-        <div className='flex-1 grid place-content-center'>
+        {isLimitedEdition && (
           <div
-            className={`italic tracking-wide mt-3 mb-2 px-2 text-center text-lg/5 font-bold text-${coffee.color}-950 flex-1`}
+            className='flex flex-initial justify-around gap-2 mx-auto text-xs items-end'
+            style={{ fontFamily: 'fantasy' }}
           >
-            {coffee.tastingNotes}
+            <span className='w-6 border-b-[1px] border-black relative'></span>
+            <span className='relative top-1'>of</span>
+            <span className='w-6 border-b-[1px] border-black relative'></span>
+            <span className='relative top-1'>bags</span>
+          </div>
+        )}
+
+        <div className='flex-1 grid justify-center content-start'>
+          <div
+            className={`mt-1 px-2 text-center text-${coffee.color}-950 flex-1 mb-2`}
+          >
+            {'fermentation' in coffee && (
+              <div className='uppercase tracking-widest text-sm mb-[.125rem]'>
+                CO-FERMENTED
+              </div>
+            )}
+            <span className='italic tracking-wide text-lg/5 font-bold'>
+              {' '}
+              {coffee.tastingNotes}
+            </span>
           </div>
 
           <div
-            className={`grid grid-cols-[max-content_1fr] border-y-2 border-${coffee.color}-900 mt-1 text-xs`}
+            className={`grid grid-cols-[max-content_1fr] border-y-2 border-${coffee.color}-900 text-xs`}
           >
             <div
-              className={`grid grid-cols-subgrid grid-rows-subgrid row-span-5 gap-[1px] text-${coffee.color}-50 text-right uppercase font-bold  font-mono *:flex *:justify-end *:items-center`}
+              className={`grid grid-cols-subgrid grid-rows-subgrid row-span-6 gap-[1px] text-${coffee.color}-50 text-right uppercase font-bold  font-mono *:flex *:justify-end *:items-center`}
             >
+              {'fermentation' in coffee && (
+                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
+                  Fermentation
+                </div>
+              )}
               <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Process</div>
               <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Lot</div>
               <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Region</div>
               <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
                 Varietals
               </div>
-              <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Altitude</div>
+              {'altitude' in coffee && (
+                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
+                  Altitude
+                </div>
+              )}
             </div>
 
             <div
-              className={`grid grid-cols-subgrid grid-rows-subgrid font-bold tracking-wider row-span-5 gap-[1px] text-${coffee.color}-950 bg-${coffee.color}-900`}
+              className={`grid grid-cols-subgrid grid-rows-subgrid font-bold tracking-wider row-span-6 gap-[1px] text-${coffee.color}-950 bg-${coffee.color}-900`}
             >
+              {'fermentation' in coffee && (
+                <div className={`bg-${coffee.color}-50 px-2`}>
+                  {coffee.fermentation}
+                </div>
+              )}
               <div
                 className={`bg-${coffee.color}-50 px-2 font-bold tracking-wider uppercase`}
               >
@@ -106,9 +167,11 @@ const Label = (coffee: Coffee) => {
               <div className={`bg-${coffee.color}-50 px-2`}>
                 {coffee.varietals}
               </div>
-              <div className={`bg-${coffee.color}-50 px-2`}>
-                {coffee.altitude}
-              </div>
+              {'altitude' in coffee && (
+                <div className={`bg-${coffee.color}-50 px-2`}>
+                  {coffee.altitude}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -136,125 +199,402 @@ const Label = (coffee: Coffee) => {
   );
 };
 
-const SpecialBeanBoxLabel = () => {
-  const coffee: Coffee = {
-    size: '2.5',
-    country: 'House blend',
-    farm: (
-      <>
-        <span className='text-base'>Blend of our</span>
-        <br />
-        <b>Sumatra & Ethiopia Duromina</b>
-      </>
-    ),
-    color: 'lime',
-    tastingNotes:
-      'Bright nuttiness with mellow notes of chocolate and cherries',
-  };
-
+const WebsiteImage = (coffee: Coffee) => {
+  const isLimitedEdition: boolean =
+    'limited' in coffee && coffee.limited === true;
   return (
-    <div className='w-[3in] h-[5in] overflow-hidden'>
+    <div className='p-4 border-[1px] border-black bg-white'>
+      <div className='relative w-[424px] overflow-hidden flex flex-col'>
+        <div
+          // 5x3 inch labels
+          className={`relative w-full h-3/5 border-8 rounded-xl border-${coffee.color}-900 bg-${coffee.color}-50 flex flex-col`}
+        >
+          {'score' in coffee && (
+            <div
+              style={{ fontFamily: 'fantasy' }}
+              className={`absolute top-0 left-1/2 leading-none  -translate-x-1/2 -translate-y-1/2 w-16 font-bold text-${coffee.color}-950 border-2 border-${coffee.color}-950 bg-${coffee.color}-200 rounded-full w-16 aspect-square flex flex-col justify-center items-center tracking-wide font-bold`}
+            >
+              <span className='text-base'>{coffee.score}</span>{' '}
+              <span className='text-[10px] tracking-widest'>pts</span>
+            </div>
+          )}
+          <div
+            style={{ fontFamily: 'fantasy' }}
+            className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-${coffee.color}-950 border-2 border-t-0 border-r-0 rounded-bl-md border-${coffee.color}-950 bg-${coffee.color}-200 font-bold pt-1`}
+          >
+            {coffee.size}
+          </div>
+          <div className='flex flex-initial'>
+            <div
+              style={{ fontFamily: 'fantasy' }}
+              className='w-full mt-[2rem] flex gap-4 px-2 items-center'
+            >
+              <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
+                <div
+                  className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
+                />
+                <div
+                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
+                />
+              </div>
+
+              <div className='flex-1'>
+                <div
+                  className={`text-4xl max-w-[250px] uppercase font-bold text-center text-${coffee.color}-950 flex justify-center items-center `}
+                >
+                  {coffee.country}
+                </div>
+                <div
+                  className={`relative text-2xl tracking-widest flex-initial  font-bold flex justify-center items-end text-center text-${coffee.color}-950 text-nowrap`}
+                >
+                  {coffee.farm}
+                </div>
+              </div>
+
+              <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
+                <div
+                  className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
+                />
+                <div
+                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {isLimitedEdition && (
+            <div
+              className='flex flex-initial justify-around gap-2 mx-auto text-xs items-end'
+              style={{ fontFamily: 'fantasy' }}
+            >
+              <span className='w-6 border-b-[1px] border-black relative'></span>
+              <span className='relative top-1'>of</span>
+              <span className='w-6 border-b-[1px] border-black relative'></span>
+              <span className='relative top-1'>bags</span>
+            </div>
+          )}
+
+          <div className='flex-1 grid justify-center content-start'>
+            <div
+              className={`my-3 px-2 text-center text-${coffee.color}-950 flex-1`}
+            >
+              {'fermentation' in coffee && (
+                <div className='uppercase tracking-widest text-sm mb-[.125rem]'>
+                  CO-FERMENTED
+                </div>
+              )}
+              <span className='italic tracking-wide text-2xl/5 font-bold'>
+                {' '}
+                {coffee.tastingNotes}
+              </span>
+            </div>
+
+            <div
+              className={`grid grid-cols-[max-content_1fr] border-y-2 border-${coffee.color}-900 text-base`}
+            >
+              <div
+                className={`grid grid-cols-subgrid grid-rows-subgrid row-span-5 gap-[1px] text-${coffee.color}-50 text-right uppercase font-bold  font-mono *:flex *:justify-end *:items-center`}
+              >
+                {'fermentation' in coffee && (
+                  <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
+                    Fermentation
+                  </div>
+                )}
+                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
+                  Process
+                </div>
+                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Lot</div>
+                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Region</div>
+                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
+                  Varietals
+                </div>
+                {'altitude' in coffee && (
+                  <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
+                    Altitude
+                  </div>
+                )}
+              </div>
+
+              <div
+                className={`grid grid-cols-subgrid grid-rows-subgrid font-bold tracking-wider row-span-6 gap-[1px] text-${coffee.color}-950 bg-${coffee.color}-900`}
+              >
+                {'fermentation' in coffee && (
+                  <div className={`bg-${coffee.color}-50 px-2`}>
+                    {coffee.fermentation}
+                  </div>
+                )}
+                <div
+                  className={`bg-${coffee.color}-50 px-2 font-bold tracking-wider uppercase`}
+                >
+                  {coffee.processing}
+                </div>
+                <div className={`bg-${coffee.color}-50 px-2`}>{coffee.lot}</div>
+                <div className={`bg-${coffee.color}-50 px-2`}>
+                  {coffee.region}
+                </div>
+                <div className={`bg-${coffee.color}-50 px-2`}>
+                  {coffee.varietals}
+                </div>
+                {'altitude' in coffee && (
+                  <div className={`bg-${coffee.color}-50 px-2`}>
+                    {coffee.altitude}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={`flex text-sm pb-1 px-2 mt-2 tracking-wider font-serif text-${coffee.color}-950 font-bold`}
+          >
+            <span className='italic'>
+              Traceable to <span>{coffee.traceable}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const HolidayLabel = () => {
+  return (
+    <div className='relative w-[4in] h-[6in] overflow-hidden flex flex-col'>
+      <Banner />
       <div
-        className='bg-center bg-no-repeat bg-cover w-full h-1/3 overflow-hidden scale-125'
+        className='w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150'
         style={{
           backgroundImage: `url('./sappho_logo.png')`,
         }}
       />
       <div
-        className={`relative border-8 border-${coffee.color}-900 bg-${coffee.color}-50 h-2/3 flex flex-col`}
+        // 5x3 inch labels
+        className={`relative w-full h-3/5 border-4 border-t-0 border-rose-800 bg-gradient-to-br from-green-100 to-rose-100 flex flex-col gap-5`}
       >
-        <div
-          style={{ fontFamily: 'fantasy' }}
-          className={`p-6 pb-2 text-${coffee.color}-950 text-center`}
-        >
-          <div className='text-2xl font-bold uppercase text-center'>
-            {coffee.country}
-          </div>
-
-          <div className='text-lg tracking-widest mt-2'>{coffee.farm}</div>
-        </div>
-
-        <div className='flex-initial flex gap-2 items-center px-4'>
-          <div className={`h-[2px] flex-1 bg-${coffee.color}-900`}></div>
-          <div
-            className={`w-[14px] aspect-square border-2 border-${coffee.color}-900 origin-center rotate-45`}
-          ></div>
-          <div className={`h-[2px] flex-1 bg-${coffee.color}-900`}></div>
-        </div>
-        <div
-          className={`flex-1 italic tracking-wide px-5 text-center text-lg font-bold text-${coffee.color}-950 flex-1 basis-2/3 text-center text-balance leading-6 pt-3`}
-        >
-          {coffee.tastingNotes}
-        </div>
-
-        <div className={`absolute bottom-0 left-0 flex gap-1 items-end`}>
-          <div
-            className={`relative w-[40px] h-[40px] overflow-hidden border-${coffee.color}-900 border-2 border-l-0 border-b-0`}
-          >
+        <div className='absolute flex-1 p-2 flex flex-col'>
+          <div className='relative w-[58px] h-[58px]'>
             <Image
               src='/site qr code.png'
               alt='qr-code'
               fill
-              className={`object-contain scale-110`}
+              className={`object-contain border-rose-900 border-2`}
             />
           </div>
-
-          <span className='text-sm'>← Find me</span>
+          <span
+            className={`text-slate-950 text-[10px] tracking-wide font-bold pl-2`}
+          >
+            FIND ME
+          </span>
         </div>
-
         <div
-          className={`absolute bottom-0 right-0 bg-${coffee.color}-900 text-white p-2`}
+          style={{ fontFamily: 'fantasy' }}
+          className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-rose-800 border-2 border-t-0 border-r-0 rounded-bl-md border-rose-800 bg-black/10 font-bold pt-1`}
         >
-          <span className='font-bold'>{coffee.size} oz </span>
+          10 oz
         </div>
-        {/* <div
-          className={`absolute top-0 right-0 bg-${coffee.color}-900 w-[38px] h-[28px] flex justify-center items-center text-${coffee.color}-50 font-bold text-sm`}
-        >
-          {coffee.size}oz
-        </div>
-        <div className='flex flex-1'>
-          <div className='flex-1 basis-1/3 p-2 flex flex-col'>
-            
-            <span
-              className={`text-${coffee.color}-950 text-[.5rem] tracking-wide font-bold pl-2`}
-            >
-              FIND ME
-            </span>
-          </div>
-          <div style={{ fontFamily: 'fantasy' }} className='w-full mx-auto'>
-            <div
-              className={`text-2xl uppercase font-bold text-center text-${coffee.color}-950 pt-9`}
-            >
-              {coffee.country}
+        <div className='flex flex-initial'>
+          <div
+            style={{ fontFamily: 'fantasy' }}
+            className='w-full mt-20 flex gap-4 px-2 items-center'
+          >
+            <div className={`relative flex-1 h-[2px] bg-rose-800`}>
+              <div
+                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-green-50 border-[2px] border-rose-800 rotate-45`}
+              />
+              <div
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-rose-900 rotate-45`}
+              />
+            </div>
+
+            <div className='flex-1 text-rose-800'>
+              <div
+                className={`text-3xl max-w-[320px] font-bold text-center flex justify-center items-center`}
+              >
+                SAPPHO&apos;s
+              </div>
+              <div
+                className={`relative text-xl tracking-widest flex-initial h-[36px] font-bold flex justify-center items-end text-center -mt-3 text-nowrap`}
+              >
+                Holiday Blend
+              </div>
+            </div>
+
+            <div className={`relative flex-1 h-[2px] bg-rose-800`}>
+              <div
+                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-rose-50 border-[2px] border-rose-800 rotate-45`}
+              />
+              <div
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-rose-800 rotate-45`}
+              />
             </div>
           </div>
         </div>
 
-        <div className='py-2 px-1 flex-initial'>
-          <div className='text-xl tracking-widest  px-[.625rem]'>
-            <div
-              className={`relative h-5 font-bold flex justify-center items-end text-center bg-${coffee.color}-900 text-white`}
-            >
-              <div
-                className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rotate-45 left-0 w-[0.88388347648rem] aspect-square bg-${coffee.color}-900 origin-center`}
-              ></div>
-              <div
-                className={`absolute top-1/2 -translate-y-1/2 translate-x-1/2 rotate-45 right-0 w-[0.88388347648rem] aspect-square bg-${coffee.color}-900 origin-center`}
-              ></div>
-              {coffee.farm}
-            </div>
+        <div className='flex flex-col px-2 gap-4 flex-1 my-auto'>
+          <div
+            className={`italic tracking-wide text-center text-lg/5 font-bold text-rose-800`}
+          >
+            almond, molasses, chocolate and apricot
+          </div>
+
+          <div
+            className='text-center text-sm tracking-wider flex-initial text-green-950'
+            style={{ fontFamily: 'fantasy' }}
+          >
+            Blend of our <br /> <b className='text-rose-800'>Mexico Totutla</b>{' '}
+            and <b className='text-rose-800'>Ethiopian Getachew</b>*
+          </div>
+
+          <div
+            className='flex  justify-around gap-2 mx-auto text-xs items-end text-green-950'
+            style={{ fontFamily: 'fantasy' }}
+          >
+            <span className='w-6 border-b-[1px] border-rose-800 relative'></span>
+            <span className='relative top-1'>of</span>
+            <span className='w-6 border-b-[1px] border-rose-800 relative'></span>
+            <span className='relative top-1'>bags</span>
           </div>
         </div>
 
         <div
-          className={`italic tracking-wide px-5 text-center text-lg font-bold text-${coffee.color}-950 flex-1 basis-2/3 place-content-center text-balance leading-6`}
+          className={`flex text-xs pb-1 px-2 tracking-wider font-serif text-rose-800 gap-2`}
         >
-          {coffee.tastingNotes}
-        </div>*/}
+          <div className='flex text-[.7rem] items-end leading-[10px] text-rose-800 flex-initial text-nowrap mb-1'>
+            <b>Roasted on:</b>{' '}
+            <div className={`ml-1 border-b-[1px] border-red-800 w-4`} />
+            <span className='px-[2px] -mr-1 mb-[1px] text-green-950'>/</span>
+            <div className={`border-b-[1px] border-red-800 w-4`} />{' '}
+          </div>
+
+          <div className=' self-end text-right text-green-950'>
+            *Sourced directly from our friends at{' '}
+            <b className='text-red-800'>Tailwinds</b> in Chicago
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
+// const SpecialBeanBoxLabel = () => {
+//   const coffee: Coffee = {
+//     size: '2.5',
+//     country: 'House blend',
+//     farm: (
+//       <>
+//         <span className='text-base'>Blend of our</span>
+//         <br />
+//         <b>Sumatra & Ethiopia Duromina</b>
+//       </>
+//     ),
+//     color: 'lime',
+//     tastingNotes:
+//       'Bright nuttiness with mellow notes of chocolate and cherries',
+//   };
+
+//   return (
+//     <div className='w-[3in] h-[5in] overflow-hidden'>
+//       <div
+//         className='bg-center bg-no-repeat bg-cover w-full h-1/3 overflow-hidden scale-125'
+//         style={{
+//           backgroundImage: `url('./sappho_logo.png')`,
+//         }}
+//       />
+//       <div
+//         className={`relative border-8 border-${coffee.color}-900 bg-${coffee.color}-50 h-2/3 flex flex-col`}
+//       >
+//         <div
+//           style={{ fontFamily: 'fantasy' }}
+//           className={`p-6 pb-2 text-${coffee.color}-950 text-center`}
+//         >
+//           <div className='text-2xl font-bold uppercase text-center'>
+//             {coffee.country}
+//           </div>
+
+//           <div className='text-lg tracking-widest mt-2'>{coffee.farm}</div>
+//         </div>
+
+//         <div className='flex-initial flex gap-2 items-center px-4'>
+//           <div className={`h-[2px] flex-1 bg-${coffee.color}-900`}></div>
+//           <div
+//             className={`w-[14px] aspect-square border-2 border-${coffee.color}-900 origin-center rotate-45`}
+//           ></div>
+//           <div className={`h-[2px] flex-1 bg-${coffee.color}-900`}></div>
+//         </div>
+//         <div
+//           className={`flex-1 italic tracking-wide px-5 text-center text-lg font-bold text-${coffee.color}-950 flex-1 basis-2/3 text-center text-balance leading-6 pt-3`}
+//         >
+//           {coffee.tastingNotes}
+//         </div>
+
+//         <div className={`absolute bottom-0 left-0 flex gap-1 items-end`}>
+//           <div
+//             className={`relative w-[40px] h-[40px] overflow-hidden border-${coffee.color}-900 border-2 border-l-0 border-b-0`}
+//           >
+//             <Image
+//               src='/site qr code.png'
+//               alt='qr-code'
+//               fill
+//               className={`object-contain scale-110`}
+//             />
+//           </div>
+
+//           <span className='text-sm'>← Find me</span>
+//         </div>
+
+//         <div
+//           className={`absolute bottom-0 right-0 bg-${coffee.color}-900 text-white p-2`}
+//         >
+//           <span className='font-bold'>{coffee.size} oz </span>
+//         </div>
+//         {/* <div
+//           className={`absolute top-0 right-0 bg-${coffee.color}-900 w-[38px] h-[28px] flex justify-center items-center text-${coffee.color}-50 font-bold text-sm`}
+//         >
+//           {coffee.size}oz
+//         </div>
+//         <div className='flex flex-1'>
+//           <div className='flex-1 basis-1/3 p-2 flex flex-col'>
+
+//             <span
+//               className={`text-${coffee.color}-950 text-[.5rem] tracking-wide font-bold pl-2`}
+//             >
+//               FIND ME
+//             </span>
+//           </div>
+//           <div style={{ fontFamily: 'fantasy' }} className='w-full mx-auto'>
+//             <div
+//               className={`text-2xl uppercase font-bold text-center text-${coffee.color}-950 pt-9`}
+//             >
+//               {coffee.country}
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className='py-2 px-1 flex-initial'>
+//           <div className='text-xl tracking-widest  px-[.625rem]'>
+//             <div
+//               className={`relative h-5 font-bold flex justify-center items-end text-center bg-${coffee.color}-900 text-white`}
+//             >
+//               <div
+//                 className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rotate-45 left-0 w-[0.88388347648rem] aspect-square bg-${coffee.color}-900 origin-center`}
+//               ></div>
+//               <div
+//                 className={`absolute top-1/2 -translate-y-1/2 translate-x-1/2 rotate-45 right-0 w-[0.88388347648rem] aspect-square bg-${coffee.color}-900 origin-center`}
+//               ></div>
+//               {coffee.farm}
+//             </div>
+//           </div>
+//         </div>
+
+//         <div
+//           className={`italic tracking-wide px-5 text-center text-lg font-bold text-${coffee.color}-950 flex-1 basis-2/3 place-content-center text-balance leading-6`}
+//         >
+//           {coffee.tastingNotes}
+//         </div>*/}
+//       </div>
+//     </div>
+//   );
+// };
 
 // const Label = (coffee: Coffee) => {
 //   return (
@@ -332,171 +672,182 @@ const SpecialBeanBoxLabel = () => {
 //   );
 // };
 
-const EthiopianLabel = () => {
+// const EthiopianLabel = () => {
+//   return (
+//     <div className='w-[6in] h-[4in] border-8 border-orange-900 bg-[#F8DCDF]'>
+//       <div className='w-full h-full p-5 pb-0 text-orange-900 relative'>
+//         <div className='h-full font-bold grid grid-cols-[1fr_75%] grid-rows-[1fr_1fr]'>
+//           <div className='relative mr-5 mb-5'>
+//             <Image
+//               src='/fake qr code.jpg'
+//               fill
+//               className='object-contain'
+//               alt='qr-code'
+//             />
+//             <span className='absolute -bottom-4 text-xs text-center text-black uppercase tracking-tight inline-block w-full'>
+//               Find me
+//             </span>
+//           </div>
+//           <div className='text-center'>
+//             <div
+//               className='text-5xl uppercase'
+//               style={{ fontFamily: 'fantasy' }}
+//             >
+//               Ethiopia
+//             </div>
+//             <div
+//               className='text-3xl px-6 py-2 bg-orange-900 text-white text-center -mr-8 w-[calc(100%+1.5rem)]  rounded-l-full'
+//               style={{ fontFamily: 'fantasy' }}
+//             >
+//               Nguisse Nare
+//             </div>
+//             <div className='mt-1 italic text-lg'>
+//               Lavendar, plum, peach, rose water
+//             </div>
+//           </div>
+
+//           <div className='bg-orange-900/30 text-orange-950 col-span-2 items-end border-orange-900 border-t-4 px-4 tracking-wider font-sans gap-2 grid grid-cols-[max-content_1fr] -ml-5 -mr-5 py-1 w-[calc(100%+2.5rem)] '>
+//             <div className='text-xl text-right'>Process:</div>
+//             <div className='text-xl'>Natural</div>
+//             <div className='text-xl text-right'>Lot:</div>
+//             <div>Nguisse Nare, Bombe, Natural, Grade 1</div>
+//             <div className='text-xl text-right'>Region:</div>
+//             <div>Sidama Bensa Bombe</div>
+//             <div className='text-xl text-right'>Varietals:</div>
+//             <div>74158</div>
+//             <div className='text-xl text-right'>Altitude:</div>
+//             <div>2,240 meters</div>
+
+//             <div className='text-sm italic col-span-2'>
+//               * Traceable to Nguisse Nare and 60 registered outgrowers
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// function MexicanLabel() {
+//   return (
+//     <div className='w-[6in] h-[4in] border-8 border-red-800 bg-[#F8DCDF]'>
+//       <div className='w-full h-full p-4 pb-0 text-red-800 relative'>
+//         <div className='h-full font-bold grid grid-cols-[1fr_75%] grid-rows-[1fr_1fr]'>
+//           <div className='relative mr-5 mb-5'>
+//             <Image
+//               src='/fake qr code.jpg'
+//               fill
+//               className='object-contain'
+//               alt='qr-code'
+//             />
+//             <span className='absolute -bottom-4 text-xs text-center text-black uppercase tracking-tight inline-block w-full'>
+//               Find me
+//             </span>
+//           </div>
+//           <div className='text-center'>
+//             <div
+//               className='text-5xl uppercase'
+//               style={{ fontFamily: 'fantasy' }}
+//             >
+//               Mexico
+//             </div>
+//             <div
+//               className='text-3xl px-6 py-1 leading- bg-red-800 text-white text-center -mr-8 w-[calc(100%+1.5rem)]  rounded-l-full'
+//               style={{ fontFamily: 'fantasy' }}
+//             >
+//               Red 5 de Diciembre
+//             </div>
+//             <div className='mt-1 italic text-lg'>
+//               Lemon, earl grey, caramel, peach, honey
+//             </div>
+//           </div>
+
+//           <div className='bg-red-800/30 text-red-900 col-span-2  border-orange-900 border-t-4 px-4 tracking-wider font-sans gap-2 grid grid-cols-[max-content_1fr] -ml-5 -mr-5 py-1 w-[calc(100%+2.5rem)] '>
+//             <div className='text-xl text-right'>Process:</div>
+//             <div className='text-xl'>Washed</div>
+//             <div className='text-xl text-right'>Lot:</div>
+//             <div>
+//               Red 5 de Diciembre, Eloxochitlán de Flores Magón Barrio de
+//               Buenavista Washed
+//             </div>
+//             <div className='text-xl text-right'>Region:</div>
+//             <div>Mazatec, Oaxaca, La Canada</div>
+//             <div className='text-xl text-right'>Varietals:</div>
+//             <div>Costa Rica 95, Obatã</div>
+//             <div className='text-xl text-right'>Altitude:</div>
+//             <div>1,650 meters</div>
+//             <div className='text-sm italic col-span-2'>
+//               * Traceable to 1,420 smallholders
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// const ColumbianLabel = () => {
+//   return (
+//     <div className='w-[6in] h-[4in] border-8 border-blue-900 bg-blue-900/10'>
+//       <div className='w-full h-full p-5 pb-0 text-blue-900 relative'>
+//         <div className='h-full font-bold grid grid-cols-[1fr_75%] grid-rows-[1fr_1fr]'>
+//           <div className='relative mr-5 mb-5'>
+//             <Image
+//               src='/fake qr code.jpg'
+//               fill
+//               className='object-contain'
+//               alt='qr-code'
+//             />
+//             <span className='absolute -bottom-4 text-xs text-center text-black uppercase tracking-tight inline-block w-full'>
+//               Find me
+//             </span>
+//           </div>
+//           <div className='text-center'>
+//             <div
+//               className='text-5xl uppercase'
+//               style={{ fontFamily: 'fantasy' }}
+//             >
+//               Colombia
+//             </div>
+//             <div
+//               className='text-3xl px-6 py-2 bg-blue-900 text-white text-center -mr-8 w-[calc(100%+1.5rem)]  rounded-l-full'
+//               style={{ fontFamily: 'fantasy' }}
+//             >
+//               Federacion Abades
+//             </div>
+//             <div className='mt-1 italic text-lg'>
+//               Red apple, quince, caramel, sugar plum
+//             </div>
+//           </div>
+
+//           <div className='bg-blue-900/30 text-blue-950 col-span-2 items-end border-blue-900 border-t-4 px-4 tracking-wider font-sans gap-2 grid grid-cols-[max-content_1fr] -ml-5 -mr-5 py-1 w-[calc(100%+2.5rem)] '>
+//             <div className='text-xl text-right'>Process:</div>
+//             <div className='text-xl'>Washed</div>
+//             <div className='text-xl text-right'>Lot:</div>
+//             <div>Federacion Abades, Samaniego Lot 9</div>
+//             <div className='text-xl text-right'>Region:</div>
+//             <div>Nariño</div>
+//             <div className='text-xl text-right'>Varietals:</div>
+//             <div>Castillo and Colombia</div>
+//             <div className='text-xl text-right'>Altitude:</div>
+//             <div>1,800 - 1,850 meters</div>
+//             <div className='text-sm italic col-span-2'>
+//               * Traceable to 206 smallholder members
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+function Banner({ children }: PropsWithChildren<object>) {
   return (
-    <div className='w-[6in] h-[4in] border-8 border-orange-900 bg-[#F8DCDF]'>
-      <div className='w-full h-full p-5 pb-0 text-orange-900 relative'>
-        <div className='h-full font-bold grid grid-cols-[1fr_75%] grid-rows-[1fr_1fr]'>
-          <div className='relative mr-5 mb-5'>
-            <Image
-              src='/fake qr code.jpg'
-              fill
-              className='object-contain'
-              alt='qr-code'
-            />
-            <span className='absolute -bottom-4 text-xs text-center text-black uppercase tracking-tight inline-block w-full'>
-              Find me
-            </span>
-          </div>
-          <div className='text-center'>
-            <div
-              className='text-5xl uppercase'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              Ethiopia
-            </div>
-            <div
-              className='text-3xl px-6 py-2 bg-orange-900 text-white text-center -mr-8 w-[calc(100%+1.5rem)]  rounded-l-full'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              Nguisse Nare
-            </div>
-            <div className='mt-1 italic text-lg'>
-              Lavendar, plum, peach, rose water
-            </div>
-          </div>
-
-          <div className='bg-orange-900/30 text-orange-950 col-span-2 items-end border-orange-900 border-t-4 px-4 tracking-wider font-sans gap-2 grid grid-cols-[max-content_1fr] -ml-5 -mr-5 py-1 w-[calc(100%+2.5rem)] '>
-            <div className='text-xl text-right'>Process:</div>
-            <div className='text-xl'>Natural</div>
-            <div className='text-xl text-right'>Lot:</div>
-            <div>Nguisse Nare, Bombe, Natural, Grade 1</div>
-            <div className='text-xl text-right'>Region:</div>
-            <div>Sidama Bensa Bombe</div>
-            <div className='text-xl text-right'>Varietals:</div>
-            <div>74158</div>
-            <div className='text-xl text-right'>Altitude:</div>
-            <div>2,240 meters</div>
-
-            <div className='text-sm italic col-span-2'>
-              * Traceable to Nguisse Nare and 60 registered outgrowers
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-function MexicanLabel() {
-  return (
-    <div className='w-[6in] h-[4in] border-8 border-red-800 bg-[#F8DCDF]'>
-      <div className='w-full h-full p-4 pb-0 text-red-800 relative'>
-        <div className='h-full font-bold grid grid-cols-[1fr_75%] grid-rows-[1fr_1fr]'>
-          <div className='relative mr-5 mb-5'>
-            <Image
-              src='/fake qr code.jpg'
-              fill
-              className='object-contain'
-              alt='qr-code'
-            />
-            <span className='absolute -bottom-4 text-xs text-center text-black uppercase tracking-tight inline-block w-full'>
-              Find me
-            </span>
-          </div>
-          <div className='text-center'>
-            <div
-              className='text-5xl uppercase'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              Mexico
-            </div>
-            <div
-              className='text-3xl px-6 py-1 leading- bg-red-800 text-white text-center -mr-8 w-[calc(100%+1.5rem)]  rounded-l-full'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              Red 5 de Diciembre
-            </div>
-            <div className='mt-1 italic text-lg'>
-              Lemon, earl grey, caramel, peach, honey
-            </div>
-          </div>
-
-          <div className='bg-red-800/30 text-red-900 col-span-2  border-orange-900 border-t-4 px-4 tracking-wider font-sans gap-2 grid grid-cols-[max-content_1fr] -ml-5 -mr-5 py-1 w-[calc(100%+2.5rem)] '>
-            <div className='text-xl text-right'>Process:</div>
-            <div className='text-xl'>Washed</div>
-            <div className='text-xl text-right'>Lot:</div>
-            <div>
-              Red 5 de Diciembre, Eloxochitlán de Flores Magón Barrio de
-              Buenavista Washed
-            </div>
-            <div className='text-xl text-right'>Region:</div>
-            <div>Mazatec, Oaxaca, La Canada</div>
-            <div className='text-xl text-right'>Varietals:</div>
-            <div>Costa Rica 95, Obatã</div>
-            <div className='text-xl text-right'>Altitude:</div>
-            <div>1,650 meters</div>
-            <div className='text-sm italic col-span-2'>
-              * Traceable to 1,420 smallholders
-            </div>
-          </div>
-        </div>
-      </div>
+    <div
+      style={{ fontFamily: 'fantasy' }}
+      className='absolute top-0 left-0  z-50 bg-[#f8dcdf] text-sm  text-black text-center px-4 py-2 rounded-br-md  font-bold tracking-widest flex items-center'
+    >
+      <div className='relative top-1'>{children}</div>
     </div>
   );
 }
-
-const ColumbianLabel = () => {
-  return (
-    <div className='w-[6in] h-[4in] border-8 border-blue-900 bg-blue-900/10'>
-      <div className='w-full h-full p-5 pb-0 text-blue-900 relative'>
-        <div className='h-full font-bold grid grid-cols-[1fr_75%] grid-rows-[1fr_1fr]'>
-          <div className='relative mr-5 mb-5'>
-            <Image
-              src='/fake qr code.jpg'
-              fill
-              className='object-contain'
-              alt='qr-code'
-            />
-            <span className='absolute -bottom-4 text-xs text-center text-black uppercase tracking-tight inline-block w-full'>
-              Find me
-            </span>
-          </div>
-          <div className='text-center'>
-            <div
-              className='text-5xl uppercase'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              Colombia
-            </div>
-            <div
-              className='text-3xl px-6 py-2 bg-blue-900 text-white text-center -mr-8 w-[calc(100%+1.5rem)]  rounded-l-full'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              Federacion Abades
-            </div>
-            <div className='mt-1 italic text-lg'>
-              Red apple, quince, caramel, sugar plum
-            </div>
-          </div>
-
-          <div className='bg-blue-900/30 text-blue-950 col-span-2 items-end border-blue-900 border-t-4 px-4 tracking-wider font-sans gap-2 grid grid-cols-[max-content_1fr] -ml-5 -mr-5 py-1 w-[calc(100%+2.5rem)] '>
-            <div className='text-xl text-right'>Process:</div>
-            <div className='text-xl'>Washed</div>
-            <div className='text-xl text-right'>Lot:</div>
-            <div>Federacion Abades, Samaniego Lot 9</div>
-            <div className='text-xl text-right'>Region:</div>
-            <div>Nariño</div>
-            <div className='text-xl text-right'>Varietals:</div>
-            <div>Castillo and Colombia</div>
-            <div className='text-xl text-right'>Altitude:</div>
-            <div>1,800 - 1,850 meters</div>
-            <div className='text-sm italic col-span-2'>
-              * Traceable to 206 smallholder members
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
