@@ -92,11 +92,6 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       0,
     );
 
-    console.log("numberOfSingleServeItems", numberOfSingleServeItems);
-    console.log("numberOfNonSingleServeItems", numberOfNonSingleServeItems);
-    console.log("numberOf250g", numberOf250g);
-    console.log("numberOf100g", numberOf100g);
-
     const singleServePackaging =
       // If there are enough single serve items to ship them individually,
       // or if there are no non-single-serve items at all, ship single-serve items individually
@@ -115,12 +110,6 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       : [];
 
     const numberOf250gPerPackage = Math.floor(MAX_PACKAGE_WEIGHT_GRAMS / 250);
-    const numberOf100gPerPackage = Math.floor(
-      (MAX_PACKAGE_WEIGHT_GRAMS - numberOf250gPerPackage * 250) / 100,
-    );
-
-    console.log(numberOf250gPerPackage);
-    console.log(numberOf100gPerPackage);
 
     const packages: ParcelCreateRequest[] = [];
 
@@ -128,22 +117,18 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       let current250gCount = numberOf250g;
       let current100gCount = numberOf100g;
 
-      console.log("current250gCount", current250gCount);
-      console.log("current100gCount", current100gCount);
-
       while (current250gCount > 0 || current100gCount > 0) {
         const numberOf250gForThisPackage = Math.min(
           current250gCount,
           numberOf250gPerPackage,
         );
-        console.log("numberOf250gForThisPackage", numberOf250gForThisPackage);
+
         const numberOf100gForThisPackage = Math.min(
           current100gCount,
           Math.floor(
             (MAX_PACKAGE_WEIGHT_GRAMS - numberOf250gForThisPackage * 250) / 100,
           ),
         );
-        console.log("numberOf100gForThisPackage", numberOf100gForThisPackage);
 
         current250gCount -= numberOf250gForThisPackage;
         current100gCount -= numberOf100gForThisPackage;
@@ -159,8 +144,6 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       }
     }
 
-    console.log(packages);
-
     const shippingOptions = await shippo.shipments.create({
       addressFrom,
       addressTo,
@@ -174,8 +157,6 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       ) ??
       shippingOptions.rates.find((x) => x.attributes.includes("BESTVALUE")) ??
       shippingOptions.rates[0];
-
-    console.log("uspsShippingRate", shippingOptions.rates);
 
     if (!uspsShippingRate) {
       Sentry.captureException(

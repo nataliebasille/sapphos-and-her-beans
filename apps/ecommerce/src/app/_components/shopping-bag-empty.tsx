@@ -1,6 +1,6 @@
+import { useRouter } from "next/navigation";
 import { memo, useCallback } from "react";
 import { useCloseCart } from "../_stores/cart";
-import { useRouter } from "next/navigation";
 
 export const ShoppingBagEmpty = memo(function CartEmpty() {
   const closeCart = useCloseCart();
