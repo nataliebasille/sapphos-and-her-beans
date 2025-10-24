@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const config = async (): Promise<NextConfig> => {
   const dotenv = await import("dotenv");
 
-  dotenv.config({ path: "../.env" });
+  dotenv.config({ path: "../../.env" });
 
   // If you really need to run this module at startup:
   await import("./env.js");
