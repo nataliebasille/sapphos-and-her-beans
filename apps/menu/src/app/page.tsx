@@ -30,7 +30,6 @@ export default async function LandingPage() {
                 {products.map(({ price, size }) => (
                   <Fragment key={size}>
                     <span className="text-right">
-                      {" "}
                       {size === "singleserve" ? "Single Serve" : `${size}g`}
                     </span>
                     <span className="font-bold tracking-wider">
