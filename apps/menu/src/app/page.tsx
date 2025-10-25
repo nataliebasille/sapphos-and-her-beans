@@ -8,7 +8,7 @@ export default async function LandingPage() {
   const products = await getProducts();
 
   return (
-    <div className="w-[8.5in] h-[11in] mx-auto">
+    <div className="mx-auto w-full p-6">
       <Image
         src="/images/Sappho no background - cropped.png"
         className="mx-auto"
@@ -21,7 +21,7 @@ export default async function LandingPage() {
         {products.map(
           ({ country, farm, lot, tastingNotes, products }, index) => (
             <div key={`${country}-${farm}-${lot}`}>
-              {index > 0 && <hr className="my-6" />}
+              <hr className="my-6" />
               <h2 className="text-3xl font-bold tracking-wider">
                 {country} {farm}
               </h2>
