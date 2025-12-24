@@ -29,9 +29,7 @@
   "homepage": "https://github.com/sappho-and-her-beans/sappho#readme",
   "workspaces": [
     "apps/admin",
-    "apps/ecommerce",
-    "apps/menu",
-    "apps/labels"
+    "apps/ecommerce"
   ],
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
