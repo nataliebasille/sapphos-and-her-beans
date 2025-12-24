@@ -15,7 +15,8 @@
     "db:seed": "tsx ./db/migrate/seed.ts",
     "db:studio": "cd db && drizzle-kit studio",
     "db:generate:migration": "cd db && drizzle-kit generate",
-    "db:migrate": "NODE_ENV=production tsx ./db/migrate/index.ts"
+    "db:migrate": "NODE_ENV=production tsx ./db/migrate/index.ts",
+    "postinstall": "npm install stripe@16.12.0-beta.1 --workspace apps/ecommerce"
   },
   "repository": {
     "type": "git",

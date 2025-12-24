@@ -14,8 +14,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@nataliebasille/typescript-utils": "^1.1.5",
     "@nataliebasille/natcore-design-system": "^1.0.1",
+    "@nataliebasille/typescript-utils": "^1.1.5",
     "@sentry/nextjs": "^8.35.0",
     "@stripe/react-stripe-js": "^5.2.0",
     "@stripe/stripe-js": "^8.0.0",
