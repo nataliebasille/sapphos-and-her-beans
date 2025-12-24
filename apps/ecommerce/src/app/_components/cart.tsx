@@ -15,7 +15,6 @@ import {
   useSetCartItemQuantity,
 } from "../_stores/cart";
 import { type CartItem, useCartSelector } from "../_stores/cart/cart-provider";
-import { isLegacyProduct } from "../_stores/products";
 import { CartIcon } from "./cart-icon";
 import { ArrowRightIcon } from "./icons/arrow-right";
 import { Close } from "./icons/close";
@@ -151,16 +150,6 @@ const CartItemDisplay = memo(function CartItem({
         >
           <div className="flex flex-col font-bold uppercase md:block md:text-2xl">
             <span>{item.product?.name}</span>
-            {item.product && isLegacyProduct(item.product) && (
-              <>
-                <span className="hidden md:inline">{" - "}</span>
-                <span className="normal-case">
-                  {item.product &&
-                    isLegacyProduct(item.product) &&
-                    `${item.product?.sizeOunces}oz`}
-                </span>
-              </>
-            )}
           </div>
           <div className="mt-2 text-base md:text-lg">
             {item.product?.country}

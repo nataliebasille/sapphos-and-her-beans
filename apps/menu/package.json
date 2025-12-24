@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@nataliebasille/typescript-utils": "^1.1.5",
-    "@natcore/design-system-core": "https://gitpkg.now.sh/nataliebasille/natcore-design-system/packages/core?main",
+    "@nataliebasille/natcore-design-system": "^1.0.1",
     "@t3-oss/env-nextjs": "^0.11.0",
     "cross-env": "^10.1.0",
     "dotenv": "^16.4.5",

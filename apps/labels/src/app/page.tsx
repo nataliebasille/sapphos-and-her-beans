@@ -1,96 +1,238 @@
-import Image from 'next/image';
-import type { PropsWithChildren } from 'react';
-import { coffeeDescriptions } from './coffee_descriptions';
+import Image from "next/image";
+import type { PropsWithChildren } from "react";
+import * as products from "../../../../lib/models/products";
+import { twMerge } from "tailwind-merge";
 
-type Coffee = (typeof coffeeDescriptions)[keyof typeof coffeeDescriptions];
+type Coffee = {
+  [K in keyof typeof products as (typeof products)[K] extends { type: "coffee" }
+    ? K
+    : never]: (typeof products)[K];
+};
+
+import { MedievalSharp } from "next/font/google";
+
+const BrandingStylizedFont = MedievalSharp({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function Home() {
   return (
-    <div className='grid grid-cols-1 gap-3 justify-center items-center place-items-center h-full w-full'>
-      <WebsiteImage {...coffeeDescriptions.MexicoTotutla} />
+    <div className="grid grid-cols-1 gap-3 justify-center items-center place-items-center h-full w-full">
+      <Label coffee="YELLOW_PACAMARA_WASHED_250g" />
     </div>
   );
 }
 
-const Label = (coffee: Coffee) => {
+const COLORS = {
+  cyan: {
+    bgLight: "bg-cyan-50",
+    bgNormal: "bg-cyan-200",
+    bgDark: "bg-cyan-900",
+    textLight: "text-cyan-50",
+    textDark: "text-cyan-900",
+    textDarkest: "text-cyan-950",
+    border: "border-cyan-900",
+    borderDarkest: "border-cyan-950",
+  },
+
+  sky: {
+    bgLight: "bg-sky-50",
+    bgNormal: "bg-sky-200",
+    bgDark: "bg-sky-900",
+    textLight: "text-sky-50",
+    textDark: "text-sky-900",
+    textDarkest: "text-sky-950",
+    border: "border-sky-900",
+    borderDarkest: "border-sky-950",
+  },
+
+  yellow: {
+    bgLight: "bg-yellow-50",
+    bgNormal: "bg-yellow-200",
+    bgDark: "bg-yellow-900",
+    textLight: "text-yellow-50",
+    textDark: "text-yellow-900",
+    textDarkest: "text-yellow-950",
+    border: "border-yellow-900",
+    borderDarkest: "border-yellow-950",
+  },
+
+  rose: {
+    bgLight: "bg-rose-50",
+    bgNormal: "bg-rose-200",
+    bgDark: "bg-rose-900",
+    textLight: "text-rose-50",
+    textDark: "text-rose-900",
+    textDarkest: "text-rose-950",
+    border: "border-rose-900",
+    borderDarkest: "border-rose-950",
+  },
+
+  slate: {
+    bgLight: "bg-slate-50",
+    bgNormal: "bg-slate-200",
+    bgDark: "bg-slate-900",
+    textLight: "text-slate-50",
+    textDark: "text-slate-900",
+    textDarkest: "text-slate-950",
+    border: "border-slate-900",
+    borderDarkest: "border-slate-950",
+  },
+
+  purple: {
+    bgLight: "bg-purple-50",
+    bgNormal: "bg-purple-200",
+    bgDark: "bg-purple-900",
+    textLight: "text-purple-50",
+    textDark: "text-purple-900",
+    textDarkest: "text-purple-950",
+    border: "border-purple-900",
+    borderDarkest: "border-purple-950",
+  },
+
+  amber: {
+    bgLight: "bg-amber-50",
+    bgNormal: "bg-amber-200",
+    bgDark: "bg-amber-900",
+    textLight: "text-amber-50",
+    textDark: "text-amber-900",
+    textDarkest: "text-amber-950",
+    border: "border-amber-900",
+    borderDarkest: "border-amber-950",
+  },
+
+  emerald: {
+    bgLight: "bg-emerald-50",
+    bgNormal: "bg-emerald-200",
+    bgDark: "bg-emerald-900",
+    textLight: "text-emerald-50",
+    textDark: "text-emerald-900",
+    textDarkest: "text-emerald-950",
+    border: "border-emerald-900",
+    borderDarkest: "border-emerald-950",
+  },
+} as const;
+
+const Label = (props: { coffee: keyof Coffee }) => {
+  const coffee = products[props.coffee];
   const isLimitedEdition: boolean =
-    'limited' in coffee && coffee.limited === true;
+    "limited" in coffee && coffee.limited === true;
+  const colors = COLORS[coffee.color];
   return (
-    <div className='relative w-[4in] h-[6in] overflow-hidden flex flex-col'>
+    <div className="relative w-[4in] h-[6in] overflow-hidden flex flex-col scale-[calc(1.125)]">
       {isLimitedEdition && <Banner>Limited Edition</Banner>}
       <div
-        className='w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150'
+        className="w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150"
         style={{
           backgroundImage: `url('./sappho_logo.png')`,
         }}
       />
       <div
-        // 5x3 inch labels
-        className={`relative w-full h-3/5 border-8 border-t-0 border-${coffee.color}-900 bg-${coffee.color}-50 flex flex-col`}
+        className={twMerge(
+          "relative w-full h-3/5 border-8 border-t-0 flex flex-col",
+          colors.border,
+          colors.bgLight
+        )}
       >
-        <div className='absolute flex-1 p-2 flex flex-col'>
-          <div className='relative w-[58px] h-[58px]'>
+        <div className="absolute flex-1 p-2 flex flex-col">
+          <div className="relative w-[58px] h-[58px]">
             <Image
-              src='/site qr code.png'
-              alt='qr-code'
+              src="/site qr code.png"
+              alt="qr-code"
               fill
-              className={`object-contain border-${coffee.color}-900 border-2`}
+              className={twMerge("object-contain border-2", colors.border)}
             />
           </div>
           <span
-            className={`text-${coffee.color}-950 text-[10px] tracking-wide font-bold pl-2`}
+            className={twMerge(
+              "text-[10px] tracking-wide font-bold pl-2",
+              colors.textDarkest
+            )}
           >
             FIND ME
           </span>
         </div>
-        {'score' in coffee && (
+        {"score" in coffee && (
           <div
-            style={{ fontFamily: 'fantasy' }}
-            className={`absolute top-0 left-1/2 leading-none  -translate-x-1/2 -translate-y-1/2 w-16 font-bold text-${coffee.color}-950 border-2 border-${coffee.color}-950 bg-${coffee.color}-200 rounded-full w-16 aspect-square flex flex-col justify-center items-center tracking-wide font-bold`}
+            className={twMerge(
+              "absolute top-0 left-1/2 leading-none -translate-x-1/2 -translate-y-1/2 w-16 !font-bold border-2 rounded-full aspect-square flex flex-col justify-center items-center tracking-wide",
+              colors.textDarkest,
+              colors.borderDarkest,
+              colors.bgNormal,
+              BrandingStylizedFont.className
+            )}
           >
-            <span className='text-base'>{coffee.score}</span>{' '}
-            <span className='text-[10px] tracking-widest'>pts</span>
+            <span className="text-base">{coffee.score}</span>{" "}
+            <span className="text-[10px] tracking-widest">pts</span>
           </div>
         )}
         <div
-          style={{ fontFamily: 'fantasy' }}
-          className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-${coffee.color}-950 border-2 border-t-0 border-r-0 rounded-bl-md border-${coffee.color}-950 bg-${coffee.color}-200 font-bold pt-1`}
+          className={twMerge(
+            "absolute top-0 right-0 w-[48px] h-[36px] flex justify-center items-center border-2 border-t-0 border-r-0 rounded-bl-md !font-bold pt-1",
+            colors.textDarkest,
+            colors.borderDarkest,
+            colors.bgNormal,
+            BrandingStylizedFont.className
+          )}
         >
           {coffee.size}
         </div>
-        <div className='flex flex-initial'>
+        <div className="flex flex-initial">
           <div
-            style={{ fontFamily: 'fantasy' }}
-            className='w-full mt-[4.5rem] flex gap-4 px-2 items-center'
+            className={twMerge(
+              "w-full mt-[4.5rem] flex gap-4 px-2 items-center",
+              BrandingStylizedFont.className
+            )}
           >
-            <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
+            <div className={twMerge("relative flex-1 h-[2px]", colors.bgDark)}>
               <div
-                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
+                className={twMerge(
+                  "absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square border-[2px] rotate-45",
+                  colors.bgLight,
+                  colors.border
+                )}
               />
               <div
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
+                className={twMerge(
+                  "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square rotate-45",
+                  colors.bgDark
+                )}
               />
             </div>
 
-            <div className='flex-1'>
+            <div className="flex-1">
               <div
-                className={`text-2xl max-w-[250px] uppercase font-bold text-center text-${coffee.color}-950 flex justify-center items-center `}
+                className={twMerge(
+                  "tracking-widest text-2xl max-w-[250px] uppercase font-bold text-center flex justify-center items-center",
+                  colors.textDarkest
+                )}
               >
                 {coffee.country}
               </div>
               <div
-                className={`relative text-lg tracking-widest flex-initial h-[36px] font-bold flex justify-center items-end text-center text-${coffee.color}-950 -mt-3 text-nowrap`}
+                className={twMerge(
+                  "relative text-lg tracking-wider flex-initial h-[36px] font-bold flex justify-center items-end text-center -mt-3 text-nowrap",
+                  colors.textDarkest
+                )}
               >
                 {coffee.farm}
               </div>
             </div>
 
-            <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
+            <div className={twMerge("relative flex-1 h-[2px]", colors.bgDark)}>
               <div
-                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
+                className={twMerge(
+                  "absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square border-[2px] rotate-45",
+                  colors.bgLight,
+                  colors.border
+                )}
               />
               <div
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
+                className={twMerge(
+                  "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square rotate-45",
+                  colors.bgDark
+                )}
               />
             </div>
           </div>
@@ -98,99 +240,62 @@ const Label = (coffee: Coffee) => {
 
         {isLimitedEdition && (
           <div
-            className='flex flex-initial justify-around gap-2 mx-auto text-xs items-end'
-            style={{ fontFamily: 'fantasy' }}
+            className={twMerge(
+              "flex flex-initial justify-around gap-2 mx-auto text-xs items-end",
+              BrandingStylizedFont.className
+            )}
           >
-            <span className='w-6 border-b-[1px] border-black relative'></span>
-            <span className='relative top-1'>of</span>
-            <span className='w-6 border-b-[1px] border-black relative'></span>
-            <span className='relative top-1'>bags</span>
+            <span className="w-6 border-b-[1px] border-black relative"></span>
+            <span className="relative top-1">of</span>
+            <span className="w-6 border-b-[1px] border-black relative"></span>
+            <span className="relative top-1">bags</span>
           </div>
         )}
 
-        <div className='flex-1 grid justify-center content-start'>
+        <div className="flex-1 grid content-start">
           <div
-            className={`mt-1 px-2 text-center text-${coffee.color}-950 flex-1 mb-2`}
-          >
-            {'fermentation' in coffee && (
-              <div className='uppercase tracking-widest text-sm mb-[.125rem]'>
-                CO-FERMENTED
-              </div>
+            className={twMerge(
+              "mt-2 px-2 text-center flex-1 mb-2",
+              colors.textDarkest
             )}
-            <span className='italic tracking-wide text-lg/5 font-bold'>
-              {' '}
+          >
+            {"fermentation" in coffee &&
+              typeof coffee.fermentation !== "string" && (
+                <div className="uppercase tracking-widest text-sm mb-[.125rem]">
+                  {coffee.fermentation.type === "cofermentation"
+                    ? "CO-FERMENTED"
+                    : "ANAEROBIC"}
+                </div>
+              )}
+            <span className="italic tracking-wide text-lg/5 font-bold">
               {coffee.tastingNotes}
             </span>
           </div>
 
-          <div
-            className={`grid grid-cols-[max-content_1fr] border-y-2 border-${coffee.color}-900 text-xs`}
-          >
-            <div
-              className={`grid grid-cols-subgrid grid-rows-subgrid row-span-6 gap-[1px] text-${coffee.color}-50 text-right uppercase font-bold  font-mono *:flex *:justify-end *:items-center`}
-            >
-              {'fermentation' in coffee && (
-                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                  Fermentation
-                </div>
-              )}
-              <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Process</div>
-              <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Lot</div>
-              <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Region</div>
-              <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                Varietals
-              </div>
-              {'altitude' in coffee && (
-                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                  Altitude
-                </div>
-              )}
-            </div>
-
-            <div
-              className={`grid grid-cols-subgrid grid-rows-subgrid font-bold tracking-wider row-span-6 gap-[1px] text-${coffee.color}-950 bg-${coffee.color}-900`}
-            >
-              {'fermentation' in coffee && (
-                <div className={`bg-${coffee.color}-50 px-2`}>
-                  {coffee.fermentation}
-                </div>
-              )}
-              <div
-                className={`bg-${coffee.color}-50 px-2 font-bold tracking-wider uppercase`}
-              >
-                {coffee.processing}
-              </div>
-              <div className={`bg-${coffee.color}-50 px-2`}>{coffee.lot}</div>
-              <div className={`bg-${coffee.color}-50 px-2`}>
-                {coffee.region}
-              </div>
-              <div className={`bg-${coffee.color}-50 px-2`}>
-                {coffee.varietals}
-              </div>
-              {'altitude' in coffee && (
-                <div className={`bg-${coffee.color}-50 px-2`}>
-                  {coffee.altitude}
-                </div>
-              )}
-            </div>
-          </div>
+          <CoffeeInfo coffee={coffee} />
         </div>
 
         <div
-          className={`flex text-xs pb-1 px-2 tracking-wider font-serif text-${coffee.color}-950 font-bold`}
+          className={twMerge(
+            "flex text-xs pb-1 px-2 tracking-wider font-serif font-bold items-end",
+            colors.textDarkest
+          )}
         >
-          <div className='flex text-[.7rem] items-end leading-[10px]'>
-            Roasted on:{' '}
+          <div className="flex text-[.7rem] items-end leading-[10px] flex-nowrap text-nowrap">
+            Roasted on:{" "}
             <div
-              className={`ml-1 border-b-[1px] border-${coffee.color}-950 w-4`}
+              className={twMerge(
+                "ml-1 border-b-[1px] w-4",
+                colors.borderDarkest
+              )}
             />
-            <span className='px-[2px] -mr-1 mb-[1px]'>/</span>
+            <span className="px-[2px] -mr-1 mb-[1px]">/</span>
             <div
-              className={`border-b-[1px] border-${coffee.color}-950 w-4`}
-            />{' '}
+              className={twMerge("border-b-[1px] w-4", colors.borderDarkest)}
+            />{" "}
           </div>
 
-          <span className='italic ml-auto '>
+          <span className="italic ml-auto text-nowrap text-[.6rem]">
             Traceable to <span>{coffee.traceable}</span>
           </span>
         </div>
@@ -199,282 +304,192 @@ const Label = (coffee: Coffee) => {
   );
 };
 
-const WebsiteImage = (coffee: Coffee) => {
-  const isLimitedEdition: boolean =
-    'limited' in coffee && coffee.limited === true;
+function CoffeeInfo({ coffee }: { coffee: Coffee[keyof Coffee] }) {
+  const rowCount = (4 +
+    ("altitude" in coffee ? 1 : 0) +
+    ("fermentation" in coffee && coffee.fermentation ? 1 : 0)) as 4 | 5 | 6;
+
   return (
-    <div className='p-4 border-[1px] border-black bg-white'>
-      <div className='relative w-[424px] overflow-hidden flex flex-col'>
-        <div
-          // 5x3 inch labels
-          className={`relative w-full h-3/5 border-8 rounded-xl border-${coffee.color}-900 bg-${coffee.color}-50 flex flex-col`}
-        >
-          {'score' in coffee && (
-            <div
-              style={{ fontFamily: 'fantasy' }}
-              className={`absolute top-0 left-1/2 leading-none  -translate-x-1/2 -translate-y-1/2 w-16 font-bold text-${coffee.color}-950 border-2 border-${coffee.color}-950 bg-${coffee.color}-200 rounded-full w-16 aspect-square flex flex-col justify-center items-center tracking-wide font-bold`}
-            >
-              <span className='text-base'>{coffee.score}</span>{' '}
-              <span className='text-[10px] tracking-widest'>pts</span>
-            </div>
-          )}
-          <div
-            style={{ fontFamily: 'fantasy' }}
-            className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-${coffee.color}-950 border-2 border-t-0 border-r-0 rounded-bl-md border-${coffee.color}-950 bg-${coffee.color}-200 font-bold pt-1`}
-          >
-            {coffee.size}
-          </div>
-          <div className='flex flex-initial'>
-            <div
-              style={{ fontFamily: 'fantasy' }}
-              className='w-full mt-[2rem] flex gap-4 px-2 items-center'
-            >
-              <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
-                <div
-                  className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
-                />
-                <div
-                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
-                />
-              </div>
-
-              <div className='flex-1'>
-                <div
-                  className={`text-4xl max-w-[250px] uppercase font-bold text-center text-${coffee.color}-950 flex justify-center items-center `}
-                >
-                  {coffee.country}
-                </div>
-                <div
-                  className={`relative text-2xl tracking-widest flex-initial  font-bold flex justify-center items-end text-center text-${coffee.color}-950 text-nowrap`}
-                >
-                  {coffee.farm}
-                </div>
-              </div>
-
-              <div className={`relative flex-1 h-[2px] bg-${coffee.color}-900`}>
-                <div
-                  className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-${coffee.color}-50 border-[2px] border-${coffee.color}-900 rotate-45`}
-                />
-                <div
-                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-${coffee.color}-900 rotate-45`}
-                />
-              </div>
-            </div>
-          </div>
-
-          {isLimitedEdition && (
-            <div
-              className='flex flex-initial justify-around gap-2 mx-auto text-xs items-end'
-              style={{ fontFamily: 'fantasy' }}
-            >
-              <span className='w-6 border-b-[1px] border-black relative'></span>
-              <span className='relative top-1'>of</span>
-              <span className='w-6 border-b-[1px] border-black relative'></span>
-              <span className='relative top-1'>bags</span>
-            </div>
-          )}
-
-          <div className='flex-1 grid justify-center content-start'>
-            <div
-              className={`my-3 px-2 text-center text-${coffee.color}-950 flex-1`}
-            >
-              {'fermentation' in coffee && (
-                <div className='uppercase tracking-widest text-sm mb-[.125rem]'>
-                  CO-FERMENTED
-                </div>
-              )}
-              <span className='italic tracking-wide text-2xl/5 font-bold'>
-                {' '}
-                {coffee.tastingNotes}
-              </span>
-            </div>
-
-            <div
-              className={`grid grid-cols-[max-content_1fr] border-y-2 border-${coffee.color}-900 text-base`}
-            >
-              <div
-                className={`grid grid-cols-subgrid grid-rows-subgrid row-span-5 gap-[1px] text-${coffee.color}-50 text-right uppercase font-bold  font-mono *:flex *:justify-end *:items-center`}
-              >
-                {'fermentation' in coffee && (
-                  <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                    Fermentation
-                  </div>
-                )}
-                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                  Process
-                </div>
-                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Lot</div>
-                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Region</div>
-                <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                  Varietals
-                </div>
-                {'altitude' in coffee && (
-                  <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>
-                    Altitude
-                  </div>
-                )}
-              </div>
-
-              <div
-                className={`grid grid-cols-subgrid grid-rows-subgrid font-bold tracking-wider row-span-6 gap-[1px] text-${coffee.color}-950 bg-${coffee.color}-900`}
-              >
-                {'fermentation' in coffee && (
-                  <div className={`bg-${coffee.color}-50 px-2`}>
-                    {coffee.fermentation}
-                  </div>
-                )}
-                <div
-                  className={`bg-${coffee.color}-50 px-2 font-bold tracking-wider uppercase`}
-                >
-                  {coffee.processing}
-                </div>
-                <div className={`bg-${coffee.color}-50 px-2`}>{coffee.lot}</div>
-                <div className={`bg-${coffee.color}-50 px-2`}>
-                  {coffee.region}
-                </div>
-                <div className={`bg-${coffee.color}-50 px-2`}>
-                  {coffee.varietals}
-                </div>
-                {'altitude' in coffee && (
-                  <div className={`bg-${coffee.color}-50 px-2`}>
-                    {coffee.altitude}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={`flex text-sm pb-1 px-2 mt-2 tracking-wider font-serif text-${coffee.color}-950 font-bold`}
-          >
-            <span className='italic'>
-              Traceable to <span>{coffee.traceable}</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const HolidayLabel = () => {
-  return (
-    <div className='relative w-[4in] h-[6in] overflow-hidden flex flex-col'>
-      <Banner />
+    <div
+      className={twMerge(
+        `grid grid-cols-[max-content_1fr] border-y-2 text-xs`,
+        COLORS[coffee.color].border
+      )}
+    >
       <div
-        className='w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150'
-        style={{
-          backgroundImage: `url('./sappho_logo.png')`,
-        }}
-      />
-      <div
-        // 5x3 inch labels
-        className={`relative w-full h-3/5 border-4 border-t-0 border-rose-800 bg-gradient-to-br from-green-100 to-rose-100 flex flex-col gap-5`}
+        className={twMerge(
+          `grid grid-cols-subgrid grid-rows-subgrid gap-[1px] text-right font-mono font-bold uppercase *:flex *:items-center *:justify-end`,
+          COLORS[coffee.color].textLight,
+          rowCount === 4 && "row-span-4",
+          rowCount === 5 && "row-span-5",
+          rowCount === 6 && "row-span-6"
+        )}
       >
-        <div className='absolute flex-1 p-2 flex flex-col'>
-          <div className='relative w-[58px] h-[58px]'>
-            <Image
-              src='/site qr code.png'
-              alt='qr-code'
-              fill
-              className={`object-contain border-rose-900 border-2`}
-            />
+        {"fermentation" in coffee && coffee.fermentation && (
+          <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Fermentation</div>
+        )}
+        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Process</div>
+        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Lot</div>
+        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Region</div>
+        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Varietals</div>
+        {"altitude" in coffee && (
+          <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Altitude</div>
+        )}
+      </div>
+
+      <div
+        className={twMerge(
+          `grid grid-cols-subgrid grid-rows-subgrid gap-[1px] font-bold tracking-wider`,
+          rowCount === 4 && "row-span-4",
+          rowCount === 5 && "row-span-5",
+          rowCount === 6 && "row-span-6",
+          COLORS[coffee.color].textDarkest,
+          COLORS[coffee.color].bgDark
+        )}
+      >
+        {"fermentation" in coffee && coffee.fermentation && (
+          <div className={`bg-${coffee.color}-50 px-2`}>
+            {typeof coffee.fermentation === "string"
+              ? coffee.fermentation
+              : coffee.fermentation.type === "cofermentation"
+                ? coffee.fermentation.ingredient
+                : coffee.fermentation.duration || "Anaerobic"}
           </div>
-          <span
-            className={`text-slate-950 text-[10px] tracking-wide font-bold pl-2`}
-          >
-            FIND ME
-          </span>
-        </div>
+        )}
         <div
-          style={{ fontFamily: 'fantasy' }}
-          className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-rose-800 border-2 border-t-0 border-r-0 rounded-bl-md border-rose-800 bg-black/10 font-bold pt-1`}
+          className={`bg-${coffee.color}-50 px-2 font-bold uppercase tracking-wider`}
         >
-          10 oz
+          {coffee.processing}
         </div>
-        <div className='flex flex-initial'>
-          <div
-            style={{ fontFamily: 'fantasy' }}
-            className='w-full mt-20 flex gap-4 px-2 items-center'
-          >
-            <div className={`relative flex-1 h-[2px] bg-rose-800`}>
-              <div
-                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-green-50 border-[2px] border-rose-800 rotate-45`}
-              />
-              <div
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-rose-900 rotate-45`}
-              />
-            </div>
-
-            <div className='flex-1 text-rose-800'>
-              <div
-                className={`text-3xl max-w-[320px] font-bold text-center flex justify-center items-center`}
-              >
-                SAPPHO&apos;s
-              </div>
-              <div
-                className={`relative text-xl tracking-widest flex-initial h-[36px] font-bold flex justify-center items-end text-center -mt-3 text-nowrap`}
-              >
-                Holiday Blend
-              </div>
-            </div>
-
-            <div className={`relative flex-1 h-[2px] bg-rose-800`}>
-              <div
-                className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-rose-50 border-[2px] border-rose-800 rotate-45`}
-              />
-              <div
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-rose-800 rotate-45`}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className='flex flex-col px-2 gap-4 flex-1 my-auto'>
-          <div
-            className={`italic tracking-wide text-center text-lg/5 font-bold text-rose-800`}
-          >
-            almond, molasses, chocolate and apricot
-          </div>
-
-          <div
-            className='text-center text-sm tracking-wider flex-initial text-green-950'
-            style={{ fontFamily: 'fantasy' }}
-          >
-            Blend of our <br /> <b className='text-rose-800'>Mexico Totutla</b>{' '}
-            and <b className='text-rose-800'>Ethiopian Getachew</b>*
-          </div>
-
-          <div
-            className='flex  justify-around gap-2 mx-auto text-xs items-end text-green-950'
-            style={{ fontFamily: 'fantasy' }}
-          >
-            <span className='w-6 border-b-[1px] border-rose-800 relative'></span>
-            <span className='relative top-1'>of</span>
-            <span className='w-6 border-b-[1px] border-rose-800 relative'></span>
-            <span className='relative top-1'>bags</span>
-          </div>
-        </div>
-
-        <div
-          className={`flex text-xs pb-1 px-2 tracking-wider font-serif text-rose-800 gap-2`}
-        >
-          <div className='flex text-[.7rem] items-end leading-[10px] text-rose-800 flex-initial text-nowrap mb-1'>
-            <b>Roasted on:</b>{' '}
-            <div className={`ml-1 border-b-[1px] border-red-800 w-4`} />
-            <span className='px-[2px] -mr-1 mb-[1px] text-green-950'>/</span>
-            <div className={`border-b-[1px] border-red-800 w-4`} />{' '}
-          </div>
-
-          <div className=' self-end text-right text-green-950'>
-            *Sourced directly from our friends at{' '}
-            <b className='text-red-800'>Tailwinds</b> in Chicago
-          </div>
-        </div>
+        <div className={`bg-${coffee.color}-50 px-2`}>{coffee.lot}</div>
+        <div className={`bg-${coffee.color}-50 px-2`}>{coffee.region}</div>
+        <div className={`bg-${coffee.color}-50 px-2`}>{coffee.varietals}</div>
+        {"altitude" in coffee && (
+          <div className={`bg-${coffee.color}-50 px-2`}>{coffee.altitude}</div>
+        )}
       </div>
     </div>
   );
-};
+}
+
+// const HolidayLabel = () => {
+//   return (
+//     <div className="relative w-[4in] h-[6in] overflow-hidden flex flex-col">
+//       <Banner />
+//       <div
+//         className="w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150"
+//         style={{
+//           backgroundImage: `url('./sappho_logo.png')`,
+//         }}
+//       />
+//       <div
+//         // 5x3 inch labels
+//         className={`relative w-full h-3/5 border-4 border-t-0 border-rose-800 bg-gradient-to-br from-green-100 to-rose-100 flex flex-col gap-5`}
+//       >
+//         <div className="absolute flex-1 p-2 flex flex-col">
+//           <div className="relative w-[58px] h-[58px]">
+//             <Image
+//               src="/site qr code.png"
+//               alt="qr-code"
+//               fill
+//               className={`object-contain border-rose-900 border-2`}
+//             />
+//           </div>
+//           <span
+//             className={`text-slate-950 text-[10px] tracking-wide font-bold pl-2`}
+//           >
+//             FIND ME
+//           </span>
+//         </div>
+//         <div
+//           style={{ fontFamily: "fantasy" }}
+//           className={`absolute top-0 right-0  w-[48px] h-[36px] flex justify-center items-center text-rose-800 border-2 border-t-0 border-r-0 rounded-bl-md border-rose-800 bg-black/10 font-bold pt-1`}
+//         >
+//           10 oz
+//         </div>
+//         <div className="flex flex-initial">
+//           <div
+//             style={{ fontFamily: "fantasy" }}
+//             className="w-full mt-20 flex gap-4 px-2 items-center"
+//           >
+//             <div className={`relative flex-1 h-[2px] bg-rose-800`}>
+//               <div
+//                 className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-green-50 border-[2px] border-rose-800 rotate-45`}
+//               />
+//               <div
+//                 className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-rose-900 rotate-45`}
+//               />
+//             </div>
+
+//             <div className="flex-1 text-rose-800">
+//               <div
+//                 className={`text-3xl max-w-[320px] font-bold text-center flex justify-center items-center`}
+//               >
+//                 SAPPHO&apos;s
+//               </div>
+//               <div
+//                 className={`relative text-xl tracking-widest flex-initial h-[36px] font-bold flex justify-center items-end text-center -mt-3 text-nowrap`}
+//               >
+//                 Holiday Blend
+//               </div>
+//             </div>
+
+//             <div className={`relative flex-1 h-[2px] bg-rose-800`}>
+//               <div
+//                 className={`absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square bg-rose-50 border-[2px] border-rose-800 rotate-45`}
+//               />
+//               <div
+//                 className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square bg-rose-800 rotate-45`}
+//               />
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="flex flex-col px-2 gap-4 flex-1 my-auto">
+//           <div
+//             className={`italic tracking-wide text-center text-lg/5 font-bold text-rose-800`}
+//           >
+//             almond, molasses, chocolate and apricot
+//           </div>
+
+//           <div
+//             className="text-center text-sm tracking-wider flex-initial text-green-950"
+//             style={{ fontFamily: "fantasy" }}
+//           >
+//             Blend of our <br /> <b className="text-rose-800">Mexico Totutla</b>{" "}
+//             and <b className="text-rose-800">Ethiopian Getachew</b>*
+//           </div>
+
+//           <div
+//             className="flex  justify-around gap-2 mx-auto text-xs items-end text-green-950"
+//             style={{ fontFamily: "fantasy" }}
+//           >
+//             <span className="w-6 border-b-[1px] border-rose-800 relative"></span>
+//             <span className="relative top-1">of</span>
+//             <span className="w-6 border-b-[1px] border-rose-800 relative"></span>
+//             <span className="relative top-1">bags</span>
+//           </div>
+//         </div>
+
+//         <div
+//           className={`flex text-xs pb-1 px-2 tracking-wider font-serif text-rose-800 gap-2`}
+//         >
+//           <div className="flex text-[.7rem] items-end leading-[10px] text-rose-800 flex-initial text-nowrap mb-1">
+//             <b>Roasted on:</b>{" "}
+//             <div className={`ml-1 border-b-[1px] border-red-800 w-4`} />
+//             <span className="px-[2px] -mr-1 mb-[1px] text-green-950">/</span>
+//             <div className={`border-b-[1px] border-red-800 w-4`} />{" "}
+//           </div>
+
+//           <div className=" self-end text-right text-green-950">
+//             *Sourced directly from our friends at{" "}
+//             <b className="text-red-800">Tailwinds</b> in Chicago
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 // const SpecialBeanBoxLabel = () => {
 //   const coffee: Coffee = {
@@ -844,10 +859,12 @@ const HolidayLabel = () => {
 function Banner({ children }: PropsWithChildren<object>) {
   return (
     <div
-      style={{ fontFamily: 'fantasy' }}
-      className='absolute top-0 left-0  z-50 bg-[#f8dcdf] text-sm  text-black text-center px-4 py-2 rounded-br-md  font-bold tracking-widest flex items-center'
+      className={twMerge(
+        "absolute top-0 left-0 z-50 bg-[#f8dcdf] text-sm text-black text-center px-4 py-2 rounded-br-md font-bold tracking-widest flex items-center",
+        BrandingStylizedFont.className
+      )}
     >
-      <div className='relative top-1'>{children}</div>
+      <div className="relative top-1">{children}</div>
     </div>
   );
 }

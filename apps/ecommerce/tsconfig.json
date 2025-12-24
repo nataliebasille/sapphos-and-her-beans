@@ -32,12 +32,12 @@
       "@env": ["src/env.mjs"],
       "@action-rpc": ["../../lib/action-rpc"],
       "~/*": ["./src/*"],
+      "@models": ["../../lib/models"],
       "@stripe": ["../../lib/stripe"],
       "@shippo": ["../../lib/shippo"]
     }
   },
   "include": [
-    ".eslintrc.cjs",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
@@ -46,5 +46,5 @@
     ".next/types/**/*.ts",
     "../../lib/typings/*.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".eslintrc.cjs"]
 }

@@ -10,13 +10,9 @@ import type {
   ParcelCreateFromTemplateRequest,
   ParcelCreateRequest,
 } from "shippo";
-import { isProduct } from "~/app/_stores/products";
 import { type Stripe, stripe } from "~/server/+utils/stripe";
-import {
-  getProducts,
-  type LegacyProduct,
-  type Product,
-} from "~/server/products/get_products";
+import { getProducts } from "~/server/products/get_products";
+import { products } from "@models";
 
 const addressFrom = {
   name: "Sappho and her beans",
@@ -52,13 +48,13 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
     const products = (await getProducts()).reduce((acc, product) => {
       acc.set(product.id, product);
       return acc;
-    }, new Map<string, Product | LegacyProduct>());
+    }, new Map<string, products.Product>());
 
     const [singleServeLineItems, nonSingleServeLineItems] = lineItems.reduce(
       (acc, item) => {
         const product = products.get(item.price!.product as string);
 
-        if (product && isProduct(product) && product.size === "singleserve") {
+        if (product && product.size === "singleserve") {
           acc[0].push(item);
         } else {
           const size = getSizeInGrams(product);
@@ -209,8 +205,8 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
   },
 );
 
-function getSizeInGrams(product: Product | LegacyProduct | undefined) {
-  if (!product || !isProduct(product)) {
+function getSizeInGrams(product: products.Product | undefined) {
+  if (!product) {
     return undefined;
   }
 

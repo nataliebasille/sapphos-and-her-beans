@@ -15,8 +15,7 @@
     "db:seed": "tsx ./db/migrate/seed.ts",
     "db:studio": "cd db && drizzle-kit studio",
     "db:generate:migration": "cd db && drizzle-kit generate",
-    "db:migrate": "NODE_ENV=production tsx ./db/migrate/index.ts",
-    "postinstall": "npm install stripe@16.12.0-beta.1 --workspace apps/ecommerce"
+    "db:migrate": "NODE_ENV=production tsx ./db/migrate/index.ts"
   },
   "repository": {
     "type": "git",
@@ -28,15 +27,10 @@
     "url": "https://github.com/sappho-and-her-beans/sappho/issues"
   },
   "homepage": "https://github.com/sappho-and-her-beans/sappho#readme",
-  "workspaces": [
-    "apps/admin",
-    "apps/ecommerce",
-    "apps/menu"
-  ],
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
     "@nataliebasille/typescript-utils": "^1.1.5",
-    "@natcore/design-system-core": "https://gitpkg.now.sh/nataliebasille/natcore-design-system/packages/core?main",
+    "@nataliebasille/natcore-design-system": "^1.0.1",
     "@neondatabase/serverless": "^0.10.1",
     "@t3-oss/env-nextjs": "^0.11.0",
     "cross-env": "^10.1.0",
@@ -62,6 +56,5 @@
     "styled-jsx": "^5.1.6",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4"
-  },
-  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"
+  }
 }

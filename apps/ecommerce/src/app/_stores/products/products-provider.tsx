@@ -1,10 +1,10 @@
 "use client";
 
 import { createStore } from "../_creator/create-store";
-import type { LegacyProduct, Product } from "./queries";
+import type { Product } from "./queries";
 
 export type ProductsStoreData = {
-  products: (Product | LegacyProduct)[];
+  products: Product[];
 };
 
 export const { Provider: ProductsProvider, useSelector: useProductsSelector } =

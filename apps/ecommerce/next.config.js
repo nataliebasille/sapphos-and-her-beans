@@ -1,6 +1,6 @@
-const dotenv = await import('dotenv');
+const dotenv = await import("dotenv");
 
-dotenv.config({path: '../../.env'});
+dotenv.config({ path: "../../.env" });
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
@@ -8,24 +8,23 @@ dotenv.config({path: '../../.env'});
  */
 await import("./src/env.js");
 
-
 /** @type {import("next").NextConfig} */
 const baseConfig = {
-  transpilePackages: ["@natcore/design-system-core"],
+  turbopack: {},
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: 'utfs.io',
-        pathname: '/f/**'
+        hostname: "utfs.io",
+        pathname: "/f/**",
       },
       {
         protocol: "https",
-        hostname: 'utfs.io',
-        pathname: '/a/ns7k7p5vvb/**'
-      }
-    ]
-  }
+        hostname: "utfs.io",
+        pathname: "/a/ns7k7p5vvb/**",
+      },
+    ],
+  },
 };
 
 import { withSentryConfig } from "@sentry/nextjs";

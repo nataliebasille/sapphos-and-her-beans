@@ -1,7 +1,7 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-import natcore from "@natcore/design-system-core/src/plugin";
-import { toRgb } from "@natcore/design-system-core/src/utils";
+import natcore from "@nataliebasille/natcore-design-system/plugin";
+import { toRgb } from "@nataliebasille/natcore-design-system/utils"
 
 export default {
   content: ["./src/**/*.tsx"],
