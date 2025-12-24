@@ -319,11 +319,15 @@ function WebsiteLabel(coffee: products.Product) {
               COLOR_CLASSES[coffee.color].textDarkest,
             )}
           >
-            {coffee.fermentation && (
-              <div className="mb-[.125rem] text-lg uppercase tracking-widest">
-                CO-FERMENTED
-              </div>
-            )}
+            {"fermentation" in coffee &&
+              coffee.fermentation &&
+              typeof coffee.fermentation !== "string" && (
+                <div className="mb-[.125rem] text-lg uppercase tracking-widest">
+                  {coffee.fermentation.type === "cofermentation"
+                    ? "CO-FERMENTED"
+                    : "ANAEROBIC"}
+                </div>
+              )}
             <span className="text-2xl/5 font-bold italic tracking-wide">
               {" "}
               {coffee.tastingNotes}

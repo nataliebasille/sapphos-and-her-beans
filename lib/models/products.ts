@@ -27,10 +27,10 @@ export type Product = {
   traceable: string;
   altitude?: string;
   varietals?: string;
-  fermentation?: 
+  fermentation?:
     | { type: "cofermentation"; ingredient: string }
     | { type: "anaerobic"; duration?: string }
-    | `${number} hours`
+    | `${number} hours`;
   score?: number;
 };
 
@@ -58,7 +58,7 @@ export const MEXICO_100g = {
   ...MEXICO_250g,
   id: "1001",
   size: "100g",
-  price: 10,
+  price: 12,
   name: "Mexico - Red de Totutla - 100g",
 } as const satisfies Product;
 
@@ -166,7 +166,7 @@ export const ETHIOPIA_GUJI_TUKU_250g = {
   type: "coffee",
   id: "5000",
   name: "Ethiopia - Guji Tuku - 250g",
-  price: 30,
+  price: 28,
   country: "Ethiopia",
   color: "rose",
   farm: "Guji Tuku",
@@ -180,14 +180,14 @@ export const ETHIOPIA_GUJI_TUKU_250g = {
   traceable: "Tuku - Vertically integrated mill",
   altitude: "2125 meters",
   isDecaf: false,
-  score: 93.2
+  score: 93.2,
 } as const satisfies Product;
 
 export const ETHIOPIA_GUJI_TUKU_100g = {
   ...ETHIOPIA_GUJI_TUKU_250g,
   id: "5001",
   size: "100g",
-  price: 13,
+  price: 14,
   name: "Ethiopia - Guji Tuku - 100g",
 } as const satisfies Product;
 
@@ -195,7 +195,7 @@ export const YELLOW_BOURBON_CONCOCTION_250g = {
   type: "coffee",
   id: "6000",
   name: "Nicaragua - Yellow Bourbon Concoction - 250g",
-  price: 35,
+  price: 28,
   score: 90,
   country: "Nicaragua",
   color: "yellow",
@@ -216,7 +216,7 @@ export const YELLOW_BOURBON_CONCOCTION_100g = {
   ...YELLOW_BOURBON_CONCOCTION_250g,
   id: "6001",
   size: "100g",
-  price: 15,
+  price: 12,
   featured: false,
   name: "Nicaragua - Yellow Bourbon Concoction - 100g",
 } as const satisfies Product;
@@ -225,7 +225,7 @@ export const YELLOW_PACAMARA_WASHED_250g = {
   type: "coffee",
   id: "7000",
   name: "Nicaragua - Yellow Pacamara Washed - 250g",
-  price: 35,
+  price: 28,
   score: 89,
   country: "Nicaragua",
   color: "sky",
@@ -240,14 +240,14 @@ export const YELLOW_PACAMARA_WASHED_250g = {
   altitude: "1200 meters",
   isDecaf: false,
   featured: false,
-  fermentation: "30.84 hours"
+  fermentation: "30.84 hours",
 } as const satisfies Product;
 
 export const YELLOW_PACAMARA_WASHED_100g = {
   ...YELLOW_PACAMARA_WASHED_250g,
   id: "7001",
   size: "100g",
-  price: 15,
+  price: 14,
   featured: false,
   name: "Nicaragua - Yellow Pacamara Washed - 100g",
 } as const satisfies Product;
@@ -255,7 +255,7 @@ export const YELLOW_PACAMARA_WASHED_100g = {
 export const MARACATURRA_MACERATION_GRENADINE_100g = {
   type: "coffee",
   id: "8000",
-  name: "Nicaragua - Maracaturra Maceration \"Grenadine\" - 100g",
+  name: 'Nicaragua - Maracaturra Maceration "Grenadine" - 100g',
   price: 18,
   score: 94,
   country: "Nicaragua",
@@ -278,12 +278,12 @@ export const PRODUCTS = [
   MEXICO_250g,
   MEXICO_100g,
   MEXICO_SINGLESERVE,
-  COFERMENTED_WINE_YEAST_LYCHEE_250g,
+  //COFERMENTED_WINE_YEAST_LYCHEE_250g,
   COFERMENTED_WINE_YEAST_LYCHEE_100g,
-  ETHIOPIA_YIRGACHEFF_BANKO_GOTITI_250g,
-  ETHIOPIA_YIRGACHEFF_BANKO_GOTITI_100g,
-  KENYA_NYERI_NYERI_GICHICHI_AA_250g,
-  KENYA_NYERI_NYERI_GICHICHI_AA_100g,
+  // ETHIOPIA_YIRGACHEFF_BANKO_GOTITI_250g,
+  // ETHIOPIA_YIRGACHEFF_BANKO_GOTITI_100g,
+  // KENYA_NYERI_NYERI_GICHICHI_AA_250g,
+  // KENYA_NYERI_NYERI_GICHICHI_AA_100g,
   ETHIOPIA_GUJI_TUKU_250g,
   ETHIOPIA_GUJI_TUKU_100g,
   YELLOW_BOURBON_CONCOCTION_250g,
