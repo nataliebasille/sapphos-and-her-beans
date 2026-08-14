@@ -1,12 +1,12 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { getProducts } from "~/server/products/get_products";
 import { Cart } from "./_components/cart";
 import { CartProvider } from "./_stores/cart/cart-provider";
 import { ProductsProvider } from "./_stores/products/products-provider";
+import { primaryFont, secondaryFont, tertiaryFont } from "./fonts";
 import { ShopHeader } from "./shop-header";
 import { ShopPageContainer } from "./shop-page-container";
 
@@ -22,7 +22,10 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const products = await getProducts();
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html
+      lang="en"
+      className={`${primaryFont.variable} ${secondaryFont.variable} ${tertiaryFont.variable}`}
+    >
       <head>
         <Script
           type="text/javascript"
@@ -33,7 +36,7 @@ export default async function RootLayout({
           }
         ></Script>
       </head>
-      <body>
+      <body className="palette-surface bg-surface-50 text-on-surface-50">
         <ProductsProvider initialValue={{ products }}>
           <CartProvider>
             <Cart />

@@ -1,3 +1,67 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@nataliebasille/natcore-design-system/css";
+
+/*
+ * Brand theme for Sappho and her beans.
+ * Palette + typography come from the brand guidelines; hex anchors drive the
+ * full 50–950 ramp that Natcore v2 derives.
+ */
+@theme static {
+  --theme-primary: #001f36; /* Deep Navy */
+  --theme-secondary: #e87a01; /* Sunset Orange */
+  --theme-accent: #e8abb0; /* Peachy Pink */
+
+  --theme-surface-50: #fef7f8; /* near-white blush */
+  --theme-surface-500: #f7dcdf; /* brand Pink */
+  --theme-surface-950: #001f36; /* Deep Navy */
+
+  --theme-danger: #c0445f;
+  --theme-success: #2f8f6b;
+
+  /*
+   * Free substitutes for the brand typefaces (set on <html> by next/font):
+   *   primary   = Baron       → Montserrat
+   *   secondary = Canva Sans  → Noto Sans
+   *   tertiary  = Antic       → Antic
+   */
+  --font-sans:
+    var(--font-secondary), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Keep the light, pink-forward brand look regardless of OS preference. */
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family:
+    var(--font-secondary),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+/* Baron/Montserrat is the display/heading voice of the brand. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-primary {
+  font-family: var(--font-primary), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-tertiary {
+  font-family: var(--font-tertiary), ui-sans-serif, system-ui, sans-serif;
+}
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}

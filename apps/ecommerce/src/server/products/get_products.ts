@@ -51,7 +51,7 @@ export const getProducts = unstable_cache(
 
       const fermentation = normalizeFermentation(p.metadata.fermentation);
       return {
-        type: 'coffee',
+        type: "coffee",
         id: p.id,
         name: p.name,
         price: price,
@@ -70,8 +70,8 @@ export const getProducts = unstable_cache(
         lot: p.metadata.lot,
         featured: p.metadata.featured === "true",
         isDecaf: p.metadata.decaf === "true",
-          } satisfies products.Product;
-    })
+      } satisfies products.Product;
+    });
   },
   ["products"],
   {
@@ -81,14 +81,18 @@ export const getProducts = unstable_cache(
 );
 
 function normalizeFermentation(fermentation: string | false | undefined) {
-  if(!fermentation) return undefined;
+  if (!fermentation) return undefined;
 
-  if(fermentation.endsWith("hours")) return fermentation as products.Product['fermentation'];
+  if (fermentation.endsWith("hours"))
+    return fermentation as products.Product["fermentation"];
 
-  const parsed = safeParse<products.Product['fermentation']>(fermentation);
-  if(parsed) return parsed;
+  const parsed = safeParse<products.Product["fermentation"]>(fermentation);
+  if (parsed) return parsed;
 
-  return { type: 'cofermentation',ingredient: fermentation} satisfies products.Product['fermentation'];
+  return {
+    type: "cofermentation",
+    ingredient: fermentation,
+  } satisfies products.Product["fermentation"];
 }
 
 function safeParse<T>(value: string): T | undefined {
@@ -96,5 +100,5 @@ function safeParse<T>(value: string): T | undefined {
     return JSON.parse(value) as T;
   } catch {
     return undefined;
-  } 
+  }
 }

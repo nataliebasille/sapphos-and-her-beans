@@ -35,14 +35,14 @@ export const QuantitySelector = ({
   return (
     <div className={twMerge("flex", className)}>
       <button
-        className="btn btn-outline rounded-r-none border-r-0 !border-surface-800 px-3 py-2 md:p-3"
+        className="btn-outline/surface !border-surface-800 rounded-r-none border-r-0 px-3 py-2 md:p-3"
         disabled={value <= 1}
         onClick={handleDecrement}
       >
         -
       </button>
       <input
-        className="w-10 rounded-none border-l-0 border-r-0 border-solid border-surface-800 p-1 text-center md:p-2"
+        className="border-surface-800 w-10 rounded-none border-r-0 border-l-0 border-solid p-1 text-center md:p-2"
         type="text"
         value={value}
         inputMode="numeric"
@@ -50,7 +50,7 @@ export const QuantitySelector = ({
         onChange={handleSet}
       />
       <button
-        className="btn btn-outline rounded-l-none border-l-0 !border-surface-800 px-3 py-2 md:p-3"
+        className="btn-outline/surface !border-surface-800 rounded-l-none border-l-0 px-3 py-2 md:p-3"
         onClick={handleIncrement}
       >
         +

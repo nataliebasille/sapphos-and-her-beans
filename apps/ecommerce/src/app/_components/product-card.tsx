@@ -136,7 +136,7 @@ export const ProductCard = (coffee: products.Product) => {
         <button
           type="button"
           className={twMerge(
-            "btn-primary btn btn-sm flex w-full items-center justify-center uppercase tracking-wider",
+            "btn-solid/primary btn-size-sm flex w-full items-center justify-center tracking-wider uppercase",
             added && "!bg-[#4BB543]",
           )}
           onClick={handleAddToCart}
@@ -187,7 +187,7 @@ function WebsiteLabel(coffee: products.Product) {
         {coffee.size !== "singleserve" && (
           <div
             className={twMerge(
-              `absolute left-0 top-0 flex items-center justify-center rounded-br-lg border-2 border-l-0 border-t-0 px-4 pt-1 text-2xl font-bold tracking-wider`,
+              `absolute top-0 left-0 flex items-center justify-center rounded-br-lg border-2 border-t-0 border-l-0 px-4 pt-1 text-2xl font-bold tracking-wider`,
               COLOR_CLASSES[coffee.color].textDarkest,
               COLOR_CLASSES[coffee.color].bgNormal,
               COLOR_CLASSES[coffee.color].borderDarkest,
@@ -208,7 +208,7 @@ function WebsiteLabel(coffee: products.Product) {
             >
               <span
                 className={twMerge(
-                  "mx-auto flex flex-col p-2 text-sm font-bold uppercase leading-3 tracking-wider",
+                  "mx-auto flex flex-col p-2 text-sm leading-3 font-bold tracking-wider uppercase",
                   COLOR_CLASSES[coffee.color].textLight,
                   COLOR_CLASSES[coffee.color].bgDark,
                 )}
@@ -254,14 +254,14 @@ function WebsiteLabel(coffee: products.Product) {
               >
                 <div
                   className={twMerge(
-                    `absolute left-1/2 top-[1px] aspect-square w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-[2px]`,
+                    `absolute top-[1px] left-1/2 aspect-square w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-[2px]`,
                     COLOR_CLASSES[coffee.color].bgLight,
                     COLOR_CLASSES[coffee.color].border,
                   )}
                 />
                 <div
                   className={twMerge(
-                    `absolute left-1/2 top-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45`,
+                    `absolute top-1/2 left-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45`,
                     COLOR_CLASSES[coffee.color].bgDark,
                   )}
                 />
@@ -279,7 +279,7 @@ function WebsiteLabel(coffee: products.Product) {
                 </div>
                 <div
                   className={twMerge(
-                    `relative flex flex-initial items-end justify-center text-nowrap text-center font-bold tracking-widest`,
+                    `relative flex flex-initial items-end justify-center text-center font-bold tracking-widest text-nowrap`,
                     coffee.size !== "singleserve" ? "text-2xl" : "text-xl",
                     COLOR_CLASSES[coffee.color].textDarkest,
                   )}
@@ -296,14 +296,14 @@ function WebsiteLabel(coffee: products.Product) {
               >
                 <div
                   className={twMerge(
-                    `absolute left-1/2 top-[1px] aspect-square w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-[2px]`,
+                    `absolute top-[1px] left-1/2 aspect-square w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-[2px]`,
                     COLOR_CLASSES[coffee.color].bgLight,
                     COLOR_CLASSES[coffee.color].border,
                   )}
                 />
                 <div
                   className={twMerge(
-                    `absolute left-1/2 top-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45`,
+                    `absolute top-1/2 left-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45`,
                     COLOR_CLASSES[coffee.color].bgDark,
                   )}
                 />
@@ -322,13 +322,13 @@ function WebsiteLabel(coffee: products.Product) {
             {"fermentation" in coffee &&
               coffee.fermentation &&
               typeof coffee.fermentation !== "string" && (
-                <div className="mb-[.125rem] text-lg uppercase tracking-widest">
-                  {coffee.fermentation.type === "cofermentation"
-                    ? "CO-FERMENTED"
-                    : "ANAEROBIC"}
+                <div className="mb-[.125rem] text-lg tracking-widest uppercase">
+                  {coffee.fermentation.type === "cofermentation" ?
+                    "CO-FERMENTED"
+                  : "ANAEROBIC"}
                 </div>
               )}
-            <span className="text-2xl/5 font-bold italic tracking-wide">
+            <span className="text-2xl/5 font-bold tracking-wide italic">
               {" "}
               {coffee.tastingNotes}
             </span>
@@ -374,14 +374,14 @@ function CoffeeInfo({ coffee }: { coffee: products.Product }) {
         )}
       >
         {coffee.fermentation && (
-          <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Fermentation</div>
+          <div className={`bg-${coffee.color}-900 pr-3 pl-1`}>Fermentation</div>
         )}
-        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Process</div>
-        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Lot</div>
-        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Region</div>
-        <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Varietals</div>
+        <div className={`bg-${coffee.color}-900 pr-3 pl-1`}>Process</div>
+        <div className={`bg-${coffee.color}-900 pr-3 pl-1`}>Lot</div>
+        <div className={`bg-${coffee.color}-900 pr-3 pl-1`}>Region</div>
+        <div className={`bg-${coffee.color}-900 pr-3 pl-1`}>Varietals</div>
         {"altitude" in coffee && (
-          <div className={`bg-${coffee.color}-900 pl-1 pr-3`}>Altitude</div>
+          <div className={`bg-${coffee.color}-900 pr-3 pl-1`}>Altitude</div>
         )}
       </div>
 
@@ -401,11 +401,11 @@ function CoffeeInfo({ coffee }: { coffee: products.Product }) {
               coffee.fermentation
             : coffee.fermentation.type === "cofermentation" ?
               coffee.fermentation.ingredient
-            : coffee.fermentation.duration ?? "Anaerobic"}
+            : (coffee.fermentation.duration ?? "Anaerobic")}
           </div>
         )}
         <div
-          className={`bg-${coffee.color}-50 px-2 font-bold uppercase tracking-wider`}
+          className={`bg-${coffee.color}-50 px-2 font-bold tracking-wider uppercase`}
         >
           {coffee.processing}
         </div>

@@ -55,13 +55,13 @@ export const ShopHeader = () => {
             alt="Sappho logo"
             width={125}
             height={100}
-            className="absolute left-[50%] top-[50%] mx-auto -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-[50%] left-[50%] mx-auto -translate-x-1/2 -translate-y-1/2"
           />
         </Link>
       )}
       <button
         className={twMerge(
-          "ml-auto mr-6 hidden text-nowrap rounded-full border px-4 py-2 text-base uppercase transition-all duration-300 md:block",
+          "mr-6 ml-auto hidden rounded-full border px-4 py-2 text-base text-nowrap uppercase transition-all duration-300 md:block",
           contrast === "white" ?
             "border-white hover:bg-white hover:text-slate-800"
           : "border-black hover:bg-black/70 hover:text-slate-200",

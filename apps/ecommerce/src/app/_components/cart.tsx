@@ -33,19 +33,19 @@ export const Cart = () => {
   return (
     <>
       {isOpen && (
-        <div className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-black/40" />
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-[100] bg-black/40" />
       )}
       <div
         ref={cartRef}
         className={twMerge(
-          "fixed bottom-0 right-0 top-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5",
-          isOpen && "translate-x-0 shadow-lg shadow-primary-900",
+          "fixed top-0 right-0 bottom-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5",
+          isOpen && "shadow-primary-900 translate-x-0 shadow-lg",
         )}
       >
         <div className="flex h-full flex-col">
           <div className="mb-0 flex items-center border-b-[1px] border-slate-800/30 px-4 py-4 text-2xl">
             <CartIcon className="mr-2" />
-            <div className="-mb-[2px] flex-1 text-nowrap text-center">
+            <div className="-mb-[2px] flex-1 text-center text-nowrap">
               Your shopping bag
             </div>
             <Close
@@ -75,7 +75,7 @@ const CartItemList = memo(function CartItemList() {
 
   return (
     <>
-      <div className="flex-1 overflow-auto bg-surface-900/20 p-2 shadow-inner shadow-primary-50/50">
+      <div className="bg-surface-900/20 shadow-primary-50/50 flex-1 overflow-auto p-2 shadow-inner">
         <div
           className="grid grid-cols-[6rem_1fr] grid-rows-[min-content] gap-4 md:grid-cols-[12rem_1fr]"
           style={{ gridRow: `span ${cartItems.length}` }}
@@ -85,16 +85,16 @@ const CartItemList = memo(function CartItemList() {
           })}
         </div>
       </div>
-      <div className="flex items-center gap-3 border-b-[1px] border-t-[1px] border-primary-300/50 p-2">
+      <div className="border-primary-300/50 flex items-center gap-3 border-t-[1px] border-b-[1px] p-2">
         <div className="mx-auto flex flex-col text-xl">
-          <span className="text-sm font-bold uppercase text-surface-contrast-50/50">
+          <span className="text-on-surface-50/50 text-sm font-bold uppercase">
             Total
           </span>
           {total}
         </div>
         <Link
           href="/checkout/cart"
-          className="btn-primary btn flex w-[175px] flex-initial items-center uppercase tracking-wider md:w-auto md:min-w-[200px]"
+          className="btn-solid/primary flex w-[175px] flex-initial items-center tracking-wider uppercase md:w-auto md:min-w-[200px]"
           onClick={handleCheckoutClick}
         >
           Checkout{" "}
@@ -125,7 +125,7 @@ const CartItemDisplay = memo(function CartItem({
   }, [id, removeItem]);
 
   return item ?
-      <div className="card col-span-2 grid h-fit grid-cols-subgrid border-surface-800 bg-surface-200 p-2 shadow-sm shadow-primary-50/50">
+      <div className="card-soft/surface border-surface-800 bg-surface-200 shadow-primary-50/50 col-span-2 grid h-fit grid-cols-subgrid p-2 shadow-sm">
         <input type="hidden" name={`items.${index}.id`} value={id} />
         <input
           type="hidden"
@@ -168,7 +168,7 @@ const CartItemDisplay = memo(function CartItem({
             <span className="ml-2 md:text-xl">x ${item.product?.price}</span>
             <button
               type="button"
-              className="btn btn-ghost btn-sm ml-auto"
+              className="btn-ghost/surface btn-size-sm ml-auto"
               onClick={handleRemoveItem}
             >
               Remove

@@ -27,7 +27,7 @@ export const Heading = ({ children, level, className }: HeadingProps) => {
   return (
     <Tag
       className={twMerge(
-        "uppercase tracking-wide",
+        "tracking-wide uppercase",
         textSize[level],
         marginBottom[level],
         className,

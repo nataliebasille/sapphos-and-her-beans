@@ -12,12 +12,12 @@ export function CartIcon({ onClick, className }: CartIconProps) {
 
   return (
     <div
-      className={twMerge("relative ml-auto mr-6 w-fit md:ml-0", className)}
+      className={twMerge("relative mr-6 ml-auto w-fit md:ml-0", className)}
       onClick={onClick}
     >
       <Cart className="ml-auto size-12 md:ml-0" />
       {quantity > 0 && (
-        <span className="pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-primary-600/80 text-xs text-primary-contrast-600 text-white">
+        <span className="bg-primary-600/80 text-on-primary-600 pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full text-xs text-white">
           {quantity}
         </span>
       )}

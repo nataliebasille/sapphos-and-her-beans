@@ -43,11 +43,11 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <div className="relative grid grid-cols-1 flex-row-reverse bg-primary-base !pb-12 tracking-widest text-primary-contrast-base sm:px-20 md:grid-cols-[3fr_2fr] md:gap-4 md:py-4">
+      <div className="bg-primary-500 text-on-primary-500 relative grid grid-cols-1 flex-row-reverse !pb-12 tracking-widest sm:px-20 md:grid-cols-[3fr_2fr] md:gap-4 md:py-4">
         <div className="row-start-2 flex min-w-0 flex-col gap-10 p-0 pb-8 font-thin sm:px-8 md:row-start-1 md:mr-24 md:p-0 md:pt-14 xl:mr-40">
           <span className="flex flex-col items-center justify-center text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
             <span className="text-nowrap">Unique coffee</span>
-            <span className="divider divider-secondary w-1/3 !self-center text-sm !font-thin text-white xl:text-base">
+            <span className="divider/secondary w-1/3 !self-center text-sm !font-thin text-white xl:text-base">
               AND
             </span>
             <span>Uncompromised quality</span>
@@ -72,15 +72,15 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <div className="bg-surface-base p-8 text-surface-contrast-base">
+      <div className="bg-surface-500 text-on-surface-500 p-8">
         <div className="mb-5 flex items-center border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
-          <Heading level={3} className="mb-0 uppercase tracking-wide">
+          <Heading level={3} className="mb-0 tracking-wide uppercase">
             Featured
           </Heading>
 
           <Link
             href="/shop"
-            className="btn-primary btn btn-outline btn-lg mb-2 ml-auto uppercase"
+            className="btn-outline/primary btn-size-lg mb-2 ml-auto uppercase"
           >
             Shop All
           </Link>
@@ -103,7 +103,7 @@ export default async function HomePage() {
             //     />
             //   </div>
 
-            //   <div className="text-nowrap bg-secondary-700 p-4 text-xl uppercase text-secondary-contrast-700">
+            //   <div className="text-nowrap bg-secondary-700 p-4 text-xl uppercase text-on-secondary-700">
             //     {product.name}
             //   </div>
             // </div>

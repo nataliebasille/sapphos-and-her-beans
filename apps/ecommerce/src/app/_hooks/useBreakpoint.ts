@@ -1,12 +1,20 @@
-import resolveConfig from "tailwindcss/resolveConfig";
 import { useLayoutEffect, useState } from "react";
-import tailwindConfig from "~/../tailwind.config";
 
-const fullConfig = resolveConfig(tailwindConfig);
+/**
+ * Tailwind v4 default breakpoints. Tailwind v4 is CSS-first (no JS config to
+ * resolve), so the screen sizes are kept here for the media-query hook.
+ */
+const BREAKPOINTS = {
+  sm: "40rem",
+  md: "48rem",
+  lg: "64rem",
+  xl: "80rem",
+  "2xl": "96rem",
+} as const;
 
-export const useBreakpoint = (
-  breakpoint: keyof (typeof fullConfig)["theme"]["screens"],
-) => {
+type Breakpoint = keyof typeof BREAKPOINTS;
+
+export const useBreakpoint = (breakpoint: Breakpoint) => {
   const [isInBreakpoint, setIsInBreakpoint] = useState(
     getMediaQueryForBreakpoint(breakpoint)?.matches ?? false,
   );
@@ -32,13 +40,11 @@ export const useBreakpoint = (
   return isInBreakpoint;
 };
 
-function getMediaQueryForBreakpoint(
-  breakpoint: keyof (typeof fullConfig)["theme"]["screens"],
-) {
+function getMediaQueryForBreakpoint(breakpoint: Breakpoint) {
   if (typeof window === "undefined") return undefined;
 
   const mediaQuery = window.matchMedia(
-    `(min-width: ${fullConfig.theme.screens[breakpoint]})`,
+    `(min-width: ${BREAKPOINTS[breakpoint]})`,
   );
 
   return mediaQuery;

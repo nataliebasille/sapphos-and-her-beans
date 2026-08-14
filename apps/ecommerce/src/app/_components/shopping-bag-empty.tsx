@@ -15,7 +15,7 @@ export const ShoppingBagEmpty = memo(function CartEmpty() {
         Your shopping bag is empty
       </div>
       <button
-        className="btn-primary btn btn-ghost btn-lg mt-5 uppercase"
+        className="btn-ghost/primary btn-size-lg mt-5 uppercase"
         onClick={handleExplore}
       >
         Explore our coffee
