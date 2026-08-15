@@ -1,12 +1,11 @@
 "use client";
 
 /**
- * Shop catalog — the coffee list on `/shop`. Renders one label card per coffee
- * on the Winter Frost canvas. The "Details" disclosure is shared across cards so
- * the whole grid expands/collapses together and rows stay aligned.
+ * Shop catalog — the coffee list on `/shop`. Renders one "mini passport" card
+ * per coffee; each links through to the full coffee page at /shop/[id].
  */
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useProductList } from "~/app/_stores/products";
 import { groupByOrigin } from "./catalog-data";
 import { CoffeeCard } from "./coffee-card";
@@ -15,7 +14,6 @@ import { Eyebrow, FrostCanvas } from "./coffee-label";
 export function ShopCatalog() {
   const products = useProductList();
   const groups = useMemo(() => groupByOrigin(products), [products]);
-  const [detailsOpen, setDetailsOpen] = useState(false);
 
   return (
     <FrostCanvas>
@@ -33,12 +31,7 @@ export function ShopCatalog() {
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
-            <CoffeeCard
-              key={g.key}
-              group={g}
-              detailsOpen={detailsOpen}
-              onToggleDetails={() => setDetailsOpen((o) => !o)}
-            />
+            <CoffeeCard key={g.key} group={g} />
           ))}
         </div>
       </div>
