@@ -1,11 +1,12 @@
 "use client";
 
 /**
- * PROTOTYPE — throwaway. Shared helpers for the coffee-list redesign variants.
+ * Coffee-label primitives for the shop catalog.
  *
- * These variants adopt the `new-ui` design system (Winter Frost canvas, Deep
- * Navy anchor, muted earthy per-coffee accents) so the shop page matches the
- * redesigned homepage. Brand tokens + helpers are reused from the home build.
+ * These re-tint the brand's signature product-label motifs (MedievalSharp-era
+ * origin rule, size/price + score, spec grid, "traceable to" footer) onto the
+ * Winter Frost / Deep Navy palette shared with the redesigned homepage. Brand
+ * tokens and helpers are reused from the home build.
  */
 
 import { twMerge } from "tailwind-merge";
@@ -21,14 +22,11 @@ import {
   useQuickAdd,
 } from "~/app/(home)/_components/sections";
 
-export { accentFor, BRAND, Eyebrow, originName, tastingNotes, useQuickAdd };
+export { accentFor, Eyebrow };
 export type { Coffee };
 
-export const FROST = BRAND.frost;
-export const NAVY = BRAND.navy;
-
 /** Translucent accent for label tints (source accents are solid hex). */
-export function tint(hex: string, alpha: number): string {
+function tint(hex: string, alpha: number): string {
   const h = hex.replace("#", "");
   const r = parseInt(h.slice(0, 2), 16);
   const g = parseInt(h.slice(2, 4), 16);
@@ -36,12 +34,12 @@ export function tint(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export function sizeLabel(size: products.Product["size"]) {
+function sizeLabel(size: products.Product["size"]) {
   return size === "singleserve" ? "Single Serve" : size;
 }
 
 /** Source altitude data is inconsistent ("1200 - 1450" vs "2125 meters"). */
-export function altitudeLabel(altitude?: string): string | null {
+function altitudeLabel(altitude?: string): string | null {
   if (!altitude) return null;
   const trimmed = altitude.trim();
   return /m(eters?)?$/i.test(trimmed) ? trimmed : `${trimmed}m`;
@@ -155,9 +153,7 @@ function SizeAddButton({ coffee }: { coffee: Coffee }) {
       <span className="text-xs font-bold tracking-wide uppercase">
         {added ? "Added" : sizeLabel(coffee.size)}
       </span>
-      {!added && (
-        <span className="text-sm font-bold">${coffee.price}</span>
-      )}
+      {!added && <span className="text-sm font-bold">${coffee.price}</span>}
     </button>
   );
 }
@@ -179,30 +175,12 @@ export function SizeAddRow({
   );
 }
 
-/** Pink tasting-note chips, matching the homepage. */
-export function NoteChips({
-  notes,
-  className,
-}: {
-  notes: string[];
-  className?: string;
-}) {
-  return (
-    <div className={twMerge("flex flex-wrap gap-1.5", className)}>
-      {notes.map((n) => (
-        <span
-          key={n}
-          className="rounded-full bg-[#F8DCDF]/60 px-2.5 py-1 text-xs text-[#001F36]/80"
-        >
-          {n}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-/** Shared page shell: Winter Frost canvas that covers the legacy pink container. */
-export function ShopCanvas({ children }: { children: React.ReactNode }) {
+/**
+ * Winter Frost page canvas. The shop routes are wrapped by the legacy pink
+ * `PageContainer`; this cancels its top padding and repaints the surface in
+ * Winter Frost so the catalog matches the redesigned homepage.
+ */
+export function FrostCanvas({ children }: { children: React.ReactNode }) {
   return (
     <div className="-mt-[calc(76px+1.5rem)] min-h-dvh bg-[#FAF9F8] pt-[calc(76px+1.5rem)]">
       {children}
@@ -210,10 +188,9 @@ export function ShopCanvas({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ================================================================== *
- * Signature "coffee-label" motifs — carried over from the original
- * product card, re-tinted onto the Winter Frost / navy palette.
- * ================================================================== */
+/* ------------------------------------------------------------------ *
+ * Signature "coffee-label" motifs.
+ * ------------------------------------------------------------------ */
 
 /** The horizontal rule with a rotated-diamond node centered on it. */
 function MotifRule() {
@@ -225,7 +202,7 @@ function MotifRule() {
   );
 }
 
-/** Origin name + farm flanked by the diamond-line motif, in MedievalSharp. */
+/** Origin name + lot flanked by the diamond-line motif. */
 export function OriginMotif({
   origin,
   label,
@@ -251,11 +228,7 @@ export function OriginMotif({
         >
           {origin}
         </span>
-        <span
-          className={twMerge(
-            "font-primary mt-0.5 text-xs leading-tight tracking-wider",
-          )}
-        >
+        <span className="font-primary mt-0.5 text-xs leading-tight tracking-wider">
           {label}
         </span>
       </div>
@@ -264,7 +237,7 @@ export function OriginMotif({
   );
 }
 
-/** Airy price label in the brand primary font — no box, no fill. Range string. */
+/** Airy price label in the brand primary font. Accepts a range string. */
 export function PriceTag({
   text,
   className,
@@ -306,7 +279,7 @@ export function ScoreBadge({
 }
 
 /** Human-readable fermentation value + kicker, from the original card logic. */
-export function fermentationInfo(f: Coffee["fermentation"]): {
+function fermentationInfo(f: Coffee["fermentation"]): {
   kicker?: string;
   value: string;
 } | null {
@@ -321,7 +294,7 @@ export function fermentationInfo(f: Coffee["fermentation"]): {
  * Fermentation kicker for the card header — but only when it isn't already
  * spelled out in the origin label (e.g. "Co-fermented with Wine Yeast / Lychee").
  */
-export function headerFermentKicker(group: OriginGroup): string | null {
+function headerFermentKicker(group: OriginGroup): string | null {
   const f = fermentationInfo(group.fermentation);
   if (!f?.kicker) return null;
   if (group.label.toLowerCase().includes(f.kicker.toLowerCase())) return null;
@@ -349,7 +322,7 @@ export function ProcessLine({ group }: { group: OriginGroup }) {
 }
 
 /** The mono-uppercase spec table — label column navy, value column accent-tinted. */
-export function SpecGrid({
+function SpecGrid({
   group,
   accent,
   className,
@@ -395,7 +368,7 @@ export function SpecGrid({
 }
 
 /** "Traceable to {n}" italic serif footer. */
-export function TraceableFooter({
+function TraceableFooter({
   traceable,
   className,
 }: {
@@ -443,10 +416,7 @@ export function SpecDetails({
         <svg
           viewBox="0 0 12 12"
           fill="none"
-          className={twMerge(
-            "size-3 transition-transform",
-            open && "rotate-180",
-          )}
+          className={twMerge("size-3 transition-transform", open && "rotate-180")}
         >
           <path
             d="M2.5 4.5 6 8l3.5-3.5"
@@ -466,4 +436,3 @@ export function SpecDetails({
     </div>
   );
 }
-
