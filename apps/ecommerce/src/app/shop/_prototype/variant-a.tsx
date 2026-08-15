@@ -6,7 +6,7 @@
  * score badges, spec grid, traceable footer) re-tinted onto Winter Frost/navy.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   AddButton,
   accentFor,
@@ -27,7 +27,15 @@ import {
 
 export const VARIANT_A_NAME = "Coffee label";
 
-function LabelCard({ group }: { group: OriginGroup }) {
+function LabelCard({
+  group,
+  detailsOpen,
+  onToggleDetails,
+}: {
+  group: OriginGroup;
+  detailsOpen: boolean;
+  onToggleDetails: () => void;
+}) {
   const accent = accentFor(group.color);
   const { selected, setSelected } = useSizeSelection(group);
   const ferment = fermentationInfo(group.fermentation);
@@ -81,7 +89,12 @@ function LabelCard({ group }: { group: OriginGroup }) {
             </span>
             <AddButton coffee={selected} size="sm" />
           </div>
-          <SpecDetails group={group} accent={accent} />
+          <SpecDetails
+            group={group}
+            accent={accent}
+            open={detailsOpen}
+            onToggle={onToggleDetails}
+          />
         </div>
       </div>
     </article>
@@ -90,6 +103,7 @@ function LabelCard({ group }: { group: OriginGroup }) {
 
 export function VariantA({ products: list }: { products: Coffee[] }) {
   const groups = useMemo(() => groupByOrigin(list), [list]);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   return (
     <ShopCanvas>
@@ -105,9 +119,14 @@ export function VariantA({ products: list }: { products: Coffee[] }) {
           </p>
         </header>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
-            <LabelCard key={g.key} group={g} />
+            <LabelCard
+              key={g.key}
+              group={g}
+              detailsOpen={detailsOpen}
+              onToggleDetails={() => setDetailsOpen((o) => !o)}
+            />
           ))}
         </div>
       </div>

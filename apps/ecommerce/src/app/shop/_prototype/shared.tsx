@@ -408,20 +408,23 @@ export function TraceableFooter({
 export function SpecDetails({
   group,
   accent,
+  open,
+  onToggle,
   className,
 }: {
   group: OriginGroup;
   accent: string;
+  open: boolean;
+  onToggle: () => void;
   className?: string;
 }) {
-  const [open, setOpen] = useState(false);
   return (
     <div className={className}>
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
         aria-expanded={open}
-        className="flex w-full items-center justify-between border-t border-[#001F36]/10 pt-2 text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/60 uppercase transition-colors hover:text-[#001F36]"
+        className="flex w-full items-center justify-between border-t border-[#001F36]/10 pt-2 text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/60 uppercase transition-colors outline-none hover:text-[#001F36] focus:outline-none focus-visible:outline-none"
       >
         {open ? "Hide details" : "Details"}
         <svg

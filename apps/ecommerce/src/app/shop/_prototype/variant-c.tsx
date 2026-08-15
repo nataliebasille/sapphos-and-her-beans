@@ -6,7 +6,7 @@
  * navy on top, and the spec/actions ride on a white "label sticker" panel.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   AddButton,
   accentFor,
@@ -26,7 +26,15 @@ import {
 
 export const VARIANT_C_NAME = "Accent poster";
 
-function PosterTile({ group }: { group: OriginGroup }) {
+function PosterTile({
+  group,
+  detailsOpen,
+  onToggleDetails,
+}: {
+  group: OriginGroup;
+  detailsOpen: boolean;
+  onToggleDetails: () => void;
+}) {
   const accent = accentFor(group.color);
   const { selected, setSelected } = useSizeSelection(group);
   const ferment = fermentationInfo(group.fermentation);
@@ -69,7 +77,12 @@ function PosterTile({ group }: { group: OriginGroup }) {
           </span>
           <AddButton coffee={selected} size="sm" />
         </div>
-        <SpecDetails group={group} accent={accent} />
+        <SpecDetails
+          group={group}
+          accent={accent}
+          open={detailsOpen}
+          onToggle={onToggleDetails}
+        />
       </div>
     </article>
   );
@@ -77,6 +90,7 @@ function PosterTile({ group }: { group: OriginGroup }) {
 
 export function VariantC({ products: list }: { products: Coffee[] }) {
   const groups = useMemo(() => groupByOrigin(list), [list]);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   return (
     <ShopCanvas>
@@ -94,9 +108,14 @@ export function VariantC({ products: list }: { products: Coffee[] }) {
           </p>
         </header>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
-            <PosterTile key={g.key} group={g} />
+            <PosterTile
+              key={g.key}
+              group={g}
+              detailsOpen={detailsOpen}
+              onToggleDetails={() => setDetailsOpen((o) => !o)}
+            />
           ))}
         </div>
       </div>
