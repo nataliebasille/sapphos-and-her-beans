@@ -8,19 +8,18 @@
 
 import { useMemo, useState } from "react";
 import {
-  AddButton,
   accentFor,
   Eyebrow,
   fermentationInfo,
   type OriginGroup,
   OriginMotif,
+  PriceTag,
+  priceRange,
   ScoreBadge,
   ShopCanvas,
-  SizePills,
-  SizePriceBadge,
+  SizeAddRow,
   SpecDetails,
   groupByOrigin,
-  useSizeSelection,
   type Coffee,
 } from "./shared";
 
@@ -36,47 +35,41 @@ function PosterTile({
   onToggleDetails: () => void;
 }) {
   const accent = accentFor(group.color);
-  const { selected, setSelected } = useSizeSelection(group);
   const ferment = fermentationInfo(group.fermentation);
 
   return (
     <article
-      className="flex flex-col gap-3 rounded-2xl p-4"
+      className="flex h-full flex-col gap-3 rounded-2xl p-4"
       style={{ backgroundColor: accent }}
     >
       <div className="flex items-start justify-between">
-        <SizePriceBadge
-          size={selected.size}
-          price={selected.price}
-        />
+        <PriceTag text={priceRange(group.sizes)} />
         {group.score ? <ScoreBadge score={group.score} /> : null}
       </div>
 
       <OriginMotif origin={group.origin} label={group.label} size="sm" />
-      {group.processing ? (
-        <p className="-mt-2 text-center text-sm font-bold tracking-[0.2em] text-[#001F36]/80 uppercase">
-          {group.processing}
-        </p>
+      {group.processing || ferment?.kicker ? (
+        <div className="-mt-2 flex flex-col items-center leading-tight">
+          {ferment?.kicker ? (
+            <span className="text-[10px] font-semibold tracking-[0.2em] text-[#001F36]/55 uppercase">
+              {ferment.kicker}
+            </span>
+          ) : null}
+          {group.processing ? (
+            <span className="text-sm font-bold tracking-[0.2em] text-[#001F36]/80 uppercase">
+              {group.processing}
+            </span>
+          ) : null}
+        </div>
       ) : null}
 
       <p className="text-center text-[15px] leading-snug font-bold text-[#001F36] italic">
-        {ferment?.kicker ? (
-          <span className="mr-1.5 text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/60 not-italic uppercase">
-            {ferment.kicker}
-          </span>
-        ) : null}
         {group.notes.join(", ")}
       </p>
 
       {/* white "label sticker" panel */}
       <div className="mt-auto flex flex-col gap-2.5 rounded-xl bg-white/85 p-3 backdrop-blur-sm">
-        <SizePills group={group} selected={selected} onSelect={setSelected} />
-        <div className="flex items-center justify-between">
-          <span className="font-primary text-xl font-semibold text-[#001F36]">
-            ${selected.price}
-          </span>
-          <AddButton coffee={selected} size="sm" />
-        </div>
+        <SizeAddRow sizes={group.sizes} />
         <SpecDetails
           group={group}
           accent={accent}
@@ -108,7 +101,7 @@ export function VariantC({ products: list }: { products: Coffee[] }) {
           </p>
         </header>
 
-        <div className="grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
             <PosterTile
               key={g.key}

@@ -9,21 +9,20 @@
 import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import {
-  AddButton,
   accentFor,
   altitudeLabel,
   Eyebrow,
   fermentationInfo,
   type OriginGroup,
   OriginMotif,
+  PriceTag,
+  priceRange,
   ScoreBadge,
   ShopCanvas,
-  SizePills,
-  SizePriceBadge,
+  SizeAddRow,
   TraceableFooter,
   groupByOrigin,
   tint,
-  useSizeSelection,
   type Coffee,
 } from "./shared";
 
@@ -58,7 +57,6 @@ function SpecInline({ group }: { group: OriginGroup }) {
 
 function IndexRow({ group }: { group: OriginGroup }) {
   const accent = accentFor(group.color);
-  const { selected, setSelected } = useSizeSelection(group);
   const ferment = fermentationInfo(group.fermentation);
 
   return (
@@ -72,10 +70,7 @@ function IndexRow({ group }: { group: OriginGroup }) {
         style={{ backgroundColor: tint(accent, 0.35) }}
       >
         <div className="flex items-center justify-between">
-          <SizePriceBadge
-            size={selected.size}
-            price={selected.price}
-          />
+          <PriceTag text={priceRange(group.sizes)} />
           {group.score ? <ScoreBadge score={group.score} /> : null}
         </div>
         <OriginMotif origin={group.origin} label={group.label} size="sm" />
@@ -95,14 +90,8 @@ function IndexRow({ group }: { group: OriginGroup }) {
         <TraceableFooter traceable={group.traceable} />
       </div>
 
-      {/* actions */}
-      <div className="flex flex-col items-start gap-2.5 md:items-end">
-        <SizePills group={group} selected={selected} onSelect={setSelected} />
-        <span className="font-primary text-xl font-semibold text-[#001F36]">
-          ${selected.price}
-        </span>
-        <AddButton coffee={selected} />
-      </div>
+      {/* one-click add per size */}
+      <SizeAddRow sizes={group.sizes} className="md:flex-col md:items-end" />
     </div>
   );
 }

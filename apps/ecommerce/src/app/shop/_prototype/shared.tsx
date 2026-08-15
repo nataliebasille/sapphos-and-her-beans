@@ -8,7 +8,6 @@
  * redesigned homepage. Brand tokens + helpers are reused from the home build.
  */
 
-import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { type products } from "@models";
 import { accentFor, BRAND } from "~/app/(home)/_components/brand";
@@ -118,71 +117,48 @@ export function groupByOrigin(list: Coffee[]): OriginGroup[] {
   return [...map.values()];
 }
 
-/** Navy pill add-to-cart, matching the homepage FeaturedCard. */
-export function AddButton({
-  coffee,
-  size = "md",
-  className,
-}: {
-  coffee: Coffee;
-  size?: "sm" | "md";
-  className?: string;
-}) {
+/** Min–max price label for a group's sizes. */
+export function priceRange(sizes: Coffee[]): string {
+  const prices = sizes.map((s) => s.price);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  return min === max ? `$${min}` : `$${min}–$${max}`;
+}
+
+/** One-click add for a single size. Clicking adds that SKU straight to cart. */
+function SizeAddButton({ coffee }: { coffee: Coffee }) {
   const { added, add } = useQuickAdd(coffee.id);
   return (
     <button
       type="button"
       onClick={add}
       disabled={added}
+      aria-label={`Add ${sizeLabel(coffee.size)} to cart`}
       className={twMerge(
-        "rounded-full font-semibold tracking-[0.1em] text-[#FAF9F8] uppercase transition-colors",
-        size === "sm" ? "px-4 py-2 text-xs" : "px-5 py-2.5 text-[13px]",
+        "flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold tracking-wide text-[#FAF9F8] uppercase transition-colors",
         added ? "bg-[#3f8f6b]" : "bg-[#001F36] hover:bg-[#001F36]/85",
-        className,
       )}
     >
-      {added ? "Added ✓" : "Add"}
+      <span>{sizeLabel(coffee.size)}</span>
+      <span className="opacity-60">·</span>
+      <span>{added ? "Added ✓" : `$${coffee.price}`}</span>
     </button>
   );
 }
 
-/** Selectable size chips; returns the currently selected SKU via render prop. */
-export function useSizeSelection(group: OriginGroup) {
-  const [selected, setSelected] = useState<Coffee>(group.sizes[0]!);
-  return { selected, setSelected };
-}
-
-export function SizePills({
-  group,
-  selected,
-  onSelect,
+/** Row of one-click add buttons — one per available size. */
+export function SizeAddRow({
+  sizes,
   className,
 }: {
-  group: OriginGroup;
-  selected: Coffee;
-  onSelect: (c: Coffee) => void;
+  sizes: Coffee[];
   className?: string;
 }) {
   return (
-    <div className={twMerge("flex flex-wrap gap-1.5", className)}>
-      {group.sizes.map((s) => {
-        const active = s.id === selected.id;
-        return (
-          <button
-            key={s.id}
-            type="button"
-            onClick={() => onSelect(s)}
-            className={twMerge(
-              "rounded-full border px-3 py-1 text-xs font-semibold tracking-wide transition-colors",
-              active
-                ? "border-[#001F36] bg-[#001F36] text-[#FAF9F8]"
-                : "border-[#001F36]/20 text-[#001F36]/80 hover:border-[#001F36]/50",
-            )}
-          >
-            {sizeLabel(s.size)}
-          </button>
-        );
-      })}
+    <div className={twMerge("flex flex-wrap gap-2", className)}>
+      {sizes.map((s) => (
+        <SizeAddButton key={s.id} coffee={s} />
+      ))}
     </div>
   );
 }
@@ -274,29 +250,23 @@ export function OriginMotif({
   );
 }
 
-/** Airy size + price label in MedievalSharp — no box, no fill. */
-export function SizePriceBadge({
-  size,
-  price,
+/** Airy price label in MedievalSharp — no box, no fill. Accepts a range string. */
+export function PriceTag({
+  text,
   className,
 }: {
-  size: string;
-  price: number;
+  text: string;
   className?: string;
 }) {
   return (
-    <span className={twMerge("inline-flex items-baseline gap-2", className)}>
-      <span
-        className={twMerge(
-          "text-2xl font-bold tracking-wide text-[#001F36]",
-          BrandingStylizedFont.className,
-        )}
-      >
-        ${price}
-      </span>
-      <span className="text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/55 uppercase">
-        {sizeLabel(size)}
-      </span>
+    <span
+      className={twMerge(
+        "text-2xl font-bold tracking-wide text-[#001F36]",
+        BrandingStylizedFont.className,
+        className,
+      )}
+    >
+      {text}
     </span>
   );
 }
@@ -392,7 +362,7 @@ export function TraceableFooter({
   return (
     <p
       className={twMerge(
-        "font-serif text-sm font-bold tracking-wider text-[#001F36]/75 italic",
+        "font-serif text-xs font-bold tracking-wider text-[#001F36]/70 italic",
         className,
       )}
     >
