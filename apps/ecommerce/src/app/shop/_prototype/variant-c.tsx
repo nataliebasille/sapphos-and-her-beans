@@ -11,7 +11,6 @@ import {
   AddButton,
   accentFor,
   Eyebrow,
-  FROST,
   fermentationInfo,
   type OriginGroup,
   OriginMotif,
@@ -41,7 +40,6 @@ function PosterTile({ group }: { group: OriginGroup }) {
         <SizePriceBadge
           size={selected.size}
           price={selected.price}
-          accent={FROST}
         />
         {group.score ? <ScoreBadge score={group.score} /> : null}
       </div>

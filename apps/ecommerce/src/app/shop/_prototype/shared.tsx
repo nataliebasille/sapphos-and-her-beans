@@ -284,30 +284,29 @@ export function OriginMotif({
   );
 }
 
-/** Corner size | price chip in MedievalSharp, tinted with the coffee accent. */
+/** Airy size + price label in MedievalSharp — no box, no fill. */
 export function SizePriceBadge({
   size,
   price,
-  accent,
   className,
 }: {
   size: string;
   price: number;
-  accent: string;
   className?: string;
 }) {
   return (
-    <span
-      className={twMerge(
-        "inline-flex items-center gap-2 border-2 border-[#001F36] px-3 pt-0.5 text-xl font-bold tracking-wide text-[#001F36]",
-        BrandingStylizedFont.className,
-        className,
-      )}
-      style={{ backgroundColor: accent }}
-    >
-      <span className="uppercase">{sizeLabel(size)}</span>
-      <span className="opacity-50">|</span>
-      <span className="tracking-widest">${price}</span>
+    <span className={twMerge("inline-flex items-baseline gap-2", className)}>
+      <span
+        className={twMerge(
+          "text-2xl font-bold tracking-wide text-[#001F36]",
+          BrandingStylizedFont.className,
+        )}
+      >
+        ${price}
+      </span>
+      <span className="text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/55 uppercase">
+        {sizeLabel(size)}
+      </span>
     </span>
   );
 }

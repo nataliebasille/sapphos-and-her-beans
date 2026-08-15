@@ -46,7 +46,6 @@ function LabelCard({ group }: { group: OriginGroup }) {
           <SizePriceBadge
             size={selected.size}
             price={selected.price}
-            accent={accent}
           />
           {group.score ? <ScoreBadge score={group.score} /> : null}
         </div>
