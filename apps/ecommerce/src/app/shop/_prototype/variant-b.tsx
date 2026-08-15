@@ -1,209 +1,172 @@
 "use client";
 
-/** PROTOTYPE — throwaway. Variant B: dense spec-sheet / comparison table. */
+/**
+ * PROTOTYPE — throwaway. Variant B: editorial origin index.
+ * Dense full-width rows with hairline dividers + inline pill filters.
+ * Deliberately NOT a data table — reads like a typeset index.
+ */
 
 import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { type products } from "@models";
-import { AddToCartButton, CheckboxField, COLORS, sizeLabel } from "./shared";
+import {
+  AddButton,
+  accentFor,
+  altitudeLabel,
+  Eyebrow,
+  type OriginGroup,
+  ShopCanvas,
+  SizePills,
+  groupByOrigin,
+  useSizeSelection,
+  type Coffee,
+} from "./shared";
 
-export const VARIANT_B_NAME = "Spec sheet";
+export const VARIANT_B_NAME = "Origin index";
 
-type SortKey = "country" | "price" | "process";
+function IndexRow({ group }: { group: OriginGroup }) {
+  const accent = accentFor(group.color);
+  const { selected, setSelected } = useSizeSelection(group);
 
-const SIZE_FILTERS = ["all", "250g", "100g", "singleserve"] as const;
-type SizeFilter = (typeof SIZE_FILTERS)[number];
-
-function ColumnHeader({
-  label,
-  sortKey,
-  active,
-  dir,
-  onSort,
-  className,
-}: {
-  label: string;
-  sortKey?: SortKey;
-  active?: boolean;
-  dir?: "asc" | "desc";
-  onSort?: (k: SortKey) => void;
-  className?: string;
-}) {
   return (
-    <th
-      scope="col"
-      className={twMerge(
-        "px-4 py-3 text-left font-mono text-[11px] font-bold tracking-widest text-primary-50/80 uppercase",
-        sortKey && "cursor-pointer select-none hover:text-primary-50",
-        className,
-      )}
-      onClick={sortKey && onSort ? () => onSort(sortKey) : undefined}
-    >
-      {label}
-      {active && <span className="ml-1">{dir === "asc" ? "▲" : "▼"}</span>}
-    </th>
+    <div className="grid grid-cols-1 items-center gap-5 border-t border-[#001F36]/10 py-6 transition-colors hover:bg-white/60 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)_auto] md:gap-8 md:px-3">
+      {/* origin */}
+      <div className="flex items-start gap-4">
+        <span
+          className="mt-1.5 size-3 shrink-0 rounded-full"
+          style={{ backgroundColor: accent }}
+        />
+        <div>
+          <p className="text-[0.65rem] font-semibold tracking-[0.2em] text-[#001F36]/55 uppercase">
+            {group.processing}
+          </p>
+          <h3 className="font-primary text-xl leading-tight font-semibold text-[#001F36]">
+            {group.origin}
+          </h3>
+          <p className="text-sm text-[#001F36]/65">{group.label}</p>
+          {group.region ? (
+            <p className="mt-0.5 text-xs text-[#001F36]/45">
+              {group.region}
+              {altitudeLabel(group.altitude) ? ` · ${altitudeLabel(group.altitude)}` : ""}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      {/* tasting notes as prose */}
+      <p className="text-[15px] leading-relaxed text-[#001F36]/75 italic">
+        {group.notes.join(", ")}
+        {group.score ? (
+          <span className="ml-2 rounded-full bg-[#001F36]/5 px-2 py-0.5 text-[11px] font-semibold text-[#001F36]/70 not-italic">
+            {group.score} pts
+          </span>
+        ) : null}
+      </p>
+
+      {/* actions */}
+      <div className="flex items-center justify-between gap-4 md:justify-end">
+        <div className="flex flex-col items-start gap-2 md:items-end">
+          <SizePills group={group} selected={selected} onSelect={setSelected} />
+          <span className="font-primary text-lg font-semibold text-[#001F36]">
+            ${selected.price}
+          </span>
+        </div>
+        <AddButton coffee={selected} />
+      </div>
+    </div>
   );
 }
 
-export function VariantB({ products: list }: { products: products.Product[] }) {
-  const [sizeFilter, setSizeFilter] = useState<SizeFilter>("all");
+function FilterPill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={twMerge(
+        "rounded-full border px-4 py-1.5 text-xs font-semibold tracking-[0.1em] uppercase transition-colors",
+        active
+          ? "border-[#001F36] bg-[#001F36] text-[#FAF9F8]"
+          : "border-[#001F36]/20 text-[#001F36]/70 hover:border-[#001F36]/50",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function VariantB({ products: list }: { products: Coffee[] }) {
+  const groups = useMemo(() => groupByOrigin(list), [list]);
+  const processes = useMemo(
+    () =>
+      [...new Set(groups.map((g) => g.processing).filter(Boolean))] as string[],
+    [groups],
+  );
+
+  const [selProcess, setSelProcess] = useState<Set<string>>(new Set());
   const [decafOnly, setDecafOnly] = useState(false);
-  const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({
-    key: "country",
-    dir: "asc",
+
+  const toggle = (v: string) =>
+    setSelProcess((prev) => {
+      const next = new Set(prev);
+      next.has(v) ? next.delete(v) : next.add(v);
+      return next;
+    });
+
+  const filtered = groups.filter((g) => {
+    if (decafOnly && !g.isDecaf) return false;
+    if (selProcess.size && !selProcess.has(g.processing ?? "")) return false;
+    return true;
   });
 
-  const rows = useMemo(() => {
-    let r = list.filter((p) => {
-      if (sizeFilter !== "all" && p.size !== sizeFilter) return false;
-      if (decafOnly && !p.isDecaf) return false;
-      return true;
-    });
-    r = [...r].sort((a, b) => {
-      const mult = sort.dir === "asc" ? 1 : -1;
-      if (sort.key === "price") return (a.price - b.price) * mult;
-      if (sort.key === "process")
-        return (a.processing ?? "").localeCompare(b.processing ?? "") * mult;
-      return (a.country ?? "").localeCompare(b.country ?? "") * mult;
-    });
-    return r;
-  }, [list, sizeFilter, decafOnly, sort]);
-
-  const toggleSort = (key: SortKey) =>
-    setSort((s) =>
-      s.key === key ?
-        { key, dir: s.dir === "asc" ? "desc" : "asc" }
-      : { key, dir: "asc" },
-    );
-
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-16 md:px-8">
-      <div className="mb-6 flex flex-col gap-4 border-b border-primary-950/20 pb-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h1 className="text-4xl font-bold tracking-wide text-primary-950 uppercase">
-            Coffee index
+    <ShopCanvas>
+      <div className="mx-auto max-w-5xl px-6 pb-24 md:px-10">
+        <header className="py-10 md:py-14">
+          <Eyebrow className="text-[#EFAA9C]">Shop Coffee</Eyebrow>
+          <h1 className="mt-3 font-primary text-4xl leading-tight font-semibold tracking-tight text-[#001F36] md:text-5xl">
+            The origin index.
           </h1>
-          <p className="mt-1 text-primary-800">
-            {rows.length} lots · sort and filter to compare
-          </p>
+        </header>
+
+        {/* inline filters */}
+        <div className="flex flex-wrap items-center gap-2 pb-3">
+          <FilterPill
+            active={selProcess.size === 0 && !decafOnly}
+            onClick={() => {
+              setSelProcess(new Set());
+              setDecafOnly(false);
+            }}
+          >
+            All
+          </FilterPill>
+          {processes.map((p) => (
+            <FilterPill key={p} active={selProcess.has(p)} onClick={() => toggle(p)}>
+              {p}
+            </FilterPill>
+          ))}
+          <span className="mx-1 h-5 w-px bg-[#001F36]/15" />
+          <FilterPill active={decafOnly} onClick={() => setDecafOnly((d) => !d)}>
+            Decaf
+          </FilterPill>
+          <span className="ml-auto text-xs tracking-wide text-[#001F36]/45 uppercase">
+            {filtered.length} origins
+          </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex overflow-hidden rounded-full border border-primary-950/30">
-            {SIZE_FILTERS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setSizeFilter(f)}
-                className={twMerge(
-                  "px-4 py-1.5 text-sm font-semibold tracking-wide uppercase transition-colors",
-                  sizeFilter === f ?
-                    "bg-primary-950 text-surface-50"
-                  : "bg-transparent text-primary-900 hover:bg-primary-950/10",
-                )}
-              >
-                {f === "all" ? "all sizes" : sizeLabel(f)}
-              </button>
-            ))}
-          </div>
-          <CheckboxField
-            checked={decafOnly}
-            onChange={setDecafOnly}
-            label="Decaf"
-            className="font-semibold tracking-wide text-primary-900 uppercase"
-          />
+        <div>
+          {filtered.map((g) => (
+            <IndexRow key={g.key} group={g} />
+          ))}
+          <div className="border-t border-[#001F36]/10" />
         </div>
       </div>
-
-      <div className="overflow-x-auto rounded-xl border border-primary-950/15 shadow-sm">
-        <table className="w-full border-collapse text-sm">
-          <thead className="bg-primary-950">
-            <tr>
-              <ColumnHeader
-                label="Origin"
-                sortKey="country"
-                active={sort.key === "country"}
-                dir={sort.dir}
-                onSort={toggleSort}
-              />
-              <ColumnHeader label="Farm / Lot" />
-              <ColumnHeader
-                label="Process"
-                sortKey="process"
-                active={sort.key === "process"}
-                dir={sort.dir}
-                onSort={toggleSort}
-              />
-              <ColumnHeader label="Tasting notes" className="min-w-[220px]" />
-              <ColumnHeader label="Size" />
-              <ColumnHeader
-                label="Price"
-                sortKey="price"
-                active={sort.key === "price"}
-                dir={sort.dir}
-                onSort={toggleSort}
-                className="text-right"
-              />
-              <ColumnHeader label="" className="text-right" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p, i) => {
-              const c = COLORS[p.color];
-              return (
-                <tr
-                  key={p.id}
-                  className={twMerge(
-                    "border-t border-primary-950/10 align-middle transition-colors hover:bg-primary-950/[0.04]",
-                    i % 2 === 1 && "bg-surface-50/60",
-                  )}
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={twMerge(
-                          "inline-block size-3 shrink-0 rounded-full",
-                          c.bg900,
-                        )}
-                      />
-                      <span className="font-bold tracking-wide text-primary-950 uppercase">
-                        {p.country}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-primary-900">
-                    <div className="font-semibold">{p.farm}</div>
-                    <div className="text-xs text-primary-700">{p.region}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={twMerge(
-                        "rounded px-2 py-0.5 text-xs font-semibold tracking-wide uppercase",
-                        c.bg100,
-                        c.text900,
-                      )}
-                    >
-                      {p.processing}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-primary-900 italic">
-                    {p.tastingNotes}
-                  </td>
-                  <td className="px-4 py-3 font-mono font-semibold tracking-wide text-primary-950 uppercase">
-                    {sizeLabel(p.size)}
-                  </td>
-                  <td className="px-4 py-3 text-right font-bold text-primary-950">
-                    ${p.price}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <AddToCartButton coffee={p} compact />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </ShopCanvas>
   );
 }

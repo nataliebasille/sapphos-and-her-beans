@@ -10,7 +10,7 @@
 import { useCallback, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import { products as models, type products } from "@models";
+import { type products } from "@models";
 import { useProductList } from "~/app/_stores/products";
 import { VariantA, VARIANT_A_NAME } from "./variant-a";
 import { VariantB, VARIANT_B_NAME } from "./variant-b";
@@ -36,10 +36,9 @@ function normalize(raw: string | null): VariantKey {
 }
 
 export function CoffeeListPrototype() {
-  const fetched = useProductList();
-  // PROTOTYPE: fall back to the in-memory catalog so the redesign renders with
-  // real density even without Stripe/DB configured locally.
-  const products = fetched.length ? fetched : (models.PRODUCTS as unknown as products.Product[]);
+  // getProducts() returns the seed catalog when Stripe isn't configured, so the
+  // list is always populated locally.
+  const products = useProductList();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
