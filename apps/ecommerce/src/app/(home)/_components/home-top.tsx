@@ -1,0 +1,304 @@
+"use client";
+
+/**
+ * Homepage top — the "Editorial Split" hero experience.
+ *
+ * Header: shop-forward nav with a centered logo that fades in past the hero.
+ * Hero:   asymmetric split — copy left, warm photo with a soft organic curve.
+ * Featured: editorial coffee cards, horizontal-scroll on mobile.
+ */
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { Cart as CartIcon } from "~/app/_components/icons/cart";
+import { useOpenCart } from "~/app/_stores/cart";
+import {
+  type Coffee,
+  Eyebrow,
+  accentFor,
+  originName,
+  tastingNotes,
+  useQuickAdd,
+} from "./sections";
+
+const NAV = [
+  { label: "Shop Coffee", href: "/shop" },
+  { label: "Wholesale", href: "/wholesale" },
+  { label: "Our Story", href: "/about" },
+];
+
+export function HomeHeader() {
+  const [scrolled, setScrolled] = useState(false);
+  const openCart = useOpenCart();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 120);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header
+      className={twMerge(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled
+          ? "border-b border-[#001F36]/10 bg-[#FAF9F8]/90 backdrop-blur-md"
+          : "border-b border-transparent",
+      )}
+    >
+      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">
+        {/* left nav */}
+        <nav className="hidden items-center gap-7 md:flex">
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium tracking-wide text-[#001F36]/80 transition-colors hover:text-[#001F36]"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <MobileMenu />
+
+        {/* center logo — fades in past hero */}
+        <Link
+          href="/"
+          className={twMerge(
+            "relative mx-auto h-9 w-[130px] transition-opacity duration-500",
+            scrolled ? "opacity-100" : "opacity-0",
+          )}
+          aria-hidden={!scrolled}
+        >
+          <Image
+            src="/images/sappho black logo cropped.png"
+            alt="Sappho & Her Beans"
+            fill
+            className="object-contain"
+          />
+        </Link>
+
+        {/* right actions */}
+        <div className="flex items-center justify-end gap-5">
+          <Link
+            href="/locations"
+            className="hidden text-sm font-medium tracking-wide text-[#001F36]/80 transition-colors hover:text-[#001F36] md:block"
+          >
+            Find Us
+          </Link>
+          <button
+            onClick={openCart}
+            aria-label="Open cart"
+            className="text-[#001F36]"
+          >
+            <CartIcon className="size-6" />
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function MobileMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="md:hidden">
+      <button
+        aria-label="Open menu"
+        onClick={() => setOpen(true)}
+        className="flex flex-col gap-1.5"
+      >
+        <span className="block h-0.5 w-6 bg-[#001F36]" />
+        <span className="block h-0.5 w-6 bg-[#001F36]" />
+        <span className="block h-0.5 w-4 bg-[#001F36]" />
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-50 bg-[#001F36] px-8 py-6 text-[#FAF9F8]">
+          <button
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+            className="mb-16 text-3xl"
+          >
+            ×
+          </button>
+          <nav className="flex flex-col gap-7 text-2xl">
+            {[...NAV, { label: "Find Us", href: "/locations" }].map((i) => (
+              <Link key={i.href} href={i.href} onClick={() => setOpen(false)}>
+                {i.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function HomeHero() {
+  return (
+    <section className="relative overflow-hidden pt-24 md:pt-28">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 pt-8 pb-16 md:grid-cols-[1fr_1.05fr] md:gap-14 md:px-10 md:pt-14 md:pb-24">
+        <div className="max-w-xl">
+          <Eyebrow className="text-[#EFAA9C]">
+            LGBTQ+ Owned Specialty Coffee
+          </Eyebrow>
+          <h1 className="mt-5 font-primary text-[2.6rem] leading-[1.02] font-semibold tracking-tight text-[#001F36] md:text-[4.1rem]">
+            Coffee built on relationships.
+          </h1>
+          <p className="mt-6 max-w-md text-base leading-relaxed text-[#001F36]/70 md:text-lg">
+            Direct-trade specialty coffee from producers we know, with
+            extraordinary lots selected for flavor and character.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link
+              href="/shop"
+              className="rounded-full bg-[#001F36] px-8 py-3.5 text-sm font-semibold tracking-[0.12em] text-[#FAF9F8] uppercase transition-transform hover:-translate-y-0.5"
+            >
+              Shop Coffee
+            </Link>
+            <Link
+              href="/about"
+              className="rounded-full border border-[#001F36]/25 px-8 py-3.5 text-sm font-semibold tracking-[0.12em] text-[#001F36] uppercase transition-colors hover:border-[#001F36] hover:bg-[#001F36]/5"
+            >
+              Our Approach
+            </Link>
+          </div>
+        </div>
+
+        {/* Warm photo with a soft organic curve — replaceable. */}
+        <div
+          data-replaceable="brand-photo"
+          className="relative aspect-[5/4] w-full overflow-hidden rounded-[46%_54%_44%_56%/56%_46%_54%_44%] sm:aspect-4/5 md:aspect-[4/4.4]"
+        >
+          <Image
+            src="/images/owner.png"
+            alt="Sappho coffee, made around relationships"
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      {/* soft peach blob accent, restrained */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-16 -right-24 -z-0 hidden size-72 rounded-full bg-[#F8DCDF]/60 blur-3xl md:block"
+      />
+    </section>
+  );
+}
+
+export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
+  return (
+    <section className="bg-[#FAF9F8] px-6 py-16 md:px-10 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex items-end justify-between gap-4">
+          <div>
+            <Eyebrow className="text-[#EFAA9C]">Featured Coffees</Eyebrow>
+            <h2 className="mt-3 font-primary text-3xl text-[#001F36] md:text-4xl">
+              This season&apos;s pours.
+            </h2>
+          </div>
+          <Link
+            href="/shop"
+            className="hidden text-sm font-semibold tracking-[0.16em] text-[#001F36] uppercase underline-offset-4 hover:underline md:block"
+          >
+            View all coffees &rarr;
+          </Link>
+        </div>
+
+        {/* horizontal scroll on mobile, grid on desktop */}
+        <div className="-mx-6 flex snap-x gap-4 overflow-x-auto px-6 pb-4 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
+          {coffees.slice(0, 3).map((c) => (
+            <FeaturedCard key={c.id} coffee={c} />
+          ))}
+        </div>
+
+        <div className="mt-8 md:hidden">
+          <Link
+            href="/shop"
+            className="block w-full rounded-full border border-[#001F36]/25 py-3.5 text-center text-sm font-semibold tracking-[0.14em] text-[#001F36] uppercase"
+          >
+            View all coffees
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeaturedCard({ coffee }: { coffee: Coffee }) {
+  const accent = accentFor(coffee.color);
+  const { added, add } = useQuickAdd(coffee.id);
+  const notes = tastingNotes(coffee);
+
+  return (
+    <article className="group flex w-[78vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#001F36]/10 bg-white transition-shadow hover:shadow-xl hover:shadow-[#001F36]/5 sm:w-[60vw] md:w-auto">
+      {/* label treatment — no product photos exist, so accent + origin */}
+      <div
+        className="relative flex aspect-[4/3] flex-col justify-between p-5"
+        style={{ backgroundColor: accent }}
+      >
+        <div className="flex items-center justify-between">
+          <span className="rounded-full bg-white/25 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[#001F36] uppercase">
+            {coffee.size}
+          </span>
+          {coffee.score ? (
+            <span className="font-primary text-sm font-semibold text-[#001F36]/80">
+              {coffee.score} pts
+            </span>
+          ) : null}
+        </div>
+        <div>
+          <p className="text-[0.7rem] font-semibold tracking-[0.2em] text-[#001F36]/60 uppercase">
+            {coffee.processing}
+          </p>
+          <h3 className="mt-1 font-primary text-2xl leading-tight font-semibold text-[#001F36]">
+            {originName(coffee)}
+          </h3>
+          <p className="text-sm text-[#001F36]/70">{coffee.farm}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex flex-wrap gap-1.5">
+          {notes.map((n) => (
+            <span
+              key={n}
+              className="rounded-full bg-[#F8DCDF]/60 px-2.5 py-1 text-xs text-[#001F36]/80"
+            >
+              {n}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-5 flex items-center justify-between">
+          <span className="font-primary text-xl font-semibold text-[#001F36]">
+            ${coffee.price}
+          </span>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/shop"
+              className="rounded-full border border-[#001F36]/20 px-4 py-2 text-xs font-semibold tracking-[0.1em] text-[#001F36] uppercase hover:border-[#001F36]"
+            >
+              View
+            </Link>
+            <button
+              onClick={add}
+              disabled={added}
+              className={twMerge(
+                "rounded-full px-4 py-2 text-xs font-semibold tracking-[0.1em] text-[#FAF9F8] uppercase transition-colors",
+                added ? "bg-[#3f8f6b]" : "bg-[#001F36] hover:bg-[#001F36]/85",
+              )}
+            >
+              {added ? "Added ✓" : "Add"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}

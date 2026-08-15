@@ -36,6 +36,12 @@ export const ShopHeader = () => {
     };
   }, []);
 
+  // The homepage ships its own bespoke header (see (home)/_components), so the
+  // shared shop header only renders on the inner shop routes.
+  if (isHome) {
+    return null;
+  }
+
   return (
     <header
       className={twMerge(
