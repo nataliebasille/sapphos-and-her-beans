@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProducts } from "~/server/products/get_products";
+import { groupForId } from "../_components/catalog-data";
 import { CoffeeDetails } from "./coffee-details";
 
 type CoffeePageProps = {
@@ -35,11 +36,15 @@ export async function generateMetadata({
 
 export default async function CoffeePage({ params }: CoffeePageProps) {
   const { id } = await params;
-  const coffee = await findCoffee(id);
+  const products = await getProducts();
+  const coffee = products.find((product) => product.id === id);
 
   if (!coffee) {
     notFound();
   }
 
-  return <CoffeeDetails coffee={coffee} />;
+  const group = groupForId(products, id);
+  const sizes = group?.sizes ?? [coffee];
+
+  return <CoffeeDetails coffee={coffee} sizes={sizes} />;
 }
