@@ -1,29 +1,29 @@
 "use client";
 
 /**
- * Coffee-label primitives for the shop catalog.
+ * Coffee-label primitives for the shop catalog and the individual coffee page.
  *
- * These re-tint the brand's signature product-label motifs (MedievalSharp-era
- * origin rule, size/price + score, spec grid, "traceable to" footer) onto the
- * Winter Frost / Deep Navy palette shared with the redesigned homepage. Brand
- * tokens and helpers are reused from the home build.
+ * These re-tint the brand's signature product-label motifs (diamond-line origin
+ * rule, size/price + score, spec grid, "traceable to" footer) onto the Winter
+ * Frost / Deep Navy palette shared with the redesigned homepage. Pure data
+ * helpers live in `catalog-data.ts` so the server coffee page can share them.
  */
 
 import { twMerge } from "tailwind-merge";
-import { type products } from "@models";
 import { accentFor, BRAND } from "~/app/(home)/_components/brand";
+import { Eyebrow, useQuickAdd } from "~/app/(home)/_components/sections";
 import { Plus } from "~/app/_components/icons/plus";
 import { Check } from "~/app/_components/icons/check";
 import {
   type Coffee,
-  Eyebrow,
-  originName,
-  tastingNotes,
-  useQuickAdd,
-} from "~/app/(home)/_components/sections";
+  type OriginGroup,
+  altitudeLabel,
+  fermentationInfo,
+  headerFermentKicker,
+  sizeLabel,
+} from "./catalog-data";
 
 export { accentFor, Eyebrow };
-export type { Coffee };
 
 /** Translucent accent for label tints (source accents are solid hex). */
 function tint(hex: string, alpha: number): string {
@@ -32,96 +32,6 @@ function tint(hex: string, alpha: number): string {
   const g = parseInt(h.slice(2, 4), 16);
   const b = parseInt(h.slice(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-function sizeLabel(size: products.Product["size"]) {
-  return size === "singleserve" ? "Single Serve" : size;
-}
-
-/** Source altitude data is inconsistent ("1200 - 1450" vs "2125 meters"). */
-function altitudeLabel(altitude?: string): string | null {
-  if (!altitude) return null;
-  const trimmed = altitude.trim();
-  return /m(eters?)?$/i.test(trimmed) ? trimmed : `${trimmed}m`;
-}
-
-export type OriginGroup = {
-  key: string;
-  origin: string;
-  label: string;
-  farm: string;
-  color: string;
-  processing?: string;
-  region?: string;
-  altitude?: string;
-  varietals?: string;
-  lot?: string;
-  fermentation?: Coffee["fermentation"];
-  score?: number;
-  notes: string[];
-  traceable: string;
-  isDecaf: boolean;
-  sizes: Coffee[];
-};
-
-const SIZE_ORDER = ["250g", "100g", "singleserve"];
-
-/** Base product name with the trailing size segment removed. */
-function baseName(p: Coffee): string {
-  const parts = (p.name ?? "").split(" - ");
-  return parts.length >= 2 ? parts.slice(0, -1).join(" - ") : `${p.farm}`;
-}
-
-/** The distinguishing lot label (name minus country + size), else the farm. */
-function lotLabel(p: Coffee): string {
-  const parts = (p.name ?? "").split(" - ");
-  if (parts.length >= 3) return parts.slice(1, -1).join(" - ");
-  return p.farm;
-}
-
-/** Collapse per-size SKUs into one card per distinct coffee. */
-export function groupByOrigin(list: Coffee[]): OriginGroup[] {
-  const map = new Map<string, OriginGroup>();
-  for (const p of list) {
-    const key = baseName(p);
-    let g = map.get(key);
-    if (!g) {
-      g = {
-        key,
-        origin: originName(p),
-        label: lotLabel(p),
-        farm: p.farm,
-        color: p.color,
-        processing: p.processing,
-        region: p.region,
-        altitude: p.altitude,
-        varietals: p.varietals,
-        lot: p.lot,
-        fermentation: p.fermentation,
-        score: p.score,
-        notes: tastingNotes(p, 4),
-        traceable: p.traceable,
-        isDecaf: p.isDecaf,
-        sizes: [],
-      };
-      map.set(key, g);
-    }
-    g.sizes.push(p);
-  }
-  for (const g of map.values()) {
-    g.sizes.sort(
-      (a, b) => SIZE_ORDER.indexOf(a.size) - SIZE_ORDER.indexOf(b.size),
-    );
-  }
-  return [...map.values()];
-}
-
-/** Min–max price label for a group's sizes. */
-export function priceRange(sizes: Coffee[]): string {
-  const prices = sizes.map((s) => s.price);
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
-  return min === max ? `$${min}` : `$${min}–$${max}`;
 }
 
 /** One-click add for a single size — styled as an obvious add button. */
@@ -215,7 +125,11 @@ export function OriginMotif({
   className?: string;
 }) {
   const originSize =
-    size === "lg" ? "text-3xl" : size === "sm" ? "text-xl" : "text-2xl";
+    size === "lg"
+      ? "text-3xl md:text-4xl"
+      : size === "sm"
+        ? "text-xl"
+        : "text-2xl";
   return (
     <div className={twMerge("flex items-center gap-2.5", className)}>
       <MotifRule />
@@ -278,29 +192,6 @@ export function ScoreBadge({
   );
 }
 
-/** Human-readable fermentation value + kicker, from the original card logic. */
-function fermentationInfo(f: Coffee["fermentation"]): {
-  kicker?: string;
-  value: string;
-} | null {
-  if (!f) return null;
-  if (typeof f === "string") return { value: f };
-  if (f.type === "cofermentation")
-    return { kicker: "Co-fermented", value: f.ingredient };
-  return { kicker: "Anaerobic", value: f.duration ?? "Anaerobic" };
-}
-
-/**
- * Fermentation kicker for the card header — but only when it isn't already
- * spelled out in the origin label (e.g. "Co-fermented with Wine Yeast / Lychee").
- */
-function headerFermentKicker(group: OriginGroup): string | null {
-  const f = fermentationInfo(group.fermentation);
-  if (!f?.kicker) return null;
-  if (group.label.toLowerCase().includes(f.kicker.toLowerCase())) return null;
-  return f.kicker;
-}
-
 /** The fermentation kicker + processing pair shown in the label header. */
 export function ProcessLine({ group }: { group: OriginGroup }) {
   const kicker = headerFermentKicker(group);
@@ -322,7 +213,7 @@ export function ProcessLine({ group }: { group: OriginGroup }) {
 }
 
 /** The mono-uppercase spec table — label column navy, value column accent-tinted. */
-function SpecGrid({
+export function SpecGrid({
   group,
   accent,
   className,
@@ -332,7 +223,7 @@ function SpecGrid({
   className?: string;
 }) {
   const ferment = fermentationInfo(group.fermentation);
-  // Process is surfaced in the card header by default, so it's omitted here.
+  // Process is surfaced in the label header by default, so it's omitted here.
   const rows: [string, string | undefined][] = [
     ferment ? ["Fermentation", ferment.value] : ["", undefined],
     ["Lot", group.lot],
@@ -368,7 +259,7 @@ function SpecGrid({
 }
 
 /** "Traceable to {n}" italic serif footer. */
-function TraceableFooter({
+export function TraceableFooter({
   traceable,
   className,
 }: {

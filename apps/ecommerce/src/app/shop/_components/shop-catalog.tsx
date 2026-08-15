@@ -8,8 +8,9 @@
 
 import { useMemo, useState } from "react";
 import { useProductList } from "~/app/_stores/products";
+import { groupByOrigin } from "./catalog-data";
 import { CoffeeCard } from "./coffee-card";
-import { Eyebrow, FrostCanvas, groupByOrigin } from "./coffee-label";
+import { Eyebrow, FrostCanvas } from "./coffee-label";
 
 export function ShopCatalog() {
   const products = useProductList();
