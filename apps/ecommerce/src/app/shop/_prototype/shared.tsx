@@ -412,3 +412,53 @@ export function TraceableFooter({
   );
 }
 
+/**
+ * Collapsed-by-default "Details" disclosure: keeps the full spec grid +
+ * traceable footer available without letting them dominate the card height.
+ */
+export function SpecDetails({
+  group,
+  accent,
+  className,
+}: {
+  group: OriginGroup;
+  accent: string;
+  className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between border-t border-[#001F36]/10 pt-2 text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/60 uppercase transition-colors hover:text-[#001F36]"
+      >
+        {open ? "Hide details" : "Details"}
+        <svg
+          viewBox="0 0 12 12"
+          fill="none"
+          className={twMerge(
+            "size-3 transition-transform",
+            open && "rotate-180",
+          )}
+        >
+          <path
+            d="M2.5 4.5 6 8l3.5-3.5"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {open ? (
+        <div className="mt-2 flex flex-col gap-2">
+          <SpecGrid group={group} accent={accent} />
+          <TraceableFooter traceable={group.traceable} className="text-right" />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+

@@ -19,8 +19,7 @@ import {
   ShopCanvas,
   SizePills,
   SizePriceBadge,
-  SpecGrid,
-  TraceableFooter,
+  SpecDetails,
   groupByOrigin,
   useSizeSelection,
   type Coffee,
@@ -60,7 +59,6 @@ function PosterTile({ group }: { group: OriginGroup }) {
 
       {/* white "label sticker" panel */}
       <div className="mt-auto flex flex-col gap-2.5 rounded-xl bg-white/85 p-3 backdrop-blur-sm">
-        <SpecGrid group={group} accent={accent} />
         <SizePills group={group} selected={selected} onSelect={setSelected} />
         <div className="flex items-center justify-between">
           <span className="font-primary text-xl font-semibold text-[#001F36]">
@@ -68,7 +66,7 @@ function PosterTile({ group }: { group: OriginGroup }) {
           </span>
           <AddButton coffee={selected} size="sm" />
         </div>
-        <TraceableFooter traceable={group.traceable} className="text-right" />
+        <SpecDetails group={group} accent={accent} />
       </div>
     </article>
   );

@@ -18,8 +18,7 @@ import {
   ScoreBadge,
   SizePills,
   SizePriceBadge,
-  SpecGrid,
-  TraceableFooter,
+  SpecDetails,
   groupByOrigin,
   tint,
   useSizeSelection,
@@ -70,8 +69,6 @@ function LabelCard({ group }: { group: OriginGroup }) {
           {group.notes.join(", ")}
         </p>
 
-        <SpecGrid group={group} accent={accent} />
-
         <div className="mt-auto flex flex-col gap-2.5 pt-1">
           <SizePills group={group} selected={selected} onSelect={setSelected} />
           <div className="flex items-center justify-between">
@@ -80,7 +77,7 @@ function LabelCard({ group }: { group: OriginGroup }) {
             </span>
             <AddButton coffee={selected} size="sm" />
           </div>
-          <TraceableFooter traceable={group.traceable} className="text-right" />
+          <SpecDetails group={group} accent={accent} />
         </div>
       </div>
     </article>

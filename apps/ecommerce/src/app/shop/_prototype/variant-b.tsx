@@ -63,12 +63,12 @@ function IndexRow({ group }: { group: OriginGroup }) {
 
   return (
     <div
-      className="grid grid-cols-1 gap-6 rounded-2xl border-2 bg-white p-6 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)_auto] md:items-center md:gap-8"
+      className="grid grid-cols-1 gap-4 rounded-2xl border-2 bg-white p-4 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)_auto] md:items-center md:gap-6"
       style={{ borderColor: tint(accent, 0.5) }}
     >
       {/* origin block */}
       <div
-        className="flex flex-col gap-4 rounded-xl p-4"
+        className="flex flex-col gap-3 rounded-xl p-3"
         style={{ backgroundColor: tint(accent, 0.35) }}
       >
         <div className="flex items-center justify-between">
@@ -84,10 +84,10 @@ function IndexRow({ group }: { group: OriginGroup }) {
       </div>
 
       {/* notes + spec */}
-      <div className="flex flex-col gap-3">
-        <p className="text-lg leading-snug font-bold text-[#001F36] italic">
+      <div className="flex flex-col gap-2">
+        <p className="text-[15px] leading-snug font-bold text-[#001F36] italic">
           {ferment?.kicker ? (
-            <span className="mr-2 text-xs font-semibold tracking-[0.2em] text-[#001F36]/55 not-italic uppercase">
+            <span className="mr-2 text-[11px] font-semibold tracking-[0.2em] text-[#001F36]/55 not-italic uppercase">
               {ferment.kicker}
             </span>
           ) : null}
@@ -98,9 +98,9 @@ function IndexRow({ group }: { group: OriginGroup }) {
       </div>
 
       {/* actions */}
-      <div className="flex flex-col items-start gap-3 md:items-end">
+      <div className="flex flex-col items-start gap-2.5 md:items-end">
         <SizePills group={group} selected={selected} onSelect={setSelected} />
-        <span className="font-primary text-2xl font-semibold text-[#001F36]">
+        <span className="font-primary text-xl font-semibold text-[#001F36]">
           ${selected.price}
         </span>
         <AddButton coffee={selected} />
