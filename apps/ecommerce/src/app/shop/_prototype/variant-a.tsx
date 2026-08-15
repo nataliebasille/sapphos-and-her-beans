@@ -55,6 +55,11 @@ function LabelCard({ group }: { group: OriginGroup }) {
           size="sm"
           className="mt-1"
         />
+        {group.processing ? (
+          <p className="text-center text-[11px] font-semibold tracking-[0.22em] text-[#001F36]/60 uppercase">
+            {group.processing}
+          </p>
+        ) : null}
       </div>
 
       {/* body */}

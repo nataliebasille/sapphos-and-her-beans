@@ -356,9 +356,9 @@ export function SpecGrid({
   className?: string;
 }) {
   const ferment = fermentationInfo(group.fermentation);
+  // Process is surfaced in the card header by default, so it's omitted here.
   const rows: [string, string | undefined][] = [
     ferment ? ["Fermentation", ferment.value] : ["", undefined],
-    ["Process", group.processing],
     ["Lot", group.lot],
     ["Region", group.region],
     ["Varietals", group.varietals],

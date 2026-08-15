@@ -45,6 +45,11 @@ function PosterTile({ group }: { group: OriginGroup }) {
       </div>
 
       <OriginMotif origin={group.origin} label={group.label} size="sm" />
+      {group.processing ? (
+        <p className="text-center text-[11px] font-semibold tracking-[0.22em] text-[#001F36]/60 uppercase">
+          {group.processing}
+        </p>
+      ) : null}
 
       <p className="text-center text-[15px] leading-snug font-bold text-[#001F36] italic">
         {ferment?.kicker ? (
