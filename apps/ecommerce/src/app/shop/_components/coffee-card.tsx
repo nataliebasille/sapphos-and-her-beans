@@ -17,11 +17,113 @@ import { BrandingStylizedFont } from "~/app/fonts";
 import { type Coffee, type OriginGroup, sizeLabel } from "./catalog-data";
 import { COFFEE_PALETTES, type CoffeePalette } from "./coffee-palette";
 
-function Diamond({ className }: { className?: string }) {
+export function CoffeeCard({ group }: { group: OriginGroup }) {
+  const palette = COFFEE_PALETTES[group.color];
+  const href = `/shop/${group.sizes[0]!.id}`;
+
+  return (
+    <article
+      className={twMerge(
+        "flex h-full flex-col overflow-hidden rounded-2xl border-2",
+        palette.surface,
+        palette.borderStrong,
+      )}
+    >
+      {/* Passport panel — links to the full coffee page */}
+      <Link
+        href={href}
+        aria-label={`View ${group.origin} — ${group.label}`}
+        className={twMerge(
+          "block bg-gradient-to-b p-4 text-center transition-opacity hover:opacity-95",
+          palette.panel,
+          palette.gradientFrom,
+          palette.gradientTo,
+          palette.panelText,
+        )}
+      >
+        {/* Processing eyebrow, above the rule. */}
+        <p className="text-center text-[10px] font-semibold tracking-[0.25em] uppercase opacity-80">
+          {group.processing}
+        </p>
+
+        {/* Top rule — score circle sits centered in the line, like the diamond. */}
+        <Divider className="my-3 opacity-80">
+          {group.score ? (
+            <span
+              className={twMerge(
+                "flex size-11 shrink-0 rotate-45 items-center justify-center rounded-[3px] opacity-100",
+                palette.accentBg,
+                palette.accentText,
+              )}
+            >
+              <span className="flex -rotate-45 flex-col items-center justify-center leading-none">
+                <span className="text-sm font-bold">{group.score}</span>
+                <span className="text-[8px] tracking-widest">pts</span>
+              </span>
+            </span>
+          ) : undefined}
+        </Divider>
+
+        <h3
+          className={twMerge(
+            "text-4xl leading-none tracking-wide uppercase",
+            BrandingStylizedFont.className,
+          )}
+        >
+          {group.origin}
+        </h3>
+        <p className="mt-1.5 text-xs tracking-[0.2em] uppercase opacity-90">
+          {group.label}
+        </p>
+      </Link>
+
+      {/* Body — flavor chips + one-click per-size add */}
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {group.notes.map((note) => (
+            <span
+              key={note}
+              className={twMerge(
+                "rounded-full px-3 py-0.5 text-xs font-medium",
+                palette.chipBg,
+                palette.chipText,
+              )}
+            >
+              {note}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {group.sizes.map((s) => (
+            <SizeAdd key={s.id} coffee={s} palette={palette} />
+          ))}
+        </div>
+
+        <p
+          className={twMerge(
+            "text-center font-serif text-xs font-bold tracking-wider italic",
+            palette.textMuted,
+          )}
+        >
+          Traceable to {group.traceable}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+function Divider({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className={twMerge("flex items-center gap-3", className)}>
       <span className="h-px flex-1 bg-current opacity-40" />
-      <span className="size-1.5 rotate-45 bg-current" />
+      {children ?? <span className="size-1.5 rotate-45 bg-current" />}
       <span className="h-px flex-1 bg-current opacity-40" />
     </div>
   );
@@ -66,106 +168,5 @@ function SizeAdd({
       <span className="opacity-60">·</span>
       <span>{added ? "Added" : `$${coffee.price}`}</span>
     </button>
-  );
-}
-
-export function CoffeeCard({ group }: { group: OriginGroup }) {
-  const palette = COFFEE_PALETTES[group.color];
-  const href = `/shop/${group.sizes[0]!.id}`;
-
-  return (
-    <article
-      className={twMerge(
-        "flex h-full flex-col overflow-hidden rounded-2xl border-2",
-        palette.surface,
-        palette.borderStrong,
-      )}
-    >
-      {/* Passport panel — links to the full coffee page */}
-      <Link
-        href={href}
-        aria-label={`View ${group.origin} — ${group.label}`}
-        className={twMerge(
-          "block bg-gradient-to-b p-5 text-center transition-opacity hover:opacity-95",
-          palette.panel,
-          palette.gradientFrom,
-          palette.gradientTo,
-          palette.panelText,
-        )}
-      >
-        {/* Top rule — processing + score sit centered on the line, diamond centered. */}
-        <div className="flex items-center gap-3 opacity-90">
-          <span className="max-w-[45%] shrink-0 text-left text-[10px] leading-tight font-semibold tracking-[0.2em] uppercase">
-            {group.processing}
-          </span>
-          <span className="h-px flex-1 bg-current opacity-40" />
-          <span className="size-1.5 shrink-0 rotate-45 bg-current" />
-          <span className="h-px flex-1 bg-current opacity-40" />
-          {group.score ? (
-            <span
-              className={twMerge(
-                "flex size-11 shrink-0 flex-col items-center justify-center rounded-full leading-none",
-                palette.accentBg,
-                palette.accentText,
-              )}
-            >
-              <span className="text-sm font-bold">{group.score}</span>
-              <span className="text-[8px] tracking-widest">pts</span>
-            </span>
-          ) : null}
-        </div>
-
-        <h3
-          className={twMerge(
-            "mt-3 text-4xl leading-none tracking-wide uppercase",
-            BrandingStylizedFont.className,
-          )}
-        >
-          {group.origin}
-        </h3>
-        <p className="mt-2 text-xs tracking-[0.2em] uppercase opacity-90">
-          {group.label}
-        </p>
-
-        <Diamond className="my-4 opacity-80" />
-
-        <p className="text-sm leading-snug font-medium italic opacity-95">
-          {group.notes.join(", ")}
-        </p>
-      </Link>
-
-      {/* Body — flavor chips + one-click per-size add */}
-      <div className="flex flex-1 flex-col gap-4 p-5">
-        <div className="flex flex-wrap justify-center gap-2">
-          {group.notes.map((note) => (
-            <span
-              key={note}
-              className={twMerge(
-                "rounded-full px-3 py-1 text-xs font-medium",
-                palette.chipBg,
-                palette.chipText,
-              )}
-            >
-              {note}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-auto flex flex-wrap justify-center gap-2">
-          {group.sizes.map((s) => (
-            <SizeAdd key={s.id} coffee={s} palette={palette} />
-          ))}
-        </div>
-
-        <p
-          className={twMerge(
-            "text-center font-serif text-xs font-bold tracking-wider italic",
-            palette.textMuted,
-          )}
-        >
-          Traceable to {group.traceable}
-        </p>
-      </div>
-    </article>
   );
 }
