@@ -76,20 +76,18 @@ export function VariantC({ products: list }: { products: Coffee[] }) {
   return (
     <ShopCanvas>
       <div className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
-        <header className="flex flex-col gap-4 py-10 md:flex-row md:items-end md:justify-between md:py-14">
-          <div>
-            <Eyebrow className="text-[#EFAA9C]">Shop Coffee</Eyebrow>
-            <h1 className="mt-3 font-primary text-4xl leading-tight font-semibold tracking-tight text-[#001F36] md:text-5xl">
-              A wall of good coffee.
-            </h1>
-          </div>
-          <p className="max-w-xs text-[15px] leading-relaxed text-[#001F36]/70">
-            One label per origin, each traceable to its farmers. Pick a size and
-            add it to your bag.
+        <header className="border-b border-[#001F36]/10 py-10 md:py-14">
+          <Eyebrow className="text-[#EFAA9C]">Shop Coffee</Eyebrow>
+          <h1 className="mt-3 font-primary text-4xl leading-tight font-semibold tracking-tight text-[#001F36] md:text-5xl">
+            Every lot, in season.
+          </h1>
+          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[#001F36]/70">
+            Direct-trade single origins, each traceable to the people who grew
+            it. Choose a size and it&apos;s in your bag.
           </p>
         </header>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
             <PosterTile
               key={g.key}
