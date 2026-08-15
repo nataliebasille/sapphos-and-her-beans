@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Check } from "~/app/_components/icons/check";
@@ -130,7 +131,13 @@ export const ProductCard = (coffee: products.Product) => {
         COLOR_CLASSES[coffee.color].borderDarkest,
       )}
     >
-      <WebsiteLabel {...coffee} />
+      <Link
+        href={`/shop/${coffee.id}`}
+        className="flex flex-col transition-opacity hover:opacity-90"
+        aria-label={`View details for ${coffee.name ?? "coffee"}`}
+      >
+        <WebsiteLabel {...coffee} />
+      </Link>
 
       <div className={twMerge("mt-auto p-3")}>
         <button
