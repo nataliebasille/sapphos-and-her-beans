@@ -223,22 +223,12 @@ export function ShopCanvas({ children }: { children: React.ReactNode }) {
  * product card, re-tinted onto the Winter Frost / navy palette.
  * ================================================================== */
 
-/** The horizontal rule with a rotated-diamond node (one side of the motif). */
-function MotifRule({ flip }: { flip?: boolean }) {
+/** The horizontal rule with a rotated-diamond node centered on it. */
+function MotifRule() {
   return (
     <span className="relative h-[2px] flex-1 bg-[#001F36]">
-      <span
-        className={twMerge(
-          "absolute top-1/2 aspect-square w-3.5 -translate-y-1/2 rotate-45 border-2 border-[#001F36] bg-[#FAF9F8]",
-          flip ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2",
-        )}
-      />
-      <span
-        className={twMerge(
-          "absolute top-1/2 aspect-square w-1 -translate-y-1/2 rotate-45 bg-[#001F36]",
-          flip ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2",
-        )}
-      />
+      <span className="absolute top-1/2 left-1/2 aspect-square w-3.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-2 border-[#001F36] bg-[#FAF9F8]" />
+      <span className="absolute top-1/2 left-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#001F36]" />
     </span>
   );
 }
@@ -279,7 +269,7 @@ export function OriginMotif({
           {label}
         </span>
       </div>
-      <MotifRule flip />
+      <MotifRule />
     </div>
   );
 }

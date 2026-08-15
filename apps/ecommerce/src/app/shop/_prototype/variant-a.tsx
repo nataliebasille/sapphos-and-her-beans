@@ -39,7 +39,7 @@ function LabelCard({ group }: { group: OriginGroup }) {
     >
       {/* accent label header */}
       <div
-        className="flex flex-col gap-2 px-4 pt-3.5 pb-4"
+        className="flex flex-col gap-1.5 px-4 pt-3.5 pb-4"
         style={{ backgroundColor: tint(accent, 0.4) }}
       >
         <div className="flex items-start justify-between">
@@ -56,7 +56,7 @@ function LabelCard({ group }: { group: OriginGroup }) {
           className="mt-1"
         />
         {group.processing ? (
-          <p className="text-center text-[11px] font-semibold tracking-[0.22em] text-[#001F36]/60 uppercase">
+          <p className="-mt-0.5 text-center text-sm font-bold tracking-[0.2em] text-[#001F36]/80 uppercase">
             {group.processing}
           </p>
         ) : null}

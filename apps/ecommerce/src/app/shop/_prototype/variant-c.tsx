@@ -46,7 +46,7 @@ function PosterTile({ group }: { group: OriginGroup }) {
 
       <OriginMotif origin={group.origin} label={group.label} size="sm" />
       {group.processing ? (
-        <p className="text-center text-[11px] font-semibold tracking-[0.22em] text-[#001F36]/60 uppercase">
+        <p className="-mt-2 text-center text-sm font-bold tracking-[0.2em] text-[#001F36]/80 uppercase">
           {group.processing}
         </p>
       ) : null}
