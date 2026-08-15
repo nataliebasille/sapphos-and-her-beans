@@ -93,29 +93,31 @@ export function CoffeeCard({ group }: { group: OriginGroup }) {
           palette.panelText,
         )}
       >
-        <div className="flex items-center justify-between text-[10px] tracking-[0.25em] uppercase opacity-80">
-          <span>{group.processing}</span>
+        {/* Top rule — processing + score sit centered on the line, diamond centered. */}
+        <div className="flex items-center gap-3 opacity-90">
+          <span className="max-w-[45%] shrink-0 text-left text-[10px] leading-tight font-semibold tracking-[0.2em] uppercase">
+            {group.processing}
+          </span>
+          <span className="h-px flex-1 bg-current opacity-40" />
+          <span className="size-1.5 shrink-0 rotate-45 bg-current" />
+          <span className="h-px flex-1 bg-current opacity-40" />
           {group.score ? (
             <span
               className={twMerge(
-                "flex size-12 shrink-0 flex-col items-center justify-center rounded-full leading-none",
+                "flex size-11 shrink-0 flex-col items-center justify-center rounded-full leading-none",
                 palette.accentBg,
                 palette.accentText,
               )}
             >
-              <span className="text-sm font-bold tracking-normal">
-                {group.score}
-              </span>
+              <span className="text-sm font-bold">{group.score}</span>
               <span className="text-[8px] tracking-widest">pts</span>
             </span>
           ) : null}
         </div>
 
-        <Diamond className="my-4 opacity-80" />
-
         <h3
           className={twMerge(
-            "text-4xl leading-none tracking-wide uppercase",
+            "mt-3 text-4xl leading-none tracking-wide uppercase",
             BrandingStylizedFont.className,
           )}
         >
