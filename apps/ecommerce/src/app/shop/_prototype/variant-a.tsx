@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * PROTOTYPE — throwaway. Variant A: editorial white-card grid.
- * Extends the homepage FeaturedCard treatment into a dense shop grid.
+ * PROTOTYPE — throwaway. Variant A: the coffee-label card, in a grid.
+ * The original product-label look (MedievalSharp origin motif, size|price +
+ * score badges, spec grid, traceable footer) re-tinted onto Winter Frost/navy.
  */
 
 import { useMemo } from "react";
@@ -10,63 +11,76 @@ import {
   AddButton,
   accentFor,
   Eyebrow,
+  fermentationInfo,
   type OriginGroup,
-  NoteChips,
+  OriginMotif,
   ShopCanvas,
+  ScoreBadge,
   SizePills,
+  SizePriceBadge,
+  SpecGrid,
+  TraceableFooter,
   groupByOrigin,
-  sizeLabel,
+  tint,
   useSizeSelection,
   type Coffee,
 } from "./shared";
 
-export const VARIANT_A_NAME = "Editorial grid";
+export const VARIANT_A_NAME = "Coffee label";
 
-function CoffeeCard({ group }: { group: OriginGroup }) {
+function LabelCard({ group }: { group: OriginGroup }) {
   const accent = accentFor(group.color);
   const { selected, setSelected } = useSizeSelection(group);
+  const ferment = fermentationInfo(group.fermentation);
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#001F36]/10 bg-white transition-shadow hover:shadow-xl hover:shadow-[#001F36]/5">
-      {/* accent label block */}
+    <article
+      className="flex flex-col overflow-hidden rounded-2xl border-2 bg-white shadow-sm"
+      style={{ borderColor: accent }}
+    >
+      {/* accent label header */}
       <div
-        className="relative flex aspect-[5/3] flex-col justify-between p-5"
-        style={{ backgroundColor: accent }}
+        className="flex flex-col gap-2 px-4 pt-3.5 pb-4"
+        style={{ backgroundColor: tint(accent, 0.4) }}
       >
-        <div className="flex items-center justify-between">
-          <span className="rounded-full bg-white/25 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[#001F36] uppercase">
-            {sizeLabel(selected.size)}
-          </span>
-          {group.score ? (
-            <span className="font-primary text-sm font-semibold text-[#001F36]/80">
-              {group.score} pts
-            </span>
-          ) : null}
+        <div className="flex items-start justify-between">
+          <SizePriceBadge
+            size={selected.size}
+            price={selected.price}
+            accent={accent}
+          />
+          {group.score ? <ScoreBadge score={group.score} /> : null}
         </div>
-        <div>
-          <p className="text-[0.7rem] font-semibold tracking-[0.2em] text-[#001F36]/60 uppercase">
-            {group.processing}
-          </p>
-          <h3 className="mt-1 font-primary text-2xl leading-tight font-semibold text-[#001F36]">
-            {group.origin}
-          </h3>
-          <p className="text-sm text-[#001F36]/70">{group.label}</p>
-        </div>
+        <OriginMotif
+          origin={group.origin}
+          label={group.label}
+          size="sm"
+          className="mt-1"
+        />
       </div>
 
       {/* body */}
-      <div className="flex flex-1 flex-col p-5">
-        <NoteChips notes={group.notes} />
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <p className="text-center text-[15px] leading-snug font-bold text-[#001F36] italic">
+          {ferment?.kicker ? (
+            <span className="mr-1.5 text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/55 not-italic uppercase">
+              {ferment.kicker}
+            </span>
+          ) : null}
+          {group.notes.join(", ")}
+        </p>
 
-        <div className="mt-4">
+        <SpecGrid group={group} accent={accent} />
+
+        <div className="mt-auto flex flex-col gap-2.5 pt-1">
           <SizePills group={group} selected={selected} onSelect={setSelected} />
-        </div>
-
-        <div className="mt-5 flex items-center justify-between">
-          <span className="font-primary text-xl font-semibold text-[#001F36]">
-            ${selected.price}
-          </span>
-          <AddButton coffee={selected} size="sm" />
+          <div className="flex items-center justify-between">
+            <span className="font-primary text-xl font-semibold text-[#001F36]">
+              ${selected.price}
+            </span>
+            <AddButton coffee={selected} size="sm" />
+          </div>
+          <TraceableFooter traceable={group.traceable} className="text-right" />
         </div>
       </div>
     </article>
@@ -92,7 +106,7 @@ export function VariantA({ products: list }: { products: Coffee[] }) {
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
-            <CoffeeCard key={g.key} group={g} />
+            <LabelCard key={g.key} group={g} />
           ))}
         </div>
       </div>

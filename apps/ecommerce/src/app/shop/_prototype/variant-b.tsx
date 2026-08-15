@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * PROTOTYPE — throwaway. Variant B: editorial origin index.
- * Dense full-width rows with hairline dividers + inline pill filters.
- * Deliberately NOT a data table — reads like a typeset index.
+ * PROTOTYPE — throwaway. Variant B: origin index rows with the label look.
+ * Full-width rows: MedievalSharp origin motif + badges left, notes + spec
+ * middle, size/price/add right. Inline pill filters. Not a data table.
  */
 
 import { useMemo, useState } from "react";
@@ -13,63 +13,96 @@ import {
   accentFor,
   altitudeLabel,
   Eyebrow,
+  fermentationInfo,
   type OriginGroup,
+  OriginMotif,
+  ScoreBadge,
   ShopCanvas,
   SizePills,
+  SizePriceBadge,
+  TraceableFooter,
   groupByOrigin,
+  tint,
   useSizeSelection,
   type Coffee,
 } from "./shared";
 
 export const VARIANT_B_NAME = "Origin index";
 
+function SpecInline({ group }: { group: OriginGroup }) {
+  const ferment = fermentationInfo(group.fermentation);
+  const items = [
+    ferment ? ["Fermentation", ferment.value] : null,
+    group.processing ? ["Process", group.processing] : null,
+    group.lot ? ["Lot", group.lot] : null,
+    group.region ? ["Region", group.region] : null,
+    group.varietals ? ["Varietals", group.varietals] : null,
+    altitudeLabel(group.altitude)
+      ? ["Altitude", altitudeLabel(group.altitude)!]
+      : null,
+  ].filter(Boolean) as [string, string][];
+
+  return (
+    <dl className="flex flex-wrap gap-x-5 gap-y-1.5">
+      {items.map(([label, value]) => (
+        <div key={label} className="flex items-baseline gap-1.5">
+          <dt className="font-mono text-[10px] font-bold tracking-widest text-[#001F36]/45 uppercase">
+            {label}
+          </dt>
+          <dd className="text-sm font-semibold text-[#001F36]/85">{value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 function IndexRow({ group }: { group: OriginGroup }) {
   const accent = accentFor(group.color);
   const { selected, setSelected } = useSizeSelection(group);
+  const ferment = fermentationInfo(group.fermentation);
 
   return (
-    <div className="grid grid-cols-1 items-center gap-5 border-t border-[#001F36]/10 py-6 transition-colors hover:bg-white/60 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)_auto] md:gap-8 md:px-3">
-      {/* origin */}
-      <div className="flex items-start gap-4">
-        <span
-          className="mt-1.5 size-3 shrink-0 rounded-full"
-          style={{ backgroundColor: accent }}
-        />
-        <div>
-          <p className="text-[0.65rem] font-semibold tracking-[0.2em] text-[#001F36]/55 uppercase">
-            {group.processing}
-          </p>
-          <h3 className="font-primary text-xl leading-tight font-semibold text-[#001F36]">
-            {group.origin}
-          </h3>
-          <p className="text-sm text-[#001F36]/65">{group.label}</p>
-          {group.region ? (
-            <p className="mt-0.5 text-xs text-[#001F36]/45">
-              {group.region}
-              {altitudeLabel(group.altitude) ? ` · ${altitudeLabel(group.altitude)}` : ""}
-            </p>
-          ) : null}
+    <div
+      className="grid grid-cols-1 gap-6 rounded-2xl border-2 bg-white p-6 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)_auto] md:items-center md:gap-8"
+      style={{ borderColor: tint(accent, 0.5) }}
+    >
+      {/* origin block */}
+      <div
+        className="flex flex-col gap-4 rounded-xl p-4"
+        style={{ backgroundColor: tint(accent, 0.35) }}
+      >
+        <div className="flex items-center justify-between">
+          <SizePriceBadge
+            size={selected.size}
+            price={selected.price}
+            accent={accent}
+            className="text-base"
+          />
+          {group.score ? <ScoreBadge score={group.score} /> : null}
         </div>
+        <OriginMotif origin={group.origin} label={group.label} size="sm" />
       </div>
 
-      {/* tasting notes as prose */}
-      <p className="text-[15px] leading-relaxed text-[#001F36]/75 italic">
-        {group.notes.join(", ")}
-        {group.score ? (
-          <span className="ml-2 rounded-full bg-[#001F36]/5 px-2 py-0.5 text-[11px] font-semibold text-[#001F36]/70 not-italic">
-            {group.score} pts
-          </span>
-        ) : null}
-      </p>
+      {/* notes + spec */}
+      <div className="flex flex-col gap-3">
+        <p className="text-lg leading-snug font-bold text-[#001F36] italic">
+          {ferment?.kicker ? (
+            <span className="mr-2 text-xs font-semibold tracking-[0.2em] text-[#001F36]/55 not-italic uppercase">
+              {ferment.kicker}
+            </span>
+          ) : null}
+          {group.notes.join(", ")}
+        </p>
+        <SpecInline group={group} />
+        <TraceableFooter traceable={group.traceable} />
+      </div>
 
       {/* actions */}
-      <div className="flex items-center justify-between gap-4 md:justify-end">
-        <div className="flex flex-col items-start gap-2 md:items-end">
-          <SizePills group={group} selected={selected} onSelect={setSelected} />
-          <span className="font-primary text-lg font-semibold text-[#001F36]">
-            ${selected.price}
-          </span>
-        </div>
+      <div className="flex flex-col items-start gap-3 md:items-end">
+        <SizePills group={group} selected={selected} onSelect={setSelected} />
+        <span className="font-primary text-2xl font-semibold text-[#001F36]">
+          ${selected.price}
+        </span>
         <AddButton coffee={selected} />
       </div>
     </div>
@@ -127,7 +160,7 @@ export function VariantB({ products: list }: { products: Coffee[] }) {
 
   return (
     <ShopCanvas>
-      <div className="mx-auto max-w-5xl px-6 pb-24 md:px-10">
+      <div className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
         <header className="py-10 md:py-14">
           <Eyebrow className="text-[#EFAA9C]">Shop Coffee</Eyebrow>
           <h1 className="mt-3 font-primary text-4xl leading-tight font-semibold tracking-tight text-[#001F36] md:text-5xl">
@@ -136,7 +169,7 @@ export function VariantB({ products: list }: { products: Coffee[] }) {
         </header>
 
         {/* inline filters */}
-        <div className="flex flex-wrap items-center gap-2 pb-3">
+        <div className="mb-8 flex flex-wrap items-center gap-2">
           <FilterPill
             active={selProcess.size === 0 && !decafOnly}
             onClick={() => {
@@ -147,7 +180,11 @@ export function VariantB({ products: list }: { products: Coffee[] }) {
             All
           </FilterPill>
           {processes.map((p) => (
-            <FilterPill key={p} active={selProcess.has(p)} onClick={() => toggle(p)}>
+            <FilterPill
+              key={p}
+              active={selProcess.has(p)}
+              onClick={() => toggle(p)}
+            >
               {p}
             </FilterPill>
           ))}
@@ -160,11 +197,10 @@ export function VariantB({ products: list }: { products: Coffee[] }) {
           </span>
         </div>
 
-        <div>
+        <div className="flex flex-col gap-4">
           {filtered.map((g) => (
             <IndexRow key={g.key} group={g} />
           ))}
-          <div className="border-t border-[#001F36]/10" />
         </div>
       </div>
     </ShopCanvas>

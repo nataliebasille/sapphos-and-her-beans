@@ -1,86 +1,74 @@
 "use client";
 
 /**
- * PROTOTYPE — throwaway. Variant C: accent gallery.
- * Each tile is flooded with the coffee's muted brand accent (navy type on top),
- * a graphic "wall of labels" — bold but on-brand (no saturated color, no photos).
+ * PROTOTYPE — throwaway. Variant C: accent poster gallery.
+ * Each tile is flooded with the coffee's muted accent; the label motifs sit in
+ * navy on top, and the spec/actions ride on a white "label sticker" panel.
  */
 
 import { useMemo } from "react";
-import { twMerge } from "tailwind-merge";
 import {
   AddButton,
   accentFor,
   Eyebrow,
+  FROST,
+  fermentationInfo,
   type OriginGroup,
+  OriginMotif,
+  ScoreBadge,
   ShopCanvas,
+  SizePills,
+  SizePriceBadge,
+  SpecGrid,
+  TraceableFooter,
   groupByOrigin,
-  sizeLabel,
   useSizeSelection,
   type Coffee,
 } from "./shared";
 
-export const VARIANT_C_NAME = "Accent gallery";
+export const VARIANT_C_NAME = "Accent poster";
 
-function GalleryTile({ group }: { group: OriginGroup }) {
+function PosterTile({ group }: { group: OriginGroup }) {
   const accent = accentFor(group.color);
   const { selected, setSelected } = useSizeSelection(group);
+  const ferment = fermentationInfo(group.fermentation);
 
   return (
     <article
-      className="flex min-h-[320px] flex-col justify-between rounded-2xl p-6 md:p-7"
+      className="flex flex-col gap-3 rounded-2xl p-4"
       style={{ backgroundColor: accent }}
     >
       <div className="flex items-start justify-between">
-        <p className="text-[0.7rem] font-semibold tracking-[0.22em] text-[#001F36]/60 uppercase">
-          {group.processing}
-        </p>
-        {group.score ? (
-          <span className="font-primary text-sm font-semibold text-[#001F36]/75">
-            {group.score} pts
+        <SizePriceBadge
+          size={selected.size}
+          price={selected.price}
+          accent={FROST}
+        />
+        {group.score ? <ScoreBadge score={group.score} /> : null}
+      </div>
+
+      <OriginMotif origin={group.origin} label={group.label} size="sm" />
+
+      <p className="text-center text-[15px] leading-snug font-bold text-[#001F36] italic">
+        {ferment?.kicker ? (
+          <span className="mr-1.5 text-[11px] font-semibold tracking-[0.18em] text-[#001F36]/60 not-italic uppercase">
+            {ferment.kicker}
           </span>
         ) : null}
-      </div>
+        {group.notes.join(", ")}
+      </p>
 
-      <div className="py-6">
-        <h3 className="font-primary text-3xl leading-[1.05] font-semibold text-[#001F36] md:text-4xl">
-          {group.origin}
-        </h3>
-        <p className="mt-1 text-sm font-medium text-[#001F36]/70">
-          {group.label}
-        </p>
-        <p className="mt-4 max-w-xs text-[15px] leading-snug text-[#001F36]/80 italic">
-          {group.notes.join(", ")}
-        </p>
-      </div>
-
-      <div>
-        <div className="mb-4 flex flex-wrap gap-1.5">
-          {group.sizes.map((s) => {
-            const active = s.id === selected.id;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => setSelected(s)}
-                className={twMerge(
-                  "rounded-full border px-3 py-1 text-xs font-semibold tracking-wide transition-colors",
-                  active
-                    ? "border-[#001F36] bg-[#001F36] text-[#FAF9F8]"
-                    : "border-[#001F36]/30 text-[#001F36]/80 hover:border-[#001F36]/60",
-                )}
-              >
-                {sizeLabel(s.size)}
-              </button>
-            );
-          })}
-        </div>
-        <div className="flex items-center justify-between border-t border-[#001F36]/15 pt-4">
-          <span className="font-primary text-2xl font-semibold text-[#001F36]">
+      {/* white "label sticker" panel */}
+      <div className="mt-auto flex flex-col gap-2.5 rounded-xl bg-white/85 p-3 backdrop-blur-sm">
+        <SpecGrid group={group} accent={accent} />
+        <SizePills group={group} selected={selected} onSelect={setSelected} />
+        <div className="flex items-center justify-between">
+          <span className="font-primary text-xl font-semibold text-[#001F36]">
             ${selected.price}
           </span>
           <AddButton coffee={selected} size="sm" />
         </div>
+        <TraceableFooter traceable={group.traceable} className="text-right" />
       </div>
     </article>
   );
@@ -107,7 +95,7 @@ export function VariantC({ products: list }: { products: Coffee[] }) {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
-            <GalleryTile key={g.key} group={g} />
+            <PosterTile key={g.key} group={g} />
           ))}
         </div>
       </div>

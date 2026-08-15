@@ -12,6 +12,7 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { type products } from "@models";
 import { accentFor, BRAND } from "~/app/(home)/_components/brand";
+import { BrandingStylizedFont } from "~/app/fonts";
 import {
   type Coffee,
   Eyebrow,
@@ -25,6 +26,15 @@ export type { Coffee };
 
 export const FROST = BRAND.frost;
 export const NAVY = BRAND.navy;
+
+/** Translucent accent for label tints (source accents are solid hex). */
+export function tint(hex: string, alpha: number): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 export function sizeLabel(size: products.Product["size"]) {
   return size === "singleserve" ? "Single Serve" : size;
@@ -47,6 +57,8 @@ export type OriginGroup = {
   region?: string;
   altitude?: string;
   varietals?: string;
+  lot?: string;
+  fermentation?: Coffee["fermentation"];
   score?: number;
   notes: string[];
   traceable: string;
@@ -86,6 +98,8 @@ export function groupByOrigin(list: Coffee[]): OriginGroup[] {
         region: p.region,
         altitude: p.altitude,
         varietals: p.varietals,
+        lot: p.lot,
+        fermentation: p.fermentation,
         score: p.score,
         notes: tastingNotes(p, 4),
         traceable: p.traceable,
@@ -203,3 +217,198 @@ export function ShopCanvas({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
+/* ================================================================== *
+ * Signature "coffee-label" motifs — carried over from the original
+ * product card, re-tinted onto the Winter Frost / navy palette.
+ * ================================================================== */
+
+/** The horizontal rule with a rotated-diamond node (one side of the motif). */
+function MotifRule({ flip }: { flip?: boolean }) {
+  return (
+    <span className="relative h-[2px] flex-1 bg-[#001F36]">
+      <span
+        className={twMerge(
+          "absolute top-1/2 aspect-square w-3.5 -translate-y-1/2 rotate-45 border-2 border-[#001F36] bg-[#FAF9F8]",
+          flip ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2",
+        )}
+      />
+      <span
+        className={twMerge(
+          "absolute top-1/2 aspect-square w-1 -translate-y-1/2 rotate-45 bg-[#001F36]",
+          flip ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2",
+        )}
+      />
+    </span>
+  );
+}
+
+/** Origin name + farm flanked by the diamond-line motif, in MedievalSharp. */
+export function OriginMotif({
+  origin,
+  label,
+  size = "md",
+  className,
+}: {
+  origin: string;
+  label: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}) {
+  const originSize =
+    size === "lg" ? "text-3xl" : size === "sm" ? "text-xl" : "text-2xl";
+  return (
+    <div className={twMerge("flex items-center gap-2.5", className)}>
+      <MotifRule />
+      <div className="flex flex-col items-center text-center text-[#001F36]">
+        <span
+          className={twMerge(
+            "leading-none font-bold tracking-wide uppercase",
+            originSize,
+            BrandingStylizedFont.className,
+          )}
+        >
+          {origin}
+        </span>
+        <span
+          className={twMerge(
+            "mt-0.5 text-xs leading-tight tracking-wider",
+            BrandingStylizedFont.className,
+          )}
+        >
+          {label}
+        </span>
+      </div>
+      <MotifRule flip />
+    </div>
+  );
+}
+
+/** Corner size | price chip in MedievalSharp, tinted with the coffee accent. */
+export function SizePriceBadge({
+  size,
+  price,
+  accent,
+  className,
+}: {
+  size: string;
+  price: number;
+  accent: string;
+  className?: string;
+}) {
+  return (
+    <span
+      className={twMerge(
+        "inline-flex items-center gap-2 border-2 border-[#001F36] px-3 pt-0.5 text-xl font-bold tracking-wide text-[#001F36]",
+        BrandingStylizedFont.className,
+        className,
+      )}
+      style={{ backgroundColor: accent }}
+    >
+      <span className="uppercase">{sizeLabel(size)}</span>
+      <span className="opacity-50">|</span>
+      <span className="tracking-widest">${price}</span>
+    </span>
+  );
+}
+
+/** "{score} pts" badge in MedievalSharp. */
+export function ScoreBadge({
+  score,
+  className,
+}: {
+  score: number;
+  className?: string;
+}) {
+  return (
+    <span
+      className={twMerge(
+        "inline-flex flex-col items-center leading-none text-[#001F36]",
+        BrandingStylizedFont.className,
+        className,
+      )}
+    >
+      <span className="text-xl font-bold tracking-widest">{score}</span>
+      <span className="text-[10px] tracking-[0.2em] uppercase">pts</span>
+    </span>
+  );
+}
+
+/** Human-readable fermentation value + kicker, from the original card logic. */
+export function fermentationInfo(f: Coffee["fermentation"]): {
+  kicker?: string;
+  value: string;
+} | null {
+  if (!f) return null;
+  if (typeof f === "string") return { value: f };
+  if (f.type === "cofermentation")
+    return { kicker: "Co-fermented", value: f.ingredient };
+  return { kicker: "Anaerobic", value: f.duration ?? "Anaerobic" };
+}
+
+/** The mono-uppercase spec table — label column navy, value column accent-tinted. */
+export function SpecGrid({
+  group,
+  accent,
+  className,
+}: {
+  group: OriginGroup;
+  accent: string;
+  className?: string;
+}) {
+  const ferment = fermentationInfo(group.fermentation);
+  const rows: [string, string | undefined][] = [
+    ferment ? ["Fermentation", ferment.value] : ["", undefined],
+    ["Process", group.processing],
+    ["Lot", group.lot],
+    ["Region", group.region],
+    ["Varietals", group.varietals],
+    ["Altitude", altitudeLabel(group.altitude) ?? undefined],
+  ];
+  const visible = rows.filter(([label, value]) => label && value);
+
+  return (
+    <dl
+      className={twMerge(
+        "grid grid-cols-[max-content_1fr] gap-px overflow-hidden rounded-lg text-sm",
+        className,
+      )}
+      style={{ backgroundColor: tint(BRAND.navy, 0.18) }}
+    >
+      {visible.map(([label, value]) => (
+        <div key={label} className="col-span-2 grid grid-cols-subgrid gap-px">
+          <dt className="flex items-center justify-end bg-[#001F36] px-2.5 py-1 text-right font-mono text-[10px] font-bold tracking-wide text-[#FAF9F8] uppercase">
+            {label}
+          </dt>
+          <dd
+            className="flex items-center px-2.5 py-1 text-[13px] font-semibold tracking-wide text-[#001F36]"
+            style={{ backgroundColor: tint(accent, 0.22) }}
+          >
+            {value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** "Traceable to {n}" italic serif footer. */
+export function TraceableFooter({
+  traceable,
+  className,
+}: {
+  traceable: string;
+  className?: string;
+}) {
+  return (
+    <p
+      className={twMerge(
+        "font-serif text-sm font-bold tracking-wider text-[#001F36]/75 italic",
+        className,
+      )}
+    >
+      Traceable to {traceable}
+    </p>
+  );
+}
+
