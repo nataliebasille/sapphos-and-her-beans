@@ -10,11 +10,11 @@ import { useMemo, useState } from "react";
 import {
   accentFor,
   Eyebrow,
-  fermentationInfo,
   type OriginGroup,
   OriginMotif,
   PriceTag,
   priceRange,
+  ProcessLine,
   ShopCanvas,
   ScoreBadge,
   SizeAddRow,
@@ -36,7 +36,6 @@ function LabelCard({
   onToggleDetails: () => void;
 }) {
   const accent = accentFor(group.color);
-  const ferment = fermentationInfo(group.fermentation);
 
   return (
     <article
@@ -58,20 +57,7 @@ function LabelCard({
           size="sm"
           className="mt-1"
         />
-        {group.processing || ferment?.kicker ? (
-          <div className="flex flex-col items-center leading-tight">
-            {ferment?.kicker ? (
-              <span className="text-[10px] font-semibold tracking-[0.2em] text-[#001F36]/55 uppercase">
-                {ferment.kicker}
-              </span>
-            ) : null}
-            {group.processing ? (
-              <span className="text-sm font-bold tracking-[0.2em] text-[#001F36]/80 uppercase">
-                {group.processing}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
+        <ProcessLine group={group} />
       </div>
 
       {/* body */}

@@ -11,7 +11,8 @@
 import { twMerge } from "tailwind-merge";
 import { type products } from "@models";
 import { accentFor, BRAND } from "~/app/(home)/_components/brand";
-import { BrandingStylizedFont } from "~/app/fonts";
+import { Plus } from "~/app/_components/icons/plus";
+import { Check } from "~/app/_components/icons/check";
 import {
   type Coffee,
   Eyebrow,
@@ -125,7 +126,7 @@ export function priceRange(sizes: Coffee[]): string {
   return min === max ? `$${min}` : `$${min}–$${max}`;
 }
 
-/** One-click add for a single size. Clicking adds that SKU straight to cart. */
+/** One-click add for a single size — styled as an obvious add button. */
 function SizeAddButton({ coffee }: { coffee: Coffee }) {
   const { added, add } = useQuickAdd(coffee.id);
   return (
@@ -135,13 +136,28 @@ function SizeAddButton({ coffee }: { coffee: Coffee }) {
       disabled={added}
       aria-label={`Add ${sizeLabel(coffee.size)} to cart`}
       className={twMerge(
-        "flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold tracking-wide text-[#FAF9F8] uppercase transition-colors",
-        added ? "bg-[#3f8f6b]" : "bg-[#001F36] hover:bg-[#001F36]/85",
+        "group flex items-center gap-2 rounded-full border-2 py-1 pr-3.5 pl-1 transition-colors",
+        added
+          ? "border-[#3f8f6b] bg-[#3f8f6b] text-[#FAF9F8]"
+          : "border-[#001F36] bg-white text-[#001F36] hover:bg-[#001F36] hover:text-[#FAF9F8]",
       )}
     >
-      <span>{sizeLabel(coffee.size)}</span>
-      <span className="opacity-60">·</span>
-      <span>{added ? "Added ✓" : `$${coffee.price}`}</span>
+      <span
+        className={twMerge(
+          "flex size-6 items-center justify-center rounded-full transition-colors",
+          added
+            ? "bg-white text-[#3f8f6b]"
+            : "bg-[#001F36] text-[#FAF9F8] group-hover:bg-white group-hover:text-[#001F36]",
+        )}
+      >
+        {added ? <Check className="size-4" /> : <Plus className="size-4" />}
+      </span>
+      <span className="text-xs font-bold tracking-wide uppercase">
+        {added ? "Added" : sizeLabel(coffee.size)}
+      </span>
+      {!added && (
+        <span className="text-sm font-bold">${coffee.price}</span>
+      )}
     </button>
   );
 }
@@ -229,17 +245,15 @@ export function OriginMotif({
       <div className="flex flex-col items-center text-center text-[#001F36]">
         <span
           className={twMerge(
-            "leading-none font-bold tracking-wide uppercase",
+            "font-primary leading-none font-bold tracking-wide uppercase",
             originSize,
-            BrandingStylizedFont.className,
           )}
         >
           {origin}
         </span>
         <span
           className={twMerge(
-            "mt-0.5 text-xs leading-tight tracking-wider",
-            BrandingStylizedFont.className,
+            "font-primary mt-0.5 text-xs leading-tight tracking-wider",
           )}
         >
           {label}
@@ -250,7 +264,7 @@ export function OriginMotif({
   );
 }
 
-/** Airy price label in MedievalSharp — no box, no fill. Accepts a range string. */
+/** Airy price label in the brand primary font — no box, no fill. Range string. */
 export function PriceTag({
   text,
   className,
@@ -261,8 +275,7 @@ export function PriceTag({
   return (
     <span
       className={twMerge(
-        "text-2xl font-bold tracking-wide text-[#001F36]",
-        BrandingStylizedFont.className,
+        "font-primary text-2xl font-bold tracking-wide text-[#001F36]",
         className,
       )}
     >
@@ -271,7 +284,7 @@ export function PriceTag({
   );
 }
 
-/** "{score} pts" badge in MedievalSharp. */
+/** "{score} pts" badge in the brand primary font. */
 export function ScoreBadge({
   score,
   className,
@@ -282,8 +295,7 @@ export function ScoreBadge({
   return (
     <span
       className={twMerge(
-        "inline-flex flex-col items-center leading-none text-[#001F36]",
-        BrandingStylizedFont.className,
+        "font-primary inline-flex flex-col items-center leading-none text-[#001F36]",
         className,
       )}
     >
@@ -303,6 +315,37 @@ export function fermentationInfo(f: Coffee["fermentation"]): {
   if (f.type === "cofermentation")
     return { kicker: "Co-fermented", value: f.ingredient };
   return { kicker: "Anaerobic", value: f.duration ?? "Anaerobic" };
+}
+
+/**
+ * Fermentation kicker for the card header — but only when it isn't already
+ * spelled out in the origin label (e.g. "Co-fermented with Wine Yeast / Lychee").
+ */
+export function headerFermentKicker(group: OriginGroup): string | null {
+  const f = fermentationInfo(group.fermentation);
+  if (!f?.kicker) return null;
+  if (group.label.toLowerCase().includes(f.kicker.toLowerCase())) return null;
+  return f.kicker;
+}
+
+/** The fermentation kicker + processing pair shown in the label header. */
+export function ProcessLine({ group }: { group: OriginGroup }) {
+  const kicker = headerFermentKicker(group);
+  if (!kicker && !group.processing) return null;
+  return (
+    <div className="flex flex-col items-center gap-0.5 leading-tight">
+      {kicker ? (
+        <span className="text-[10px] font-semibold tracking-[0.2em] text-[#001F36]/55 uppercase">
+          {kicker}
+        </span>
+      ) : null}
+      {group.processing ? (
+        <span className="text-center text-xs font-bold tracking-[0.08em] text-[#001F36]/80 uppercase">
+          {group.processing}
+        </span>
+      ) : null}
+    </div>
+  );
 }
 
 /** The mono-uppercase spec table — label column navy, value column accent-tinted. */
