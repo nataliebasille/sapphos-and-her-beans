@@ -7,7 +7,7 @@
  */
 import { getProducts } from "~/server/products/get_products";
 import { type products } from "@models";
-import { HomeFeatured, HomeHeader, HomeHero } from "./_components/home-top";
+import { HomeFeatured, HomeHero } from "./_components/home-top";
 import {
   FindUsLocally,
   NewsletterFooter,
@@ -47,7 +47,6 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F8] font-sans text-[#001F36]">
-      <HomeHeader />
       <HomeHero />
       <HomeFeatured coffees={coffees} />
       <WhySappho />

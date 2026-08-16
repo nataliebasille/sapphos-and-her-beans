@@ -3,16 +3,12 @@
 /**
  * Homepage top — the "Editorial Split" hero experience.
  *
- * Header: shop-forward nav with a centered logo that fades in past the hero.
  * Hero:   asymmetric split — copy left, warm photo with a soft organic curve.
  * Featured: editorial coffee cards, horizontal-scroll on mobile.
  */
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { Cart as CartIcon } from "~/app/_components/icons/cart";
-import { useOpenCart } from "~/app/_stores/cart";
 import {
   type Coffee,
   Eyebrow,
@@ -21,120 +17,6 @@ import {
   tastingNotes,
   useQuickAdd,
 } from "./sections";
-
-const NAV = [
-  { label: "Shop Coffee", href: "/shop" },
-  { label: "Wholesale", href: "/wholesale" },
-  { label: "Our Story", href: "/about" },
-];
-
-export function HomeHeader() {
-  const [scrolled, setScrolled] = useState(false);
-  const openCart = useOpenCart();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 120);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <header
-      className={twMerge(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-[#001F36]/10 bg-[#FAF9F8]/90 backdrop-blur-md"
-          : "border-b border-transparent",
-      )}
-    >
-      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">
-        {/* left nav */}
-        <nav className="hidden items-center gap-7 md:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium tracking-wide text-[#001F36]/80 transition-colors hover:text-[#001F36]"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <MobileMenu />
-
-        {/* center logo — fades in past hero */}
-        <Link
-          href="/"
-          className={twMerge(
-            "relative mx-auto h-9 w-[130px] transition-opacity duration-500",
-            scrolled ? "opacity-100" : "opacity-0",
-          )}
-          aria-hidden={!scrolled}
-        >
-          <Image
-            src="/images/sappho black logo cropped.png"
-            alt="Sappho & Her Beans"
-            fill
-            className="object-contain"
-          />
-        </Link>
-
-        {/* right actions */}
-        <div className="flex items-center justify-end gap-5">
-          <Link
-            href="/locations"
-            className="hidden text-sm font-medium tracking-wide text-[#001F36]/80 transition-colors hover:text-[#001F36] md:block"
-          >
-            Find Us
-          </Link>
-          <button
-            onClick={openCart}
-            aria-label="Open cart"
-            className="text-[#001F36]"
-          >
-            <CartIcon className="size-6" />
-          </button>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-function MobileMenu() {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="md:hidden">
-      <button
-        aria-label="Open menu"
-        onClick={() => setOpen(true)}
-        className="flex flex-col gap-1.5"
-      >
-        <span className="block h-0.5 w-6 bg-[#001F36]" />
-        <span className="block h-0.5 w-6 bg-[#001F36]" />
-        <span className="block h-0.5 w-4 bg-[#001F36]" />
-      </button>
-      {open && (
-        <div className="fixed inset-0 z-50 bg-[#001F36] px-8 py-6 text-[#FAF9F8]">
-          <button
-            aria-label="Close menu"
-            onClick={() => setOpen(false)}
-            className="mb-16 text-3xl"
-          >
-            ×
-          </button>
-          <nav className="flex flex-col gap-7 text-2xl">
-            {[...NAV, { label: "Find Us", href: "/locations" }].map((i) => (
-              <Link key={i.href} href={i.href} onClick={() => setOpen(false)}>
-                {i.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export function HomeHero() {
   return (
