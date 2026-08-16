@@ -19,7 +19,7 @@ const BrandingStylizedFont = MedievalSharp({
 export default function Home() {
   return (
     <div className="grid grid-cols-1 gap-3 justify-center items-center place-items-center h-full w-full">
-      <Label coffee="YELLOW_PACAMARA_WASHED_250g" />
+      <Label coffee="CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g" />
     </div>
   );
 }
@@ -112,6 +112,17 @@ const COLORS = {
     border: "border-emerald-900",
     borderDarkest: "border-emerald-950",
   },
+
+  violet: {
+    bgLight: "bg-violet-50",
+    bgNormal: "bg-violet-200",
+    bgDark: "bg-violet-900",
+    textLight: "text-violet-50",
+    textDark: "text-violet-900",
+    textDarkest: "text-violet-950",
+    border: "border-violet-900",
+    borderDarkest: "border-violet-950",
+  },
 } as const;
 
 const Label = (props: { coffee: keyof Coffee }) => {
@@ -132,7 +143,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
         className={twMerge(
           "relative w-full h-3/5 border-8 border-t-0 flex flex-col",
           colors.border,
-          colors.bgLight
+          colors.bgLight,
         )}
       >
         <div className="absolute flex-1 p-2 flex flex-col">
@@ -147,7 +158,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
           <span
             className={twMerge(
               "text-[10px] tracking-wide font-bold pl-2",
-              colors.textDarkest
+              colors.textDarkest,
             )}
           >
             FIND ME
@@ -160,7 +171,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
               colors.textDarkest,
               colors.borderDarkest,
               colors.bgNormal,
-              BrandingStylizedFont.className
+              BrandingStylizedFont.className,
             )}
           >
             <span className="text-base">{coffee.score}</span>{" "}
@@ -173,7 +184,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
             colors.textDarkest,
             colors.borderDarkest,
             colors.bgNormal,
-            BrandingStylizedFont.className
+            BrandingStylizedFont.className,
           )}
         >
           {coffee.size}
@@ -182,7 +193,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
           <div
             className={twMerge(
               "w-full mt-[4.5rem] flex gap-4 px-2 items-center",
-              BrandingStylizedFont.className
+              BrandingStylizedFont.className,
             )}
           >
             <div className={twMerge("relative flex-1 h-[2px]", colors.bgDark)}>
@@ -190,13 +201,13 @@ const Label = (props: { coffee: keyof Coffee }) => {
                 className={twMerge(
                   "absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square border-[2px] rotate-45",
                   colors.bgLight,
-                  colors.border
+                  colors.border,
                 )}
               />
               <div
                 className={twMerge(
                   "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square rotate-45",
-                  colors.bgDark
+                  colors.bgDark,
                 )}
               />
             </div>
@@ -205,7 +216,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
               <div
                 className={twMerge(
                   "tracking-widest text-2xl max-w-[250px] uppercase font-bold text-center flex justify-center items-center",
-                  colors.textDarkest
+                  colors.textDarkest,
                 )}
               >
                 {coffee.country}
@@ -213,7 +224,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
               <div
                 className={twMerge(
                   "relative text-lg tracking-wider flex-initial h-[36px] font-bold flex justify-center items-end text-center -mt-3 text-nowrap",
-                  colors.textDarkest
+                  colors.textDarkest,
                 )}
               >
                 {coffee.farm}
@@ -225,13 +236,13 @@ const Label = (props: { coffee: keyof Coffee }) => {
                 className={twMerge(
                   "absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square border-[2px] rotate-45",
                   colors.bgLight,
-                  colors.border
+                  colors.border,
                 )}
               />
               <div
                 className={twMerge(
                   "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square rotate-45",
-                  colors.bgDark
+                  colors.bgDark,
                 )}
               />
             </div>
@@ -242,7 +253,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
           <div
             className={twMerge(
               "flex flex-initial justify-around gap-2 mx-auto text-xs items-end",
-              BrandingStylizedFont.className
+              BrandingStylizedFont.className,
             )}
           >
             <span className="w-6 border-b-[1px] border-black relative"></span>
@@ -256,7 +267,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
           <div
             className={twMerge(
               "mt-2 px-2 text-center flex-1 mb-2",
-              colors.textDarkest
+              colors.textDarkest,
             )}
           >
             {"fermentation" in coffee &&
@@ -278,7 +289,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
         <div
           className={twMerge(
             "flex text-xs pb-1 px-2 tracking-wider font-serif font-bold items-end",
-            colors.textDarkest
+            colors.textDarkest,
           )}
         >
           <div className="flex text-[.7rem] items-end leading-[10px] flex-nowrap text-nowrap">
@@ -286,7 +297,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
             <div
               className={twMerge(
                 "ml-1 border-b-[1px] w-4",
-                colors.borderDarkest
+                colors.borderDarkest,
               )}
             />
             <span className="px-[2px] -mr-1 mb-[1px]">/</span>
@@ -313,7 +324,7 @@ function CoffeeInfo({ coffee }: { coffee: Coffee[keyof Coffee] }) {
     <div
       className={twMerge(
         `grid grid-cols-[max-content_1fr] border-y-2 text-xs`,
-        COLORS[coffee.color].border
+        COLORS[coffee.color].border,
       )}
     >
       <div
@@ -322,7 +333,7 @@ function CoffeeInfo({ coffee }: { coffee: Coffee[keyof Coffee] }) {
           COLORS[coffee.color].textLight,
           rowCount === 4 && "row-span-4",
           rowCount === 5 && "row-span-5",
-          rowCount === 6 && "row-span-6"
+          rowCount === 6 && "row-span-6",
         )}
       >
         {"fermentation" in coffee && coffee.fermentation && (
@@ -344,7 +355,7 @@ function CoffeeInfo({ coffee }: { coffee: Coffee[keyof Coffee] }) {
           rowCount === 5 && "row-span-5",
           rowCount === 6 && "row-span-6",
           COLORS[coffee.color].textDarkest,
-          COLORS[coffee.color].bgDark
+          COLORS[coffee.color].bgDark,
         )}
       >
         {"fermentation" in coffee && coffee.fermentation && (
@@ -861,7 +872,7 @@ function Banner({ children }: PropsWithChildren<object>) {
     <div
       className={twMerge(
         "absolute top-0 left-0 z-50 bg-[#f8dcdf] text-sm text-black text-center px-4 py-2 rounded-br-md font-bold tracking-widest flex items-center",
-        BrandingStylizedFont.className
+        BrandingStylizedFont.className,
       )}
     >
       <div className="relative top-1">{children}</div>

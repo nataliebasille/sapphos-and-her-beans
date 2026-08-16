@@ -21,7 +21,8 @@ export type Product = {
     | "slate"
     | "purple"
     | "amber"
-    | "emerald";
+    | "emerald"
+    | "violet";
   isDecaf: boolean;
   farm: string;
   traceable: string;
@@ -166,7 +167,7 @@ export const ETHIOPIA_GUJI_TUKU_250g = {
   type: "coffee",
   id: "5000",
   name: "Ethiopia - Guji Tuku - 250g",
-  price: 28,
+  price: 30,
   country: "Ethiopia",
   color: "rose",
   farm: "Guji Tuku",
@@ -195,7 +196,7 @@ export const YELLOW_BOURBON_CONCOCTION_250g = {
   type: "coffee",
   id: "6000",
   name: "Nicaragua - Yellow Bourbon Concoction - 250g",
-  price: 28,
+  price: 32,
   score: 90,
   country: "Nicaragua",
   color: "yellow",
@@ -216,7 +217,7 @@ export const YELLOW_BOURBON_CONCOCTION_100g = {
   ...YELLOW_BOURBON_CONCOCTION_250g,
   id: "6001",
   size: "100g",
-  price: 12,
+  price: 14,
   featured: false,
   name: "Nicaragua - Yellow Bourbon Concoction - 100g",
 } as const satisfies Product;
@@ -225,7 +226,7 @@ export const YELLOW_PACAMARA_WASHED_250g = {
   type: "coffee",
   id: "7000",
   name: "Nicaragua - Yellow Pacamara Washed - 250g",
-  price: 28,
+  price: 32,
   score: 89,
   country: "Nicaragua",
   color: "sky",
@@ -274,8 +275,40 @@ export const MARACATURRA_MACERATION_GRENADINE_100g = {
   featured: false,
 } as const satisfies Product;
 
+export const CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g = {
+  type: "coffee",
+  id: "9000",
+  name: "Colombia - Castillo Washed Co-fermented with Wine Yeast + Blackberry - 100g",
+  price: 15,
+  country: "Colombia",
+  color: "violet",
+  farm: "Jairo Arcila",
+  tastingNotes: "Ripe blackberry, dark chocolate, tangerine, caramel",
+  processing: "Washed",
+  region: "Armenia, Quindio",
+  lot: "< 40 52kg bags",
+  varietals: "CASTILLO",
+  size: "100g",
+  traceable: "Jairo Arcila",
+  altitude: "1450-1500 meters",
+  fermentation: {
+    type: "cofermentation",
+    ingredient: "Wine Yeast + Blackberry",
+  },
+  isDecaf: false,
+  featured: false,
+} as const satisfies Product;
+
+export const CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g = {
+  ...CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
+  id: "9001",
+  size: "250g",
+  price: 35,
+  name: "Colombia - Castillo Washed Co-fermented with Wine Yeast + Blackberry - 250g",
+} as const satisfies Product;
+
 export const PRODUCTS = [
-  MEXICO_250g,
+  // MEXICO_250g,
   MEXICO_100g,
   MEXICO_SINGLESERVE,
   //COFERMENTED_WINE_YEAST_LYCHEE_250g,
@@ -291,4 +324,6 @@ export const PRODUCTS = [
   YELLOW_PACAMARA_WASHED_250g,
   YELLOW_PACAMARA_WASHED_100g,
   MARACATURRA_MACERATION_GRENADINE_100g,
+  CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
+  CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g,
 ] as const satisfies Product[];
