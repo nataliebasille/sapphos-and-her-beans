@@ -7,7 +7,8 @@ import { Plus } from "~/app/_components/icons/plus";
 import { useAddToCart } from "~/app/_stores/cart";
 import { BrandingStylizedFont } from "~/app/fonts";
 import { type products } from "@models";
-import { COFFEE_PALETTES } from "./_palette";
+import { sizeLabel } from "../_components/catalog-data";
+import { COFFEE_PALETTES, type CoffeePalette } from "../_components/coffee-palette";
 
 function fermentationLabel(
   fermentation: products.Product["fermentation"],
@@ -31,7 +32,6 @@ function specRows(coffee: products.Product): { label: string; value: string }[] 
   const rows: { label: string; value: string }[] = [];
   const ferment = fermentationLabel(coffee.fermentation);
   if (ferment) rows.push({ label: "Fermentation", value: ferment });
-  if (coffee.processing) rows.push({ label: "Process", value: coffee.processing });
   if (coffee.varietals) rows.push({ label: "Varietals", value: coffee.varietals });
   if (coffee.altitude) rows.push({ label: "Altitude", value: coffee.altitude });
   if (coffee.region) rows.push({ label: "Region", value: coffee.region });
@@ -93,11 +93,60 @@ function AddToCartButton({
   );
 }
 
-export function CoffeeDetails({ coffee }: { coffee: products.Product }) {
+function SizeSelector({
+  sizes,
+  selectedId,
+  onSelect,
+  palette,
+  className,
+}: {
+  sizes: products.Product[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+  palette: CoffeePalette;
+  className?: string;
+}) {
+  return (
+    <div className={twMerge("flex flex-wrap gap-2", className)}>
+      {sizes.map((s) => {
+        const active = s.id === selectedId;
+        return (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => onSelect(s.id)}
+            aria-pressed={active}
+            className={twMerge(
+              "rounded-full border-2 px-4 py-1.5 text-sm font-semibold tracking-wide uppercase transition-colors",
+              palette.border,
+              active ?
+                twMerge(palette.accentBg, palette.accentText, "border-transparent")
+              : twMerge(palette.textStrong, "hover:opacity-70"),
+            )}
+          >
+            {sizeLabel(s.size)}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export function CoffeeDetails({
+  coffee,
+  sizes,
+}: {
+  coffee: products.Product;
+  sizes: products.Product[];
+}) {
   const palette = COFFEE_PALETTES[coffee.color];
   const notes = tastingNotes(coffee);
   const rows = specRows(coffee);
   const ferment = fermentationLabel(coffee.fermentation);
+
+  const [selectedId, setSelectedId] = useState(coffee.id);
+  const selected = sizes.find((s) => s.id === selectedId) ?? coffee;
+  const hasSizeChoice = sizes.length > 1;
 
   return (
     <div className="md:flex md:min-h-dvh">
@@ -147,6 +196,18 @@ export function CoffeeDetails({ coffee }: { coffee: products.Product }) {
           <p className="mt-3 text-lg tracking-widest uppercase opacity-90">
             {coffee.farm}
           </p>
+
+          {coffee.processing && (
+            <p
+              className={twMerge(
+                "mx-auto mt-5 inline-block rounded-full px-5 py-2 text-sm font-bold tracking-[0.25em] uppercase",
+                palette.accentBg,
+                palette.accentText,
+              )}
+            >
+              {coffee.processing}
+            </p>
+          )}
 
           <Diamond className="my-6 opacity-80" />
 
@@ -254,17 +315,37 @@ export function CoffeeDetails({ coffee }: { coffee: products.Product }) {
           {/* Buy box — inline on desktop */}
           <section
             className={twMerge(
-              "mt-10 hidden items-center justify-between gap-4 rounded-2xl border-2 p-5 md:flex",
+              "mt-10 hidden flex-col gap-4 rounded-2xl border-2 p-5 md:flex",
               palette.border,
             )}
           >
-            <div className={palette.textStrong}>
-              <p className="text-xs tracking-widest uppercase opacity-70">
-                {coffee.size}
-              </p>
-              <p className="text-3xl font-bold">${coffee.price}</p>
+            {hasSizeChoice && (
+              <div>
+                <p
+                  className={twMerge(
+                    "mb-2 text-xs tracking-[0.3em] uppercase",
+                    palette.textMuted,
+                  )}
+                >
+                  Size
+                </p>
+                <SizeSelector
+                  sizes={sizes}
+                  selectedId={selectedId}
+                  onSelect={setSelectedId}
+                  palette={palette}
+                />
+              </div>
+            )}
+            <div className="flex items-center justify-between gap-4">
+              <div className={palette.textStrong}>
+                <p className="text-xs tracking-widest uppercase opacity-70">
+                  {sizeLabel(selected.size)}
+                </p>
+                <p className="text-3xl font-bold">${selected.price}</p>
+              </div>
+              <AddToCartButton coffee={selected} className="min-w-[200px]" />
             </div>
-            <AddToCartButton coffee={coffee} className="min-w-[200px]" />
           </section>
         </div>
       </main>
@@ -277,14 +358,25 @@ export function CoffeeDetails({ coffee }: { coffee: products.Product }) {
           palette.surface,
         )}
       >
+        {hasSizeChoice && (
+          <div className={twMerge("border-b px-5 pt-3", palette.border)}>
+            <SizeSelector
+              sizes={sizes}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              palette={palette}
+              className="pb-3"
+            />
+          </div>
+        )}
         <div className="flex items-center justify-between gap-4 px-5 py-3">
           <div className={palette.textStrong}>
             <p className="text-[10px] tracking-widest uppercase opacity-70">
-              {coffee.size}
+              {sizeLabel(selected.size)}
             </p>
-            <p className="text-2xl leading-none font-bold">${coffee.price}</p>
+            <p className="text-2xl leading-none font-bold">${selected.price}</p>
           </div>
-          <AddToCartButton coffee={coffee} className="flex-1" />
+          <AddToCartButton coffee={selected} className="flex-1" />
         </div>
       </div>
     </div>
