@@ -1,4 +1,4 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations, sql } from "drizzle-orm";
 import {
   integer,
   pgTableCreator,
@@ -6,7 +6,7 @@ import {
   text,
   timestamp,
   varchar,
-} from 'drizzle-orm/pg-core';
+} from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -16,37 +16,37 @@ import {
  */
 export const createTable = pgTableCreator((name) => `sappho_${name}`);
 
-export const products = createTable('product', {
-  id: serial('id').primaryKey(),
-  publishedVersionId: integer('published_version_id').references(
-    () => productVersions.id
+export const products = createTable("product", {
+  id: serial("id").primaryKey(),
+  publishedVersionId: integer("published_version_id").references(
+    () => productVersions.id,
   ),
-  createdAt: timestamp('created_at', { withTimezone: true })
+  createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(
-    () => new Date()
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
   ),
 });
 
-export const productVersions = createTable('product_version', {
-  id: serial('id').primaryKey(),
-  productId: integer('product_id').notNull(),
-  name: varchar('name', { length: 255 }),
-  price: integer('price').notNull(),
-  sizeOunces: integer('size_ounces').notNull(),
-  image: varchar('image', { length: 255 }).notNull(),
-  tastingNotes: varchar('tasting_notes', { length: 255 }),
-  processing: varchar('processing', { length: 25 }),
-  country: varchar('country', { length: 100 }),
-  region: varchar('region', { length: 100 }),
-  lot: varchar('lot', { length: 100 }),
-  story: text('story'),
-  createdAt: timestamp('created_at', { withTimezone: true })
+export const productVersions = createTable("product_version", {
+  id: serial("id").primaryKey(),
+  productId: integer("product_id").notNull(),
+  name: varchar("name", { length: 255 }),
+  price: integer("price").notNull(),
+  sizeOunces: integer("size_ounces").notNull(),
+  image: varchar("image", { length: 255 }).notNull(),
+  tastingNotes: varchar("tasting_notes", { length: 255 }),
+  processing: varchar("processing", { length: 25 }),
+  country: varchar("country", { length: 100 }),
+  region: varchar("region", { length: 100 }),
+  lot: varchar("lot", { length: 100 }),
+  story: text("story"),
+  createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(
-    () => new Date()
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
   ),
 });
 
@@ -65,5 +65,5 @@ export const productVersionsRelations = relations(
       fields: [productVersions.productId],
       references: [products.id],
     }),
-  })
+  }),
 );

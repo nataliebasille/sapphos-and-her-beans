@@ -37,7 +37,6 @@ export async function POST(request: Request) {
     stripeWebhookHandlers[event.type as keyof typeof stripeWebhookHandlers];
 
   if (handler) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     await handler(event as any);
   }
 

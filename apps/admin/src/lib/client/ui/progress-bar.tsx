@@ -32,13 +32,13 @@ export function ProgressBar({
     <div
       role="progressbar"
       className={twMerge(
-        "relative h-6 w-full overflow-hidden rounded-md bg-surface-400",
+        "bg-surface-400 relative h-6 w-full overflow-hidden rounded-md",
         className,
       )}
     >
       {children}
       <div
-        className="absolute bottom-0 left-0 top-0 h-full w-full rounded-md bg-primary-600 transition-transform duration-200"
+        className="bg-primary-600 absolute bottom-0 left-0 top-0 h-full w-full rounded-md transition-transform duration-200"
         style={{ transform: `translateX(-${100 - progress}%)` }}
       />
     </div>

@@ -26,9 +26,9 @@ type CommonFormControlProps<TIn, TControl> = {
 };
 
 type IntrinsicElementFormControlProps<TControl> =
-  TControl extends keyof JSX.IntrinsicElements
-    ? GetAttributes<TControl & keyof JSX.IntrinsicElements>
-    : EmptyObject;
+  TControl extends keyof JSX.IntrinsicElements ?
+    GetAttributes<TControl & keyof JSX.IntrinsicElements>
+  : EmptyObject;
 
 type ComponentFormControlProps<TControl> =
   TControl extends ComponentType<any> ? ComponentProps<TControl> : EmptyObject;
@@ -37,9 +37,9 @@ export type FormControlProps<
   TIn,
   TControl extends keyof JSX.IntrinsicElements | ComponentType<GenericObject>,
 > = CommonFormControlProps<TIn, TControl> & {
-  inputProps?: TControl extends keyof JSX.IntrinsicElements
-    ? IntrinsicElementFormControlProps<TControl>
-    : ComponentFormControlProps<TControl>;
+  inputProps?: TControl extends keyof JSX.IntrinsicElements ?
+    IntrinsicElementFormControlProps<TControl>
+  : ComponentFormControlProps<TControl>;
 };
 
 export const FormControl = memo(
@@ -56,7 +56,6 @@ export const FormControl = memo(
     inputProps,
   }: FormControlProps<TIn, TControl>) {
     const error = useValidationError(name);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const inputClassName = (inputProps as any)?.className as string;
     return (
       <div
@@ -73,7 +72,6 @@ export const FormControl = memo(
           <span className="form-control-prefix">{controlPrefix}</span>
         )}
         <Control
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...(inputProps as any)}
           name={name}
           className={twMerge("form-control-input", inputClassName)}

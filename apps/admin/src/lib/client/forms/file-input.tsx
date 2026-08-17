@@ -74,7 +74,7 @@ export const FileInput = memo(
       <div
         {...rootProps}
         className={twMerge(
-          "relative col-span-full row-span-full grid h-full w-full cursor-pointer grid-cols-1 grid-rows-1 items-center justify-center overflow-hidden rounded !border-2 !border-dashed !border-secondary-border bg-secondary-base/5 transition-all duration-300",
+          "!border-secondary-border bg-secondary-base/5 relative col-span-full row-span-full grid h-full w-full cursor-pointer grid-cols-1 grid-rows-1 items-center justify-center overflow-hidden rounded !border-2 !border-dashed transition-all duration-300",
           className,
         )}
       >

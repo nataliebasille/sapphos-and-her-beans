@@ -12,7 +12,7 @@ export function CartIcon({ onClick, className }: CartIconProps) {
 
   return (
     <div
-      className={twMerge("relative mr-6 ml-auto w-fit md:ml-0", className)}
+      className={twMerge("relative ml-auto mr-6 w-fit md:ml-0", className)}
       onClick={onClick}
     >
       <Cart className="ml-auto size-12 md:ml-0" />

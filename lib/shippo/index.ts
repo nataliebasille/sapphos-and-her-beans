@@ -1,1 +1,1 @@
-export * from './shippo_client';
+export * from "./shippo_client";

@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <UserProvider>
-        <body className="h-dvh w-dvw bg-surface-base">{children}</body>
+        <body className="bg-surface-base h-dvh w-dvw">{children}</body>
       </UserProvider>
     </html>
   );

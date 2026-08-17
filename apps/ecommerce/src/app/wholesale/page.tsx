@@ -11,13 +11,13 @@ export default function WholesalesPage() {
       >
         <Heading
           level={3}
-          className="mb-0 text-center tracking-wide uppercase md:text-left"
+          className="mb-0 text-center uppercase tracking-wide md:text-left"
         >
           Wholesale
         </Heading>
       </div>
 
-      <div className="text-center text-4xl tracking-wide text-slate-600/80 uppercase">
+      <div className="text-center text-4xl uppercase tracking-wide text-slate-600/80">
         Coming soon
       </div>
 

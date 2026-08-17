@@ -7,7 +7,6 @@ import {
 import { type GenericObject, type NestedKeyOf } from "../types";
 import { createFormParser, type ZodSchema } from "./form-data-parser";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-unused-vars
 export interface ActionFormData<_TIn> extends FormData {}
 
 export type FormAction<TIn, TOk, TError extends ActionError> = Action<

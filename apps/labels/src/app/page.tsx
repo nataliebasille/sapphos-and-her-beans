@@ -4,9 +4,13 @@ import * as products from "../../../../lib/models/products";
 import { twMerge } from "tailwind-merge";
 
 type Coffee = {
-  [K in keyof typeof products as (typeof products)[K] extends { type: "coffee" }
-    ? K
-    : never]: (typeof products)[K];
+  [
+    K in keyof typeof products as (typeof products)[K] extends (
+      { type: "coffee" }
+    ) ?
+      K
+    : never
+  ]: (typeof products)[K];
 };
 
 import { MedievalSharp } from "next/font/google";
@@ -18,7 +22,7 @@ const BrandingStylizedFont = MedievalSharp({
 
 export default function Home() {
   return (
-    <div className="grid grid-cols-1 gap-3 justify-center items-center place-items-center h-full w-full">
+    <div className="grid h-full w-full grid-cols-1 place-items-center items-center justify-center gap-3">
       <Label coffee="CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g" />
     </div>
   );
@@ -131,33 +135,33 @@ const Label = (props: { coffee: keyof Coffee }) => {
     "limited" in coffee && coffee.limited === true;
   const colors = COLORS[coffee.color];
   return (
-    <div className="relative w-[4in] h-[6in] overflow-hidden flex flex-col scale-[calc(1.125)]">
+    <div className="relative flex h-[6in] w-[4in] scale-[calc(1.125)] flex-col overflow-hidden">
       {isLimitedEdition && <Banner>Limited Edition</Banner>}
       <div
-        className="w-full h-2/5 bg-center bg-no-repeat bg-cover scale-150"
+        className="h-2/5 w-full scale-150 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('./sappho_logo.png')`,
         }}
       />
       <div
         className={twMerge(
-          "relative w-full h-3/5 border-8 border-t-0 flex flex-col",
+          "relative flex h-3/5 w-full flex-col border-8 border-t-0",
           colors.border,
           colors.bgLight,
         )}
       >
-        <div className="absolute flex-1 p-2 flex flex-col">
-          <div className="relative w-[58px] h-[58px]">
+        <div className="absolute flex flex-1 flex-col p-2">
+          <div className="relative h-[58px] w-[58px]">
             <Image
               src="/site qr code.png"
               alt="qr-code"
               fill
-              className={twMerge("object-contain border-2", colors.border)}
+              className={twMerge("border-2 object-contain", colors.border)}
             />
           </div>
           <span
             className={twMerge(
-              "text-[10px] tracking-wide font-bold pl-2",
+              "pl-2 text-[10px] font-bold tracking-wide",
               colors.textDarkest,
             )}
           >
@@ -167,7 +171,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
         {"score" in coffee && (
           <div
             className={twMerge(
-              "absolute top-0 left-1/2 leading-none -translate-x-1/2 -translate-y-1/2 w-16 !font-bold border-2 rounded-full aspect-square flex flex-col justify-center items-center tracking-wide",
+              "absolute left-1/2 top-0 flex aspect-square w-16 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 !font-bold leading-none tracking-wide",
               colors.textDarkest,
               colors.borderDarkest,
               colors.bgNormal,
@@ -180,7 +184,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
         )}
         <div
           className={twMerge(
-            "absolute top-0 right-0 w-[48px] h-[36px] flex justify-center items-center border-2 border-t-0 border-r-0 rounded-bl-md !font-bold pt-1",
+            "absolute right-0 top-0 flex h-[36px] w-[48px] items-center justify-center rounded-bl-md border-2 border-r-0 border-t-0 pt-1 !font-bold",
             colors.textDarkest,
             colors.borderDarkest,
             colors.bgNormal,
@@ -192,21 +196,21 @@ const Label = (props: { coffee: keyof Coffee }) => {
         <div className="flex flex-initial">
           <div
             className={twMerge(
-              "w-full mt-[4.5rem] flex gap-4 px-2 items-center",
+              "mt-[4.5rem] flex w-full items-center gap-4 px-2",
               BrandingStylizedFont.className,
             )}
           >
-            <div className={twMerge("relative flex-1 h-[2px]", colors.bgDark)}>
+            <div className={twMerge("relative h-[2px] flex-1", colors.bgDark)}>
               <div
                 className={twMerge(
-                  "absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square border-[2px] rotate-45",
+                  "absolute left-1/2 top-[1px] aspect-square w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-[2px]",
                   colors.bgLight,
                   colors.border,
                 )}
               />
               <div
                 className={twMerge(
-                  "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square rotate-45",
+                  "absolute left-1/2 top-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45",
                   colors.bgDark,
                 )}
               />
@@ -215,7 +219,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
             <div className="flex-1">
               <div
                 className={twMerge(
-                  "tracking-widest text-2xl max-w-[250px] uppercase font-bold text-center flex justify-center items-center",
+                  "flex max-w-[250px] items-center justify-center text-center text-2xl font-bold uppercase tracking-widest",
                   colors.textDarkest,
                 )}
               >
@@ -223,7 +227,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
               </div>
               <div
                 className={twMerge(
-                  "relative text-lg tracking-wider flex-initial h-[36px] font-bold flex justify-center items-end text-center -mt-3 text-nowrap",
+                  "relative -mt-3 flex h-[36px] flex-initial items-end justify-center text-nowrap text-center text-lg font-bold tracking-wider",
                   colors.textDarkest,
                 )}
               >
@@ -231,17 +235,17 @@ const Label = (props: { coffee: keyof Coffee }) => {
               </div>
             </div>
 
-            <div className={twMerge("relative flex-1 h-[2px]", colors.bgDark)}>
+            <div className={twMerge("relative h-[2px] flex-1", colors.bgDark)}>
               <div
                 className={twMerge(
-                  "absolute top-[1px] -translate-y-1/2 left-1/2 -translate-x-1/2 w-4 aspect-square border-[2px] rotate-45",
+                  "absolute left-1/2 top-[1px] aspect-square w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-[2px]",
                   colors.bgLight,
                   colors.border,
                 )}
               />
               <div
                 className={twMerge(
-                  "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 aspect-square rotate-45",
+                  "absolute left-1/2 top-1/2 aspect-square w-1 -translate-x-1/2 -translate-y-1/2 rotate-45",
                   colors.bgDark,
                 )}
               />
@@ -252,33 +256,33 @@ const Label = (props: { coffee: keyof Coffee }) => {
         {isLimitedEdition && (
           <div
             className={twMerge(
-              "flex flex-initial justify-around gap-2 mx-auto text-xs items-end",
+              "mx-auto flex flex-initial items-end justify-around gap-2 text-xs",
               BrandingStylizedFont.className,
             )}
           >
-            <span className="w-6 border-b-[1px] border-black relative"></span>
+            <span className="relative w-6 border-b-[1px] border-black"></span>
             <span className="relative top-1">of</span>
-            <span className="w-6 border-b-[1px] border-black relative"></span>
+            <span className="relative w-6 border-b-[1px] border-black"></span>
             <span className="relative top-1">bags</span>
           </div>
         )}
 
-        <div className="flex-1 grid content-start">
+        <div className="grid flex-1 content-start">
           <div
             className={twMerge(
-              "mt-2 px-2 text-center flex-1 mb-2",
+              "mb-2 mt-2 flex-1 px-2 text-center",
               colors.textDarkest,
             )}
           >
             {"fermentation" in coffee &&
               typeof coffee.fermentation !== "string" && (
-                <div className="uppercase tracking-widest text-sm mb-[.125rem]">
-                  {coffee.fermentation.type === "cofermentation"
-                    ? "CO-FERMENTED"
-                    : "ANAEROBIC"}
+                <div className="mb-[.125rem] text-sm uppercase tracking-widest">
+                  {coffee.fermentation.type === "cofermentation" ?
+                    "CO-FERMENTED"
+                  : "ANAEROBIC"}
                 </div>
               )}
-            <span className="italic tracking-wide text-lg/5 font-bold">
+            <span className="text-lg/5 font-bold italic tracking-wide">
               {coffee.tastingNotes}
             </span>
           </div>
@@ -288,25 +292,25 @@ const Label = (props: { coffee: keyof Coffee }) => {
 
         <div
           className={twMerge(
-            "flex text-xs pb-1 px-2 tracking-wider font-serif font-bold items-end",
+            "flex items-end px-2 pb-1 font-serif text-xs font-bold tracking-wider",
             colors.textDarkest,
           )}
         >
-          <div className="flex text-[.7rem] items-end leading-[10px] flex-nowrap text-nowrap">
+          <div className="flex flex-nowrap items-end text-nowrap text-[.7rem] leading-[10px]">
             Roasted on:{" "}
             <div
               className={twMerge(
-                "ml-1 border-b-[1px] w-4",
+                "ml-1 w-4 border-b-[1px]",
                 colors.borderDarkest,
               )}
             />
-            <span className="px-[2px] -mr-1 mb-[1px]">/</span>
+            <span className="-mr-1 mb-[1px] px-[2px]">/</span>
             <div
-              className={twMerge("border-b-[1px] w-4", colors.borderDarkest)}
+              className={twMerge("w-4 border-b-[1px]", colors.borderDarkest)}
             />{" "}
           </div>
 
-          <span className="italic ml-auto text-nowrap text-[.6rem]">
+          <span className="ml-auto text-nowrap text-[.6rem] italic">
             Traceable to <span>{coffee.traceable}</span>
           </span>
         </div>
@@ -360,11 +364,11 @@ function CoffeeInfo({ coffee }: { coffee: Coffee[keyof Coffee] }) {
       >
         {"fermentation" in coffee && coffee.fermentation && (
           <div className={`bg-${coffee.color}-50 px-2`}>
-            {typeof coffee.fermentation === "string"
-              ? coffee.fermentation
-              : coffee.fermentation.type === "cofermentation"
-                ? coffee.fermentation.ingredient
-                : coffee.fermentation.duration || "Anaerobic"}
+            {typeof coffee.fermentation === "string" ?
+              coffee.fermentation
+            : coffee.fermentation.type === "cofermentation" ?
+              coffee.fermentation.ingredient
+            : coffee.fermentation.duration || "Anaerobic"}
           </div>
         )}
         <div
@@ -871,7 +875,7 @@ function Banner({ children }: PropsWithChildren<object>) {
   return (
     <div
       className={twMerge(
-        "absolute top-0 left-0 z-50 bg-[#f8dcdf] text-sm text-black text-center px-4 py-2 rounded-br-md font-bold tracking-widest flex items-center",
+        "absolute left-0 top-0 z-50 flex items-center rounded-br-md bg-[#f8dcdf] px-4 py-2 text-center text-sm font-bold tracking-widest text-black",
         BrandingStylizedFont.className,
       )}
     >

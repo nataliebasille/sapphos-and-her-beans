@@ -8,7 +8,6 @@ export type Product_v2 = {
   name: string | null;
   price: number;
   sizeOunces?: never;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   size: "singleserve" | `${number}${"g" | "oz"}` | (string & {});
   image?: never;
   tastingNotes?: string;

@@ -25,8 +25,8 @@ export default async function LandingPage() {
               <h2 className="text-3xl font-bold tracking-wider">
                 {country} {farm}
               </h2>
-              <p className="italic text-xl">{tastingNotes}</p>
-              <div className="mt-3 grid gap-2 gap-x-4 flex-col grid-cols-2 justify-self-start text-2xl">
+              <p className="text-xl italic">{tastingNotes}</p>
+              <div className="mt-3 grid grid-cols-2 flex-col gap-2 gap-x-4 justify-self-start text-2xl">
                 {products.map(({ price, size }) => (
                   <Fragment key={size}>
                     <span className="text-right">
@@ -39,7 +39,7 @@ export default async function LandingPage() {
                 ))}
               </div>
             </div>
-          )
+          ),
         )}
       </div>
     </div>
@@ -60,14 +60,14 @@ async function getProducts() {
         acc[key] = [];
       }
       acc[key].push(
-        product as Stripe.Product & { default_price: Stripe.Price }
+        product as Stripe.Product & { default_price: Stripe.Price },
       );
       return acc;
     },
     {} as Record<
       string,
       Array<Stripe.Product & { default_price: Stripe.Price }>
-    >
+    >,
   );
 
   return Object.entries(productsById).map(
@@ -76,21 +76,23 @@ async function getProducts() {
         country: products[0].metadata.country,
         farm: products[0].metadata.farm,
         lot: products[0].metadata.lot,
-        tastingNotes: products[0].metadata.tasting_notes.replace('lynchee', 'lychee'),
+        tastingNotes: products[0].metadata.tasting_notes.replace(
+          "lynchee",
+          "lychee",
+        ),
         products: products
           .map((product) => ({
             price: (product.default_price.unit_amount ?? 0) / 100,
-            size: product.metadata.size.endsWith("g")
-              ? parseInt(product.metadata.size)
+            size:
+              product.metadata.size.endsWith("g") ?
+                parseInt(product.metadata.size)
               : (product.metadata.size as "singleserve"),
           }))
           .sort((a, b) =>
-            a.size === "singleserve"
-              ? -1
-              : b.size === "singleserve"
-                ? 1
-                : a.size - b.size
+            a.size === "singleserve" ? -1
+            : b.size === "singleserve" ? 1
+            : a.size - b.size,
           ),
-      }) as const
+      }) as const,
   );
 }

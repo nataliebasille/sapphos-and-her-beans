@@ -17,13 +17,11 @@ export function ProductCard({
         className,
       )}
     >
-      {product.isNew ? (
-        <div className="absolute left-[1rem] top-[1rem] z-50 rounded-full border border-surface-800 bg-primary-500 px-4 uppercase text-primary-contrast-500">
+      {product.isNew ?
+        <div className="border-surface-800 bg-primary-500 text-primary-contrast-500 absolute left-[1rem] top-[1rem] z-50 rounded-full border px-4 uppercase">
           NOT PUBLISHED
         </div>
-      ) : (
-        false
-      )}
+      : false}
       <div className="w-100 relative flex-1">
         <Image
           src={product.image}
@@ -42,7 +40,7 @@ export function ProductCard({
           <div>{product.tastingNotes}</div>
         </div>
 
-        <div className="mt-auto flex border-t border-primary-base/30 pt-2">
+        <div className="border-primary-base/30 mt-auto flex border-t pt-2">
           <button className="btn-primary btn btn-sm ml-auto px-3 uppercase">
             Edit
           </button>

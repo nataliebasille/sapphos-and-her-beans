@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   type ZodBigInt,
   type ZodBoolean,
@@ -96,19 +93,16 @@ function getSchemaShape(schema: ZodSchema): Record<string, ZodTypeAny> {
 }
 
 function transformPrimitive(value: FormDataEntryValue, schema: ZodType) {
-  return isZodNumber(schema)
-    ? parseFloat(value as string) || null
-    : isZodBoolean(schema)
-      ? value === "true"
-      : isZodDate(schema)
-        ? new Date(value as string)
-        : isZodBigInt(schema)
-          ? BigInt(value as string)
-          : isZodUndefined(schema) && (value === "undefined" || value === "")
-            ? undefined
-            : isZodNull(schema) && (value === null || value === "")
-              ? null
-              : value;
+  return (
+    isZodNumber(schema) ? parseFloat(value as string) || null
+    : isZodBoolean(schema) ? value === "true"
+    : isZodDate(schema) ? new Date(value as string)
+    : isZodBigInt(schema) ? BigInt(value as string)
+    : isZodUndefined(schema) && (value === "undefined" || value === "") ?
+      undefined
+    : isZodNull(schema) && (value === null || value === "") ? null
+    : value
+  );
 }
 
 function isPrimitive(schema: ZodType): schema is ZodPrimitive {

@@ -15,7 +15,7 @@ export const SidebarLink = ({
   return (
     <li
       className={twMerge(
-        "list-item !rounded-none border-b-[1px] border-t-[1px] border-surface-900 bg-primary-900 !p-4 text-sm font-bold uppercase tracking-wider transition-all duration-150 hover:opacity-100",
+        "border-surface-900 bg-primary-900 list-item !rounded-none border-b-[1px] border-t-[1px] !p-4 text-sm font-bold uppercase tracking-wider transition-all duration-150 hover:opacity-100",
         isActive && "active",
       )}
     >

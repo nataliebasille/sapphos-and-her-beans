@@ -1,13 +1,12 @@
-import { type infer as Infer, type SafeParseError } from 'zod';
+import { type infer as Infer, type SafeParseError } from "zod";
 import {
   type ActionError,
   type Action,
   type ActionHandlerContext,
-} from '../actions';
-import { type GenericObject, type NestedKeyOf } from '../types';
-import { createFormParser, type ZodSchema } from './form-data-parser';
+} from "../actions";
+import { type GenericObject, type NestedKeyOf } from "../types";
+import { createFormParser, type ZodSchema } from "./form-data-parser";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-unused-vars
 export interface ActionFormData<_TIn> extends FormData {}
 
 export type FormAction<TIn, TOk, TError extends ActionError> = Action<
@@ -22,7 +21,7 @@ export type FormAction_GetInput<T extends FormAction<any, any, any>> =
   T extends FormAction<infer TIn, any, any> ? TIn : never;
 
 export type ValidationActionError<TIn> = {
-  code: 'validation_error';
+  code: "validation_error";
   data: ValidationErrors<TIn>;
 };
 
@@ -36,7 +35,7 @@ type FormActionHandler<
   TContext extends GenericObject,
 > = (
   data: Infer<TSchema>,
-  ctx: ActionHandlerContext<TContext>
+  ctx: ActionHandlerContext<TContext>,
 ) => Promise<TOut>;
 
 export function formAction<
@@ -48,7 +47,7 @@ export function formAction<
 
   return async function (
     data: ActionFormData<Infer<TSchema>>,
-    ctx: ActionHandlerContext<TContext>
+    ctx: ActionHandlerContext<TContext>,
   ) {
     console.log(data);
     const { error } = ctx;
@@ -64,22 +63,22 @@ export function formAction<
 
 function createError<TSchema extends ZodSchema>(result: SafeParseError<any>) {
   return {
-    code: 'validation_error' as const,
+    code: "validation_error" as const,
     data: result.error?.errors.reduce<ValidationErrors<Infer<TSchema>>>(
       (acc, error) => {
         const { path, message } = error;
         const key: string = path.reduce((acc: string, key) => {
-          if (typeof key === 'string' && !acc) {
+          if (typeof key === "string" && !acc) {
             return key;
           }
 
-          return typeof key === 'string' ? `${acc}.${key}` : `${acc}[${key}]`;
-        }, '');
+          return typeof key === "string" ? `${acc}.${key}` : `${acc}[${key}]`;
+        }, "");
 
         acc[key as keyof typeof acc] = message;
         return acc;
       },
-      {} as ValidationErrors<Infer<TSchema>>
+      {} as ValidationErrors<Infer<TSchema>>,
     ),
   };
 }

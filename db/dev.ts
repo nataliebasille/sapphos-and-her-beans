@@ -1,12 +1,12 @@
-import dotenv from 'dotenv';
-import * as path from 'node:path';
+import dotenv from "dotenv";
+import * as path from "node:path";
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
-import * as schema from './schema';
+import * as schema from "./schema";
 
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR
@@ -17,7 +17,7 @@ const globalForDb = globalThis as unknown as {
 };
 
 console.log(process.env.DATABASE_URL);
-const conn = globalForDb.conn ?? postgres(process.env.DATABASE_URL ?? '');
-if (process.env.NODE_ENV !== 'production') globalForDb.conn = conn;
+const conn = globalForDb.conn ?? postgres(process.env.DATABASE_URL ?? "");
+if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema, logger: true });

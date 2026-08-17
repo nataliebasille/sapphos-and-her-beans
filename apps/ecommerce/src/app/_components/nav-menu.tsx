@@ -78,7 +78,7 @@ const MobileNavMenu = ({ contrast }: NavMenuProps) => {
       />
       <div
         className={twMerge(
-          "fixed top-0 bottom-0 h-[100dvh] w-full -translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:hidden",
+          "fixed bottom-0 top-0 h-[100dvh] w-full -translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:hidden",
           isOpen && "translate-x-0",
         )}
       >
@@ -90,14 +90,14 @@ const MobileNavMenu = ({ contrast }: NavMenuProps) => {
 
           <Image
             src="/images/sappho black logo cropped.png"
-            className="absolute top-0 left-[50%] mt-2 -translate-x-1/2 object-contain"
+            className="absolute left-[50%] top-0 mt-2 -translate-x-1/2 object-contain"
             alt="Sappho logo"
             width={200}
             height={200}
           />
         </div>
 
-        <ul className="mt-24 ml-10 flex flex-col gap-10">
+        <ul className="ml-10 mt-24 flex flex-col gap-10">
           {navigationItems.map((item) => (
             <li key={item.name}>
               <NavLink

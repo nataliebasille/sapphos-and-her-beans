@@ -33,19 +33,19 @@ export const Cart = () => {
   return (
     <>
       {isOpen && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 z-[100] bg-black/40" />
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-black/40" />
       )}
       <div
         ref={cartRef}
         className={twMerge(
-          "fixed top-0 right-0 bottom-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5",
+          "fixed bottom-0 right-0 top-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5",
           isOpen && "shadow-primary-900 translate-x-0 shadow-lg",
         )}
       >
         <div className="flex h-full flex-col">
           <div className="mb-0 flex items-center border-b-[1px] border-slate-800/30 px-4 py-4 text-2xl">
             <CartIcon className="mr-2" />
-            <div className="-mb-[2px] flex-1 text-center text-nowrap">
+            <div className="-mb-[2px] flex-1 text-nowrap text-center">
               Your shopping bag
             </div>
             <Close
@@ -85,7 +85,7 @@ const CartItemList = memo(function CartItemList() {
           })}
         </div>
       </div>
-      <div className="border-primary-300/50 flex items-center gap-3 border-t-[1px] border-b-[1px] p-2">
+      <div className="border-primary-300/50 flex items-center gap-3 border-b-[1px] border-t-[1px] p-2">
         <div className="mx-auto flex flex-col text-xl">
           <span className="text-on-surface-50/50 text-sm font-bold uppercase">
             Total
@@ -94,7 +94,7 @@ const CartItemList = memo(function CartItemList() {
         </div>
         <Link
           href="/checkout/cart"
-          className="btn-solid/primary flex w-[175px] flex-initial items-center tracking-wider uppercase md:w-auto md:min-w-[200px]"
+          className="btn-solid/primary flex w-[175px] flex-initial items-center uppercase tracking-wider md:w-auto md:min-w-[200px]"
           onClick={handleCheckoutClick}
         >
           Checkout{" "}

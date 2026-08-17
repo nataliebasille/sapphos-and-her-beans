@@ -1,5 +1,5 @@
-import { Shippo } from 'shippo';
+import { Shippo } from "shippo";
 
 export const shippo = new Shippo({
-  apiKeyHeader: process.env.SHIPPO_API_KEY ?? '',
+  apiKeyHeader: process.env.SHIPPO_API_KEY ?? "",
 });

@@ -3,7 +3,6 @@ export type Product = {
   id: string;
   name: string;
   price: number;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   size: "singleserve" | (string & {});
   image?: never;
   tastingNotes?: string;

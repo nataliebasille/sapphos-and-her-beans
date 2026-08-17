@@ -17,8 +17,8 @@ export type ActionError = {
   data?: unknown;
 };
 
-export type Action<TIn, TOk, TError extends ActionError> = [TIn] extends [never]
-  ? () => Promise<Result<TOk, TError>>
+export type Action<TIn, TOk, TError extends ActionError> =
+  [TIn] extends [never] ? () => Promise<Result<TOk, TError>>
   : (input: TIn) => Promise<Result<TOk, TError>>;
 
 export type Action_GetInput<T extends Action<any, any, ActionError>> =
@@ -36,7 +36,6 @@ export type Action_GetOutput<T extends Action<any, any, ActionError>> = Awaited<
 export interface NextResult<
   TOk,
   TError extends ActionError,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _TContext extends GenericObject,
 > {
   ok: boolean;
@@ -113,9 +112,9 @@ export type ActionFactory<TContext extends GenericObject, TIntermediateOut> = {
   use<TNext extends NextResult<unknown, ActionError, GenericObject>, TOut>(
     handler: UseHandler<TNext, TOut, TContext>,
   ): ActionFactory<
-    TNext extends NextResult<unknown, ActionError, infer TNextContext>
-      ? TNextContext
-      : never,
+    TNext extends NextResult<unknown, ActionError, infer TNextContext> ?
+      TNextContext
+    : never,
     Exclude<TOut, NextResult<unknown, ActionError, any>>
   >;
   action<TIn = never, TOut = never>(
@@ -143,14 +142,14 @@ export const initActionFactory = (): ActionFactory<EmptyObject, never> => {
       return factory as ActionFactory<any, any>;
     },
     action(handler) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return (async (input: unknown) => {
         let context: GenericObject = {};
         let currentPosition = 0;
         const next = async function* (additionalContext?: GenericObject) {
           const previousContext = context;
-          context = additionalContext
-            ? Object.freeze({
+          context =
+            additionalContext ?
+              Object.freeze({
                 ...context,
                 ...additionalContext,
               })
@@ -158,7 +157,6 @@ export const initActionFactory = (): ActionFactory<EmptyObject, never> => {
 
           let result: NextResult<any, any, GenericObject>;
           if (currentPosition >= middleware.length) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             const handlerValue = await handler(input as any, {
               context,
               error: createError,
@@ -208,7 +206,7 @@ export const initActionFactory = (): ActionFactory<EmptyObject, never> => {
 };
 
 const createError = function (data, message) {
-  return typeof data === "string"
-    ? { [actionError]: true, code: data, message }
+  return typeof data === "string" ?
+      { [actionError]: true, code: data, message }
     : { [actionError]: true, ...(data as object) };
 } as ErrorFunction;

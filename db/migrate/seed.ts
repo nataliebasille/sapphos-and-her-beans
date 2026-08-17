@@ -1,5 +1,5 @@
-import { db, schema } from '../index';
-import { sql } from 'drizzle-orm';
+import { db, schema } from "../index";
+import { sql } from "drizzle-orm";
 
 type Product = {
   id: number;
@@ -19,15 +19,15 @@ type Product = {
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Mexico Red 5 de Diciembre',
+    name: "Mexico Red 5 de Diciembre",
     price: 19,
     size: 12,
-    tastingNotes: 'Lemon, earl grey, caramel, peach, honey',
-    country: 'Mexico',
-    region: 'Mazatec, Oaxaca, La Canada',
-    lot: 'Red 5 de Diciembre',
-    processing: 'Washed',
-    image: 'https://utfs.io/f/4rrGfGgcbsJmpWC5ov9cDEfe38nUAhCrXVilm7osWzTvM65S',
+    tastingNotes: "Lemon, earl grey, caramel, peach, honey",
+    country: "Mexico",
+    region: "Mazatec, Oaxaca, La Canada",
+    lot: "Red 5 de Diciembre",
+    processing: "Washed",
+    image: "https://utfs.io/f/4rrGfGgcbsJmpWC5ov9cDEfe38nUAhCrXVilm7osWzTvM65S",
     story: `The Red 5 de Diciembre network is the largest organization of producers in the La Cañada, and itself made up by 13 first-
 level organizations to represent 1,300 small indigenous producers. They formed as an independant group on the 5th of
 
@@ -40,14 +40,14 @@ come.`,
   },
   {
     id: 2,
-    name: 'Sumatra Solok Radjo',
+    name: "Sumatra Solok Radjo",
     price: 21,
     size: 12,
-    tastingNotes: 'chocolate pomegeanate aroma, spritzy pear acidity, roobois',
-    country: 'Sumatra',
-    lot: 'Solok Radjo Honey',
-    processing: 'Honey / Pulped Natural',
-    image: 'https://utfs.io/f/4rrGfGgcbsJm7MxUKV2aOmgFG5AqJWQYf4C2iRu9a1BpshUX',
+    tastingNotes: "chocolate pomegeanate aroma, spritzy pear acidity, roobois",
+    country: "Sumatra",
+    lot: "Solok Radjo Honey",
+    processing: "Honey / Pulped Natural",
+    image: "https://utfs.io/f/4rrGfGgcbsJm7MxUKV2aOmgFG5AqJWQYf4C2iRu9a1BpshUX",
     story: `Solok Radjo Cooperative is made up of 500 members with 1-2 hectares each. They are a young, energetic group engaged
 
 not only in coffee production and export, but also in roasting, visiting cafes, brewing, agronomy, and more. They have 3 Q-
@@ -69,15 +69,15 @@ support a hectare. We invite roasters to get involved and support this initiativ
 
   {
     id: 3,
-    name: 'Columbian Federacion Abades',
+    name: "Columbian Federacion Abades",
     price: 23,
     size: 12,
-    tastingNotes: 'Red apple, quince, caramel, sugar plum',
-    country: 'Colombia',
-    region: 'Nariño',
-    lot: 'Federacion Abades, Samaniego Lot 9 Washed',
-    processing: 'Washed',
-    image: 'https://utfs.io/f/4rrGfGgcbsJm0L1z5aexwGYtXT8OrpP5M0aqHCvKgIS961EZ',
+    tastingNotes: "Red apple, quince, caramel, sugar plum",
+    country: "Colombia",
+    region: "Nariño",
+    lot: "Federacion Abades, Samaniego Lot 9 Washed",
+    processing: "Washed",
+    image: "https://utfs.io/f/4rrGfGgcbsJm0L1z5aexwGYtXT8OrpP5M0aqHCvKgIS961EZ",
     story: `Abades is the name a region that covers three municipalities; Samaniego, Santacruz and Providencia. In total, there are
 over 3,200 farming families in this area; many of whom are descendants of the original Pasto, Quillacinga, Abade, and
 Sindagua peoples from this area. The mountainous geography of this region makes it both remote, and a central route
@@ -97,15 +97,15 @@ both internally and internationally.`,
 
   {
     id: 4,
-    name: 'Ethiopian Nguisse Nare',
+    name: "Ethiopian Nguisse Nare",
     price: 23,
     size: 12,
-    tastingNotes: 'Lavendar, plum, peach, rose water',
-    processing: 'Natural',
-    country: 'Ethiopia',
-    region: 'Sidama Bensa Bombe',
-    lot: 'Nguisse Nare, Bombe, Natural, Grade 1',
-    image: 'https://utfs.io/f/4rrGfGgcbsJmKP3m3b5emFDR76qGtiaw89OurNXQlhInVvHA',
+    tastingNotes: "Lavendar, plum, peach, rose water",
+    processing: "Natural",
+    country: "Ethiopia",
+    region: "Sidama Bensa Bombe",
+    lot: "Nguisse Nare, Bombe, Natural, Grade 1",
+    image: "https://utfs.io/f/4rrGfGgcbsJmKP3m3b5emFDR76qGtiaw89OurNXQlhInVvHA",
     story: `Sitting atop a ridge at 2300 MASL in Bombe, Nguisse Nare's 10 hectare farm “Setame” is planted with variety 74158
 intercropped with taro and sweet potato. With his two other farms—one in Kokose, one in Tiburo—he produces natural and
 anaerobic coffees using his own cherry as well as cherry collected from around 60 of his neighbors. When we visited in
@@ -118,16 +118,16 @@ his cherry before drying them slowly on raised beds over 20 days.`,
 
   {
     id: 5,
-    name: 'Ethiopian Duromina Cooperative',
+    name: "Ethiopian Duromina Cooperative",
     decaf: true,
     price: 21,
     size: 12,
-    tastingNotes: 'chocolate babka aroma, mint, caramel, cherries',
-    processing: 'Washed',
-    country: 'Ethiopia',
-    region: 'Limu, Agaro',
-    lot: 'Duromina Cooperative Decaf',
-    image: 'https://utfs.io/f/4rrGfGgcbsJm4CktK0gcbsJmSXVFtRMuW6ODhg4Exfqr71n8',
+    tastingNotes: "chocolate babka aroma, mint, caramel, cherries",
+    processing: "Washed",
+    country: "Ethiopia",
+    region: "Limu, Agaro",
+    lot: "Duromina Cooperative Decaf",
+    image: "https://utfs.io/f/4rrGfGgcbsJm4CktK0gcbsJmSXVFtRMuW6ODhg4Exfqr71n8",
     story: `Established in 2010, 'Duromina' means 'become wealthy', and this is a smallholder cooperative who knows how to share
 the wealth. First focusing on quality improvements, which earned them a name, then on an organic certification for
 additional premiums, the cooperative is now focusing on community by building schools, roads, connections for
@@ -160,15 +160,15 @@ producers who took their futures into their own hands.`,
 
   {
     id: 6,
-    name: 'Brazil Marcelo Assis',
+    name: "Brazil Marcelo Assis",
     price: 19,
     size: 10,
-    tastingNotes: 'Grapefruit, lemon liquor, cherry, chocolate',
-    processing: 'Natural',
-    country: 'Brazil',
-    region: 'Cerrado Mineiro, Campos Altos',
-    lot: 'Marcelo Assis, Fazenda Bioma Red Catuai Natural PB Lot 58',
-    image: 'https://utfs.io/f/4rrGfGgcbsJmMt3lqew0WcO1YtquLMAkCBDXKiaU6PzJRp4x',
+    tastingNotes: "Grapefruit, lemon liquor, cherry, chocolate",
+    processing: "Natural",
+    country: "Brazil",
+    region: "Cerrado Mineiro, Campos Altos",
+    lot: "Marcelo Assis, Fazenda Bioma Red Catuai Natural PB Lot 58",
+    image: "https://utfs.io/f/4rrGfGgcbsJmMt3lqew0WcO1YtquLMAkCBDXKiaU6PzJRp4x",
     story: `Bioma Café's is a partnership between Marcelo Nogueira Assis and Flavio Marcio Silva dating back to 2001. Flavio came
 from managing the family businesses, and Marcelo was a recent graduate in the technical school of agriculture. By 2010
 the two were ready to found their first coffee farm - dedicated 100% to specialty production - in Campos Altos region,
@@ -180,7 +180,7 @@ drying on their patios in small lots, making use of wild yeasts from Selvatech.`
 ] satisfies Product[];
 
 export async function seed() {
-  console.log('Seeding started');
+  console.log("Seeding started");
   await db.transaction(async function (tx) {
     for (const product of PRODUCTS) {
       console.log(`Seeding product: ${product.name}`);
@@ -220,10 +220,10 @@ export async function seed() {
 async function main() {
   try {
     await seed();
-    console.log('Seeding completed');
+    console.log("Seeding completed");
     process.exit(0);
   } catch (error) {
-    console.error('Error during seeding:', error);
+    console.error("Error during seeding:", error);
     process.exit(1);
   }
 }

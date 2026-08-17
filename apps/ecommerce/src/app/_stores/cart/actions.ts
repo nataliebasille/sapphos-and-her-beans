@@ -71,7 +71,6 @@ export function useRemoveCartItem() {
       if (!currentItem) {
         return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [id]: _, ...cart } = storeValue.cart;
       store.set({
         cart,

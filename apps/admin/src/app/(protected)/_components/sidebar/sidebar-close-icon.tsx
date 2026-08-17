@@ -10,7 +10,7 @@ export const SidebarCloseIcon = ({ className }: { className?: string }) => {
   return (
     <div
       className={twMerge(
-        "cursor-pointer text-primary-contrast-base md:hidden",
+        "text-primary-contrast-base cursor-pointer md:hidden",
         className,
       )}
       onClick={close}

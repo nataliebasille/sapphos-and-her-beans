@@ -13,7 +13,9 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "dev": "cross-env NODE_ENV=development next dev",
-    "lint": "next lint",
+    "lint": "biome lint .",
+    "format": "prettier --write . --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check . --ignore-path ../../.prettierignore",
     "start": "next start"
   },
   "dependencies": {
@@ -41,19 +43,11 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.10",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
-    "@typescript-eslint/eslint-plugin": "^7.1.1",
-    "@typescript-eslint/parser": "^7.1.1",
     "drizzle-kit": "^0.21.4",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "15.2.4",
-    "eslint-plugin-drizzle": "^0.2.3",
     "postcss": "^8.4.39",
-    "prettier": "^3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^4",
     "typescript": "^5.5.3"
   },

@@ -171,7 +171,6 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       collected_information: {
         // Stripe's typings seem to be wrong between the types for the
         // shipping_details and collected_information properties
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
         shipping_details: shippingDetails as any,
       },
       shipping_options: [

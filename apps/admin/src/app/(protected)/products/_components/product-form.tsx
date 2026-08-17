@@ -33,11 +33,11 @@ export function ProductForm({ label }: ProductFormProps) {
     >
       {({ FormControl }) => (
         <div className="card-surface card card-filled border-surface-900">
-          <h3 className="card-header mb-0 mt-0 rounded-t bg-surface-800 text-surface-contrast-800">
+          <h3 className="card-header bg-surface-800 text-surface-contrast-800 mb-0 mt-0 rounded-t">
             {label}
           </h3>
 
-          <div className="card-content grid grid-cols-2 gap-4 rounded-b-md bg-surface-500">
+          <div className="card-content bg-surface-500 grid grid-cols-2 gap-4 rounded-b-md">
             <div className="grid grid-cols-subgrid">
               <FormControl
                 control={FileInput}

@@ -42,7 +42,7 @@ export const QuantitySelector = ({
         -
       </button>
       <input
-        className="border-surface-800 w-10 rounded-none border-r-0 border-l-0 border-solid p-1 text-center md:p-2"
+        className="border-surface-800 w-10 rounded-none border-l-0 border-r-0 border-solid p-1 text-center md:p-2"
         type="text"
         value={value}
         inputMode="numeric"

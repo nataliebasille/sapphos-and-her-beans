@@ -74,7 +74,7 @@ export default async function HomePage() {
 
       <div className="bg-surface-500 text-on-surface-500 p-8">
         <div className="mb-5 flex items-center border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
-          <Heading level={3} className="mb-0 tracking-wide uppercase">
+          <Heading level={3} className="mb-0 uppercase tracking-wide">
             Featured
           </Heading>
 

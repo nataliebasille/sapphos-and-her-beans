@@ -1,7 +1,7 @@
 # Sappho & her beans — Branding Guide (for coding agents)
 
-This is a distilled, **actionable** summary of the official *"Sappho Brand Guidelines
-v1 (2.9.24)"* PDF, written so a coding agent can apply the brand correctly without
+This is a distilled, **actionable** summary of the official _"Sappho Brand Guidelines
+v1 (2.9.24)"_ PDF, written so a coding agent can apply the brand correctly without
 opening the PDF. If you touch anything visual (colors, fonts, spacing, components),
 follow this document.
 
@@ -23,14 +23,14 @@ follow this document.
 
 ## 2. Color palette (official)
 
-| Name | Hex | Role in guidelines |
-|------|-----|--------------------|
-| **Deep Navy** | `#001F36` | Primary (text, headings, dark UI) |
-| **Pink** | `#F8DCDF` | Primary (brand background / surface) |
-| **Peach** | `#EFAA9C` | Secondary |
-| **Sunset Orange** | `#997C60` † | Secondary (accent/highlight) |
-| **Peachy Pink** | `#E8ABB0` | Secondary |
-| **Winter Frost** | `#FAF9F8` | Secondary (near-white background) |
+| Name              | Hex         | Role in guidelines                   |
+| ----------------- | ----------- | ------------------------------------ |
+| **Deep Navy**     | `#001F36`   | Primary (text, headings, dark UI)    |
+| **Pink**          | `#F8DCDF`   | Primary (brand background / surface) |
+| **Peach**         | `#EFAA9C`   | Secondary                            |
+| **Sunset Orange** | `#997C60` † | Secondary (accent/highlight)         |
+| **Peachy Pink**   | `#E8ABB0`   | Secondary                            |
+| **Winter Frost**  | `#FAF9F8`   | Secondary (near-white background)    |
 
 † **Known discrepancy:** the PDF prints "Sunset Orange `#997C60`", but that hex is a
 muted tan and the swatch shown is a vivid orange. The current implementation uses a
@@ -46,16 +46,16 @@ palette is declared as anchor tokens in
 
 ```css
 @theme static {
-  --theme-primary:     #001f36; /* Deep Navy   */
-  --theme-secondary:   #e87a01; /* Sunset Orange (see discrepancy note) */
-  --theme-accent:      #e8abb0; /* Peachy Pink */
+  --theme-primary: #001f36; /* Deep Navy   */
+  --theme-secondary: #e87a01; /* Sunset Orange (see discrepancy note) */
+  --theme-accent: #e8abb0; /* Peachy Pink */
 
-  --theme-surface-50:  #fef7f8; /* near-white blush */
+  --theme-surface-50: #fef7f8; /* near-white blush */
   --theme-surface-500: #f7dcdf; /* brand Pink       */
   --theme-surface-950: #001f36; /* Deep Navy        */
 
-  --theme-danger:      #c0445f;
-  --theme-success:     #2f8f6b;
+  --theme-danger: #c0445f;
+  --theme-success: #2f8f6b;
 }
 ```
 
@@ -77,12 +77,12 @@ hardcoded pinks remain and may be migrated over time.)
 The brand fonts are commercial. Per project direction we use the **closest free
 (Google Fonts) substitute** for each, wired through `next/font`.
 
-| Role | Brand font | Free substitute (in use) | Where it's used |
-|------|-----------|--------------------------|-----------------|
-| **Primary** | Baron | **Montserrat** | Headings / display (`h1`–`h6`, `.font-primary`) |
-| **Secondary** | Canva Sans | **Noto Sans** | Body text (site default) |
-| **Tertiary** | Antic | **Antic** (free — no substitute needed) | Accent text (`.font-tertiary`) |
-| Product-label display | _(project choice)_ | **MedievalSharp** | Stylized product-card labels (`BrandingStylizedFont`) |
+| Role                  | Brand font         | Free substitute (in use)                | Where it's used                                       |
+| --------------------- | ------------------ | --------------------------------------- | ----------------------------------------------------- |
+| **Primary**           | Baron              | **Montserrat**                          | Headings / display (`h1`–`h6`, `.font-primary`)       |
+| **Secondary**         | Canva Sans         | **Noto Sans**                           | Body text (site default)                              |
+| **Tertiary**          | Antic              | **Antic** (free — no substitute needed) | Accent text (`.font-tertiary`)                        |
+| Product-label display | _(project choice)_ | **MedievalSharp**                       | Stylized product-card labels (`BrandingStylizedFont`) |
 
 ### How fonts are implemented
 
@@ -124,10 +124,10 @@ primary/secondary/tertiary the CSS variable wiring carries it automatically. Kee
 
 ## 5. Key files reference
 
-| Concern | File |
-|--------|------|
-| Brand palette + font mapping + light scheme | `apps/ecommerce/src/styles/globals.css` |
-| Font declarations (`next/font`) | `apps/ecommerce/src/app/fonts.ts` |
-| Font CSS vars applied to `<html>` | `apps/ecommerce/src/app/layout.tsx` |
-| Stylized product label font usage | `apps/ecommerce/src/app/_components/product-card.tsx` |
-| Tailwind v4 / Natcore v2 PostCSS setup | `apps/ecommerce/postcss.config.mjs` |
+| Concern                                     | File                                                  |
+| ------------------------------------------- | ----------------------------------------------------- |
+| Brand palette + font mapping + light scheme | `apps/ecommerce/src/styles/globals.css`               |
+| Font declarations (`next/font`)             | `apps/ecommerce/src/app/fonts.ts`                     |
+| Font CSS vars applied to `<html>`           | `apps/ecommerce/src/app/layout.tsx`                   |
+| Stylized product label font usage           | `apps/ecommerce/src/app/_components/product-card.tsx` |
+| Tailwind v4 / Natcore v2 PostCSS setup      | `apps/ecommerce/postcss.config.mjs`                   |

@@ -11,7 +11,7 @@ export default async function ProductsPage() {
       ))}
       <Link
         href="/products/add"
-        className="btn-primary btn btn-outline card card-secondary card-ghost flex items-center justify-center border-dashed font-bold uppercase opacity-80 hover:!bg-secondary-base hover:!text-secondary-contrast-base"
+        className="btn-primary btn btn-outline card card-secondary card-ghost hover:!bg-secondary-base hover:!text-secondary-contrast-base flex items-center justify-center border-dashed font-bold uppercase opacity-80"
         prefetch
       >
         + Add product

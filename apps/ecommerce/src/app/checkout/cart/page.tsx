@@ -12,7 +12,7 @@ export default function CheckoutCartPage() {
       <div className="mb-5 border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
         <Heading
           level={3}
-          className="mb-0 text-center tracking-wide uppercase md:text-left"
+          className="mb-0 text-center uppercase tracking-wide md:text-left"
         >
           Checkout
         </Heading>

@@ -111,7 +111,7 @@ export default function LocationsPage() {
             >
               <Heading
                 level={3}
-                className="mb-0 text-center tracking-wide uppercase md:text-left"
+                className="mb-0 text-center uppercase tracking-wide md:text-left"
               >
                 {city}
               </Heading>
@@ -182,7 +182,7 @@ function Location({
         </a>
 
         {description && (
-          <p className="mt-1 text-justify leading-7 tracking-wider whitespace-pre-line md:mt-4">
+          <p className="mt-1 whitespace-pre-line text-justify leading-7 tracking-wider md:mt-4">
             {description}
           </p>
         )}

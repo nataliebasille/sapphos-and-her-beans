@@ -19,7 +19,7 @@ async function main() {
       acc[product.name] = product.id;
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );
   const activeProductsNamesSet = new Set(products.PRODUCTS.map((p) => p.name));
 
@@ -46,32 +46,32 @@ async function main() {
         processing: product.processing ?? "",
         decaf: `${product.isDecaf ?? false}`,
         tasting_notes: product.tastingNotes ?? "",
-        ...("featured" in product && product.featured
-          ? { featured: `${product.featured}` }
-          : {}),
-        ...(product.type === "coffee"
-          ? {
-              size: product.size,
-              label_color: product.color,
-              region: product.region ?? "",
-              farm: product.farm,
-              traceable: product.traceable,
-              ...(product.altitude && { altitude: product.altitude }),
-              ...(product.varietals && { varietals: product.varietals }),
-              ...("fermentation" in product &&
-                product.fermentation && {
-                  fermentation: JSON.stringify(product.fermentation),
-                }),
-              ...("score" in product &&
-                product.score && { score: product.score }),
-            }
-          : {}),
+        ...("featured" in product && product.featured ?
+          { featured: `${product.featured}` }
+        : {}),
+        ...(product.type === "coffee" ?
+          {
+            size: product.size,
+            label_color: product.color,
+            region: product.region ?? "",
+            farm: product.farm,
+            traceable: product.traceable,
+            ...(product.altitude && { altitude: product.altitude }),
+            ...(product.varietals && { varietals: product.varietals }),
+            ...("fermentation" in product &&
+              product.fermentation && {
+                fermentation: JSON.stringify(product.fermentation),
+              }),
+            ...("score" in product &&
+              product.score && { score: product.score }),
+          }
+        : {}),
       },
     };
 
-    const response = await (id
-      ? stripe.products.update(id, body)
-      : stripe.products.create(body));
+    const response = await (id ?
+      stripe.products.update(id, body)
+    : stripe.products.create(body));
 
     if (
       (response.default_price as typeof response.default_price & object)
@@ -91,7 +91,7 @@ async function main() {
         (response.default_price as typeof response.default_price & object).id,
         {
           active: false,
-        }
+        },
       );
     }
 

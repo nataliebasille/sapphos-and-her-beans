@@ -46,5 +46,5 @@
     ".next/types/**/*.ts",
     "../../lib/typings/*.d.ts"
   ],
-  "exclude": ["node_modules", ".eslintrc.cjs"]
+  "exclude": ["node_modules"]
 }

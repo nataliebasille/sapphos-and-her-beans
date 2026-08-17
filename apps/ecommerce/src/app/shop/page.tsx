@@ -17,7 +17,7 @@ export default function ShopPage() {
       >
         <Heading
           level={3}
-          className="mb-0 text-center tracking-wide uppercase md:text-left"
+          className="mb-0 text-center uppercase tracking-wide md:text-left"
         >
           Coffee
         </Heading>
