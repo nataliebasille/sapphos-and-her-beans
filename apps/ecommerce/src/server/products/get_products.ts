@@ -39,17 +39,29 @@ export type Product_v2 = {
 export const getProducts = unstable_cache(
   async () => {
     // When Stripe isn't configured (local/preview without a key), fall back to
-    // the repo's seed catalog so the storefront still renders. With a key
-    // present we hit Stripe as normal and let errors surface.
+    // the repo's seed catalog so the storefront still renders.
     if (!process.env.STRIPE_KEY) {
-      return products.PRODUCTS as unknown as products.Product[];
+      return fallbackProducts();
     }
 
-    const list = await stripe.products.list({
-      active: true,
-      limit: 100,
-      expand: ["data.default_price"],
-    });
+    let list;
+    try {
+      list = await stripe.products.list({
+        active: true,
+        limit: 100,
+        expand: ["data.default_price"],
+      });
+    } catch (error) {
+      if (shouldUseFallbackProducts()) {
+        console.warn(
+          "Unable to load products from Stripe; using seed catalog.",
+          error,
+        );
+        return fallbackProducts();
+      }
+
+      throw error;
+    }
 
     return list.data.map((p) => {
       const price =
@@ -86,6 +98,17 @@ export const getProducts = unstable_cache(
     tags: ["products"],
   },
 );
+
+function fallbackProducts() {
+  return products.PRODUCTS as unknown as products.Product[];
+}
+
+function shouldUseFallbackProducts() {
+  return (
+    process.env.NODE_ENV !== "production" ||
+    process.env.DEPLOYMENT_TYPE !== "PRODUCTION"
+  );
+}
 
 function normalizeFermentation(fermentation: string | false | undefined) {
   if (!fermentation) return undefined;
