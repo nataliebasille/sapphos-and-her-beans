@@ -26,6 +26,16 @@ const NAV = [
   { label: "Our Story", href: "/about" },
 ];
 
+function isActivePath(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const desktopNavLinkClass =
+  "relative whitespace-nowrap py-1 text-sm font-medium tracking-wide text-[#001F36]/70 transition-colors after:absolute after:right-0 after:-bottom-1 after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:bg-[#E87A01] after:transition-transform after:duration-300 hover:text-[#001F36]";
+
+const activeNavLinkClass =
+  "text-[#001F36] after:scale-x-100";
+
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
@@ -63,15 +73,23 @@ export function SiteHeader() {
       <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">
         {/* left nav */}
         <nav className="hidden items-center gap-7 md:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium tracking-wide text-[#001F36]/80 transition-colors hover:text-[#001F36]"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map((item) => {
+            const active = isActivePath(pathname, item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={twMerge(
+                  desktopNavLinkClass,
+                  active && activeNavLinkClass,
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <MobileMenu />
 
@@ -96,7 +114,14 @@ export function SiteHeader() {
         <div className="flex items-center justify-end gap-5">
           <Link
             href="/locations"
-            className="hidden text-sm font-medium tracking-wide text-[#001F36]/80 transition-colors hover:text-[#001F36] md:block"
+            aria-current={
+              isActivePath(pathname, "/locations") ? "page" : undefined
+            }
+            className={twMerge(
+              desktopNavLinkClass,
+              "hidden md:block",
+              isActivePath(pathname, "/locations") && activeNavLinkClass,
+            )}
           >
             Find Us
           </Link>
@@ -122,11 +147,30 @@ export function SiteHeader() {
 }
 
 function MobileMenu() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
   return (
     <div className="md:hidden">
       <button
         aria-label="Open menu"
+        aria-expanded={open}
         onClick={() => setOpen(true)}
         className="flex flex-col gap-1.5"
       >
@@ -134,24 +178,62 @@ function MobileMenu() {
         <span className="block h-0.5 w-6 bg-[#001F36]" />
         <span className="block h-0.5 w-4 bg-[#001F36]" />
       </button>
-      {open && (
-        <div className="fixed inset-0 z-50 bg-[#001F36] px-8 py-6 text-[#FAF9F8]">
+      <div
+        aria-hidden={!open}
+        className={twMerge(
+          "fixed inset-x-0 top-0 z-[110] h-dvh",
+          open ? "pointer-events-auto" : "pointer-events-none",
+        )}
+      >
+        <button
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          tabIndex={open ? 0 : -1}
+          className={twMerge(
+            "absolute inset-0 bg-[#001F36]/45 backdrop-blur-sm transition-opacity duration-300 ease-out",
+            open ? "opacity-100" : "opacity-0",
+          )}
+        />
+        <div
+          className={twMerge(
+            "relative h-dvh w-full overflow-y-auto bg-[#001F36] px-8 py-6 text-[#FAF9F8] shadow-2xl transition-all duration-300 ease-out",
+            open ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0",
+          )}
+        >
           <button
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="mb-16 text-3xl"
+            tabIndex={open ? 0 : -1}
+            className="mb-16 text-3xl leading-none transition-transform duration-300 hover:rotate-90"
           >
             ×
           </button>
           <nav className="flex flex-col gap-7 text-2xl">
-            {[...NAV, { label: "Find Us", href: "/locations" }].map((i) => (
-              <Link key={i.href} href={i.href} onClick={() => setOpen(false)}>
-                {i.label}
-              </Link>
-            ))}
+            {[...NAV, { label: "Find Us", href: "/locations" }].map((i) => {
+              const active = isActivePath(pathname, i.href);
+
+              return (
+                <Link
+                  key={i.href}
+                  href={i.href}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                  tabIndex={open ? 0 : -1}
+                  className={twMerge(
+                    "-mx-3 rounded px-3 py-2 transition-all duration-300 ease-out",
+                    open ?
+                      "translate-x-0 opacity-100"
+                    : "-translate-x-3 opacity-0",
+                    active && "bg-[#FAF9F8]/12 text-[#EFAA9C]",
+                  )}
+                >
+                  {i.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
-      )}
+      </div>
     </div>
   );
 }
