@@ -26,7 +26,7 @@ export function HomeHero() {
           <Eyebrow className="text-[#EFAA9C]">
             LGBTQ+ Owned Specialty Coffee
           </Eyebrow>
-          <h1 className="mt-5 font-primary text-[2.6rem] leading-[1.02] font-semibold tracking-tight text-[#001F36] md:text-[4.1rem]">
+          <h1 className="font-primary mt-5 text-[2.6rem] leading-[1.02] font-semibold tracking-tight text-[#001F36] md:text-[4.1rem]">
             Coffee built on relationships.
           </h1>
           <p className="mt-6 max-w-md text-base leading-relaxed text-[#001F36]/70 md:text-lg">
@@ -80,7 +80,7 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
             <Eyebrow className="text-[#EFAA9C]">Featured Coffees</Eyebrow>
-            <h2 className="mt-3 font-primary text-3xl text-[#001F36] md:text-4xl">
+            <h2 className="font-primary mt-3 text-3xl text-[#001F36] md:text-4xl">
               This season&apos;s pours.
             </h2>
           </div>
@@ -128,17 +128,17 @@ function FeaturedCard({ coffee }: { coffee: Coffee }) {
           <span className="rounded-full bg-white/25 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[#001F36] uppercase">
             {coffee.size}
           </span>
-          {coffee.score ? (
+          {coffee.score ?
             <span className="font-primary text-sm font-semibold text-[#001F36]/80">
               {coffee.score} pts
             </span>
-          ) : null}
+          : null}
         </div>
         <div>
           <p className="text-[0.7rem] font-semibold tracking-[0.2em] text-[#001F36]/60 uppercase">
             {coffee.processing}
           </p>
-          <h3 className="mt-1 font-primary text-2xl leading-tight font-semibold text-[#001F36]">
+          <h3 className="font-primary mt-1 text-2xl leading-tight font-semibold text-[#001F36]">
             {originName(coffee)}
           </h3>
           <p className="text-sm text-[#001F36]/70">{coffee.farm}</p>

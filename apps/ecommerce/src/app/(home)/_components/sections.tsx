@@ -107,7 +107,7 @@ export function WhySappho() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 max-w-2xl">
           <Eyebrow className="text-[#EFAA9C]">Why Sappho</Eyebrow>
-          <h2 className="mt-4 font-primary text-3xl leading-tight text-[#001F36] md:text-4xl">
+          <h2 className="font-primary mt-4 text-3xl leading-tight text-[#001F36] md:text-4xl">
             Coffee worth choosing on purpose.
           </h2>
         </div>
@@ -117,7 +117,7 @@ export function WhySappho() {
               <span className="flex size-12 items-center justify-center rounded-full bg-[#F8DCDF] text-[#001F36]">
                 <Icon className="size-6" />
               </span>
-              <h3 className="mt-6 font-primary text-xl text-[#001F36]">
+              <h3 className="font-primary mt-6 text-xl text-[#001F36]">
                 {title}
               </h3>
               <p className="mt-3 text-[15px] leading-relaxed text-[#001F36]/70">
@@ -152,7 +152,7 @@ export function RelationalStory() {
         </div>
         <div>
           <Eyebrow className="text-[#E8ABB0]">Relational Coffee</Eyebrow>
-          <h2 className="mt-4 font-primary text-3xl leading-tight md:text-[2.6rem]">
+          <h2 className="font-primary mt-4 text-3xl leading-tight md:text-[2.6rem]">
             Coffee is never just a commodity.
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#FAF9F8]/75 md:text-base">
@@ -196,7 +196,7 @@ export function FindUsLocally() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10">
           <Eyebrow className="text-[#EFAA9C]">Find Us Locally</Eyebrow>
-          <h2 className="mt-3 max-w-xl font-primary text-3xl text-[#001F36] md:text-4xl">
+          <h2 className="font-primary mt-3 max-w-xl text-3xl text-[#001F36] md:text-4xl">
             Now pouring at Forest City Vault.
           </h2>
         </div>

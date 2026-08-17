@@ -48,7 +48,7 @@ export function CoffeeCard({ group }: { group: OriginGroup }) {
 
         {/* Top rule — score circle sits centered in the line, like the diamond. */}
         <Divider className="my-3 opacity-80">
-          {group.score ? (
+          {group.score ?
             <span
               className={twMerge(
                 "flex size-11 shrink-0 rotate-45 items-center justify-center rounded-[3px] opacity-100",
@@ -61,7 +61,7 @@ export function CoffeeCard({ group }: { group: OriginGroup }) {
                 <span className="text-[8px] tracking-widest">pts</span>
               </span>
             </span>
-          ) : undefined}
+          : undefined}
         </Divider>
 
         <h3
@@ -163,7 +163,9 @@ function SizeAdd({
         added && "!bg-[#3f8f6b] !text-white",
       )}
     >
-      {added ? <Check className="size-4" /> : <Plus className="size-4" />}
+      {added ?
+        <Check className="size-4" />
+      : <Plus className="size-4" />}
       <span>{sizeLabel(coffee.size)}</span>
       <span className="opacity-60">·</span>
       <span>{added ? "Added" : `$${coffee.price}`}</span>

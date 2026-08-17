@@ -14,7 +14,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Cart as CartIcon } from "./icons/cart";
-import { useCartIsDisabled, useCartQuantity, useOpenCart } from "../_stores/cart";
+import {
+  useCartIsDisabled,
+  useCartQuantity,
+  useOpenCart,
+} from "../_stores/cart";
 
 const NAV = [
   { label: "Shop Coffee", href: "/shop" },
@@ -51,9 +55,9 @@ export function SiteHeader() {
     <header
       className={twMerge(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        solid
-          ? "border-b border-[#001F36]/10 bg-[#FAF9F8]/90 backdrop-blur-md"
-          : "border-b border-transparent",
+        solid ?
+          "border-b border-[#001F36]/10 bg-[#FAF9F8]/90 backdrop-blur-md"
+        : "border-b border-transparent",
       )}
     >
       <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">

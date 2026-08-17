@@ -132,7 +132,10 @@ export function groupByOrigin(list: Coffee[]): OriginGroup[] {
 }
 
 /** The origin group that contains the given product id, if any. */
-export function groupForId(list: Coffee[], id: string): OriginGroup | undefined {
+export function groupForId(
+  list: Coffee[],
+  id: string,
+): OriginGroup | undefined {
   return groupByOrigin(list).find((g) => g.sizes.some((s) => s.id === id));
 }
 

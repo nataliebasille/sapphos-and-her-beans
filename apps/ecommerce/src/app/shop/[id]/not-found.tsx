@@ -7,7 +7,7 @@ export default function CoffeeNotFound() {
       <Heading level={2} className="tracking-wide">
         Coffee not found
       </Heading>
-      <p className="mt-2 text-on-surface-50/70">
+      <p className="text-on-surface-50/70 mt-2">
         We couldn&apos;t find that coffee. It may have sold out or been retired.
       </p>
       <Link

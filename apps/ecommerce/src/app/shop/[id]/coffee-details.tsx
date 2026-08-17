@@ -8,7 +8,10 @@ import { useAddToCart } from "~/app/_stores/cart";
 import { BrandingStylizedFont } from "~/app/fonts";
 import { type products } from "@models";
 import { sizeLabel } from "../_components/catalog-data";
-import { COFFEE_PALETTES, type CoffeePalette } from "../_components/coffee-palette";
+import {
+  COFFEE_PALETTES,
+  type CoffeePalette,
+} from "../_components/coffee-palette";
 
 function fermentationLabel(
   fermentation: products.Product["fermentation"],
@@ -17,7 +20,9 @@ function fermentationLabel(
   if (typeof fermentation === "string") return fermentation;
   if (fermentation.type === "cofermentation")
     return `Co-fermented · ${fermentation.ingredient}`;
-  return fermentation.duration ? `Anaerobic · ${fermentation.duration}` : "Anaerobic";
+  return fermentation.duration ?
+      `Anaerobic · ${fermentation.duration}`
+    : "Anaerobic";
 }
 
 function tastingNotes(coffee: products.Product): string[] {
@@ -28,11 +33,14 @@ function tastingNotes(coffee: products.Product): string[] {
     .filter(Boolean);
 }
 
-function specRows(coffee: products.Product): { label: string; value: string }[] {
+function specRows(
+  coffee: products.Product,
+): { label: string; value: string }[] {
   const rows: { label: string; value: string }[] = [];
   const ferment = fermentationLabel(coffee.fermentation);
   if (ferment) rows.push({ label: "Fermentation", value: ferment });
-  if (coffee.varietals) rows.push({ label: "Varietals", value: coffee.varietals });
+  if (coffee.varietals)
+    rows.push({ label: "Varietals", value: coffee.varietals });
   if (coffee.altitude) rows.push({ label: "Altitude", value: coffee.altitude });
   if (coffee.region) rows.push({ label: "Region", value: coffee.region });
   if (coffee.lot) rows.push({ label: "Lot", value: coffee.lot });
@@ -120,7 +128,11 @@ function SizeSelector({
               "rounded-full border-2 px-4 py-1.5 text-sm font-semibold tracking-wide uppercase transition-colors",
               palette.border,
               active ?
-                twMerge(palette.accentBg, palette.accentText, "border-transparent")
+                twMerge(
+                  palette.accentBg,
+                  palette.accentText,
+                  "border-transparent",
+                )
               : twMerge(palette.textStrong, "hover:opacity-70"),
             )}
           >
@@ -149,11 +161,11 @@ export function CoffeeDetails({
   const hasSizeChoice = sizes.length > 1;
 
   return (
-    <div className="md:flex md:min-h-dvh">
+    <div className="md:flex md:h-full">
       {/* Passport panel */}
       <aside
         className={twMerge(
-          "flex flex-col justify-center bg-gradient-to-b px-8 py-16 md:sticky md:top-0 md:h-dvh md:w-2/5",
+          "flex flex-col justify-center bg-linear-to-b px-8 py-16 md:h-full md:w-2/5",
           palette.panel,
           palette.gradientFrom,
           palette.gradientTo,
@@ -213,15 +225,17 @@ export function CoffeeDetails({
 
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between gap-4">
-              <dt className="opacity-60 uppercase">Region</dt>
+              <dt className="uppercase opacity-60">Region</dt>
               <dd className="text-right font-medium">{coffee.region ?? "—"}</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="opacity-60 uppercase">Altitude</dt>
-              <dd className="text-right font-medium">{coffee.altitude ?? "—"}</dd>
+              <dt className="uppercase opacity-60">Altitude</dt>
+              <dd className="text-right font-medium">
+                {coffee.altitude ?? "—"}
+              </dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="opacity-60 uppercase">Traceable</dt>
+              <dt className="uppercase opacity-60">Traceable</dt>
               <dd className="text-right font-medium">{coffee.traceable}</dd>
             </div>
           </dl>
@@ -296,7 +310,10 @@ export function CoffeeDetails({
                       {row.label}
                     </p>
                     <p
-                      className={twMerge("mt-1 font-semibold", palette.textStrong)}
+                      className={twMerge(
+                        "mt-1 font-semibold",
+                        palette.textStrong,
+                      )}
                     >
                       {row.value}
                     </p>
