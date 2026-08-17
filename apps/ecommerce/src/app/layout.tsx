@@ -7,7 +7,7 @@ import { Cart } from "./_components/cart";
 import { CartProvider } from "./_stores/cart/cart-provider";
 import { ProductsProvider } from "./_stores/products/products-provider";
 import { primaryFont, secondaryFont, tertiaryFont } from "./fonts";
-import { ShopHeader } from "./shop-header";
+import { SiteHeader } from "./_components/site-header";
 import { ShopPageContainer } from "./shop-page-container";
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default async function RootLayout({
         <ProductsProvider initialValue={{ products }}>
           <CartProvider>
             <Cart />
-            <ShopHeader />
+            <SiteHeader />
             <ShopPageContainer>{children}</ShopPageContainer>
           </CartProvider>
         </ProductsProvider>

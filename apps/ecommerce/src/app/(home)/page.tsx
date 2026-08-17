@@ -1,115 +1,58 @@
-import Image from "next/image";
+/**
+ * Sappho & Her Beans homepage — "Editorial Split".
+ *
+ * Shop-forward hierarchy: header → hero → featured coffees → why Sappho →
+ * relational story → find us locally → newsletter/footer. Featured products
+ * come from the live catalog, with distinct origins preferred.
+ */
 import { getProducts } from "~/server/products/get_products";
-import { Heading } from "../_components/heading";
-import { ProductCard } from "../_components/product-card";
-import Link from "next/link";
-import { FacebookIcon } from "../_components/icons/facebook";
-import { InstagramIcon } from "../_components/icons/instagram";
+import { type products } from "@models";
+import { HomeFeatured, HomeHero } from "./_components/home-top";
+import {
+  FindUsLocally,
+  NewsletterFooter,
+  RelationalStory,
+  WhySappho,
+} from "./_components/sections";
+
+type Coffee = products.Product;
+
+function gramsOf(size: string): number {
+  const match = /(\d+)\s*g/.exec(size);
+  return match ? Number(match[1]) : 0;
+}
+
+/** Featured set for the homepage: distinct origins, prefer featured + larger bags. */
+function selectFeatured(all: Coffee[]): Coffee[] {
+  const usable = all.filter((c) => c.size !== "singleserve" && !!c.country);
+  const featured = usable.filter((c) => c.featured);
+  const pool = (featured.length >= 3 ? featured : usable)
+    .slice()
+    .sort((a, b) => gramsOf(b.size) - gramsOf(a.size));
+
+  const seen = new Set<string>();
+  const out: Coffee[] = [];
+  for (const c of pool) {
+    const key = c.country!;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(c);
+    if (out.length >= 3) break;
+  }
+  return out;
+}
 
 export default async function HomePage() {
-  const products = (await getProducts()).filter((x) => x.featured);
+  const coffees = selectFeatured((await getProducts()) as unknown as Coffee[]);
+
   return (
-    <main className="flex flex-col text-white">
-      <div className="relative flex h-[92dvh] w-full flex-col items-center justify-center">
-        <Image
-          className="object-cover brightness-50"
-          src="/images/beans.jpg"
-          alt="Sappho and her beans"
-          fill
-          priority
-        />
-        <div className="relative h-[33dvh] w-full">
-          <Image
-            className="object-contain px-5"
-            src="/images/Sappho no background - cropped.png"
-            alt="Sappho"
-            fill
-            priority
-          />
-        </div>
-        <div className="relative z-10 flex justify-center gap-8">
-          <a
-            href="https://www.facebook.com/p/Sappho-and-her-beans-100094171081242/"
-            target="_blank"
-          >
-            <FacebookIcon className="size-12 text-white" />
-          </a>
-          <a
-            href="https://www.instagram.com/sapphoandherbeans/"
-            target="_blank"
-          >
-            <InstagramIcon className="size-12 text-white" />
-          </a>
-        </div>
-      </div>
-
-      <div className="bg-primary-500 text-on-primary-500 relative grid grid-cols-1 flex-row-reverse !pb-12 tracking-widest sm:px-20 md:grid-cols-[3fr_2fr] md:gap-4 md:py-4">
-        <div className="row-start-2 flex min-w-0 flex-col gap-10 p-0 pb-8 font-thin sm:px-8 md:row-start-1 md:mr-24 md:p-0 md:pt-14 xl:mr-40">
-          <span className="flex flex-col items-center justify-center text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-            <span className="text-nowrap">Unique coffee</span>
-            <span className="divider/secondary w-1/3 !self-center text-sm !font-thin text-white xl:text-base">
-              AND
-            </span>
-            <span>Uncompromised quality</span>
-          </span>
-          <span className="px-12 !leading-loose sm:p-0 md:text-base md:leading-loose lg:text-xl xl:text-2xl">
-            We are a specialty roaster focused on relational coffee. We&apos;re
-            constantly talking to new people and making friends, looking for
-            that next special harvest. We currently have producing partners in
-            Brazil, Ethiopia and Nicaragua where we source direct trade coffee.
-          </span>
-        </div>
-        <div className="px-8 sm:p-0">
-          <div className="relative top-[-50px] row-start-1 h-96 overflow-hidden rounded-3xl md:h-full md:w-auto">
-            <Image
-              src="/images/owner.png"
-              alt="Owner"
-              fill
-              className="object-cover md:object-[25%_bottom]"
-              priority
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-surface-500 text-on-surface-500 p-8">
-        <div className="mb-5 flex items-center border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
-          <Heading level={3} className="mb-0 tracking-wide uppercase">
-            Featured
-          </Heading>
-
-          <Link
-            href="/shop"
-            className="btn-outline/primary btn-size-lg mb-2 ml-auto uppercase"
-          >
-            Shop All
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-x-20 md:gap-y-12 lg:grid-cols-3 lg:gap-x-8 xl:gap-x-20">
-          {products.map((product) => (
-            <ProductCard key={product.id} {...product} />
-            // <div
-            //   key={product.id}
-            //   className="overflow-hidden rounded-2xl shadow-xl shadow-primary-700/25"
-            // >
-            //   <div className="relative aspect-square h-96 w-full">
-            //     <Image
-            //       src={product.image}
-            //       alt={product.name ?? ""}
-            //       fill
-            //       className="object-cover"
-            //       priority
-            //     />
-            //   </div>
-
-            //   <div className="text-nowrap bg-secondary-700 p-4 text-xl uppercase text-on-secondary-700">
-            //     {product.name}
-            //   </div>
-            // </div>
-          ))}
-        </div>
-      </div>
-    </main>
+    <div className="min-h-screen bg-[#FAF9F8] font-sans text-[#001F36]">
+      <HomeHero />
+      <HomeFeatured coffees={coffees} />
+      <WhySappho />
+      <RelationalStory />
+      <FindUsLocally />
+      <NewsletterFooter />
+    </div>
   );
 }

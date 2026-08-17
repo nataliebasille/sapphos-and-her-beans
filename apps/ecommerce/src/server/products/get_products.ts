@@ -38,13 +38,20 @@ export type Product_v2 = {
 
 export const getProducts = unstable_cache(
   async () => {
-    const products = await stripe.products.list({
+    // When Stripe isn't configured (local/preview without a key), fall back to
+    // the repo's seed catalog so the storefront still renders. With a key
+    // present we hit Stripe as normal and let errors surface.
+    if (!process.env.STRIPE_KEY) {
+      return products.PRODUCTS as unknown as products.Product[];
+    }
+
+    const list = await stripe.products.list({
       active: true,
       limit: 100,
       expand: ["data.default_price"],
     });
 
-    return products.data.map((p) => {
+    return list.data.map((p) => {
       const price =
         ((p.default_price as typeof p.default_price & object)?.unit_amount ??
           0) / 100;
