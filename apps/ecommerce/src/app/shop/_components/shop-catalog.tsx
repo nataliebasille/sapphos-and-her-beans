@@ -18,12 +18,12 @@ export function ShopCatalog() {
   return (
     <FrostCanvas>
       <div className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
-        <header className="border-b border-[#001F36]/10 pt-6 pb-10 md:pt-8 md:pb-14">
+        <header className="border-primary-500/10 border-b pt-6 pb-10 md:pt-8 md:pb-14">
           <Eyebrow className="text-accent-700">Shop Coffee</Eyebrow>
           <h1 className="font-primary text-primary-800 mt-3 text-3xl! leading-tight font-semibold tracking-tight md:text-4xl!">
             Every lot, in season.
           </h1>
-          <p className="mt-4 max-w-md text-sm leading-relaxed tracking-wide text-[#001F36]/70">
+          <p className="text-primary-800/70 mt-4 max-w-md text-sm leading-relaxed tracking-wide">
             Direct-trade single origins, each traceable to the people who grew
             it. Choose a size and it&apos;s in your bag.
           </p>

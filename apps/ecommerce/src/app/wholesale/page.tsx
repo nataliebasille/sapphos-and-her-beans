@@ -6,7 +6,7 @@ export default function WholesalesPage() {
     <div className="px-4 md:px-10">
       <div
         className={twMerge(
-          "mb-5 border-b-[1px] border-black/30 md:col-span-2 md:mb-10",
+          "border-primary-800/30 mb-5 border-b-[1px] md:col-span-2 md:mb-10",
         )}
       >
         <Heading
@@ -17,7 +17,7 @@ export default function WholesalesPage() {
         </Heading>
       </div>
 
-      <div className="text-center text-4xl tracking-wide text-slate-600/80 uppercase">
+      <div className="text-primary-700/80 text-center text-4xl tracking-wide uppercase">
         Coming soon
       </div>
 

@@ -160,7 +160,7 @@ function SizeAdd({
         "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold tracking-wide uppercase transition-opacity hover:opacity-90",
         palette.panel,
         palette.panelText,
-        added && "!bg-[#3f8f6b] !text-white",
+        added && "!bg-success-500 !text-surface-50",
       )}
     >
       {added ?

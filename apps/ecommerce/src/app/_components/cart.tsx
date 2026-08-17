@@ -33,17 +33,17 @@ export const Cart = () => {
   return (
     <>
       {isOpen && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 z-[100] bg-black/40" />
+        <div className="bg-primary-950/40 fixed top-0 right-0 bottom-0 left-0 z-[100]" />
       )}
       <div
         ref={cartRef}
         className={twMerge(
-          "fixed top-0 right-0 bottom-0 z-[100] w-full translate-x-full bg-[#F7DCDF] text-black transition-all duration-300 md:w-3/5",
+          "text-on-surface-500 bg-surface-500 fixed top-0 right-0 bottom-0 z-[100] w-full translate-x-full transition-all duration-300 md:w-3/5",
           isOpen && "shadow-primary-900 translate-x-0 shadow-lg",
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="mb-0 flex items-center border-b-[1px] border-slate-800/30 px-4 py-4 text-2xl">
+          <div className="border-primary-800/30 mb-0 flex items-center border-b-[1px] px-4 py-4 text-2xl">
             <CartIcon className="mr-2" />
             <div className="-mb-[2px] flex-1 text-center text-nowrap">
               Your shopping bag

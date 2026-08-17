@@ -83,7 +83,7 @@ function AddToCartButton({
       type="button"
       className={twMerge(
         "btn-solid/primary btn-size-lg flex items-center justify-center tracking-wider uppercase",
-        added && "!bg-[#4BB543]",
+        added && "!bg-success-500 !text-surface-50",
         className,
       )}
       onClick={handleAddToCart}
@@ -370,7 +370,7 @@ export function CoffeeDetails({
       {/* Mobile-only sticky buy bar — kept in front of the user on landing */}
       <div
         className={twMerge(
-          "fixed inset-x-0 bottom-0 z-40 border-t shadow-[0_-4px_20px_rgba(0,0,0,0.12)] md:hidden",
+          "shadow-primary-950/15 fixed inset-x-0 bottom-0 z-40 border-t shadow-lg md:hidden",
           palette.border,
           palette.surface,
         )}

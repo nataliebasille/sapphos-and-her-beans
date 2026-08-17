@@ -46,7 +46,7 @@ export default async function HomePage() {
   const coffees = selectFeatured((await getProducts()) as unknown as Coffee[]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F8] font-sans text-[#001F36]">
+    <div className="text-primary-800 bg-surface-50 min-h-screen font-sans">
       <HomeHero />
       <HomeFeatured coffees={coffees} />
       <WhySappho />

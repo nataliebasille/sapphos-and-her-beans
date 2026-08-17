@@ -17,7 +17,7 @@ export function CartIcon({ onClick, className }: CartIconProps) {
     >
       <Cart className="ml-auto size-12 md:ml-0" />
       {quantity > 0 && (
-        <span className="bg-primary-600/80 text-on-primary-600 pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full text-xs text-white">
+        <span className="bg-primary-600/80 text-on-primary-600 pointer-events-none absolute bottom-[7px] left-[12px] flex h-[24px] w-[24px] items-center justify-center rounded-full text-xs">
           {quantity}
         </span>
       )}

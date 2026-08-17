@@ -105,7 +105,7 @@ export default function LocationsPage() {
           <Fragment key={index}>
             <div
               className={twMerge(
-                "mx-10 mb-4 border-b-[1px] border-black/30 md:col-span-2",
+                "border-primary-800/30 mx-10 mb-4 border-b-[1px] md:col-span-2",
                 index !== 0 && "mt-10",
               )}
             >

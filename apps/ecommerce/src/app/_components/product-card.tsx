@@ -155,7 +155,7 @@ export const ProductCard = (coffee: products.Product) => {
           type="button"
           className={twMerge(
             "btn-solid/primary btn-size-sm flex w-full items-center justify-center tracking-wider uppercase",
-            added && "!bg-[#4BB543]",
+            added && "!bg-success-500 !text-surface-50",
           )}
           onClick={handleAddToCart}
           disabled={added}

@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function AboutPage() {
   return (
     <div className="px-4 md:px-10">
-      <div className="mb-5 border-b-[1px] border-black/30 md:col-span-2 md:mb-10">
+      <div className="border-primary-800/30 mb-5 border-b-[1px] md:col-span-2 md:mb-10">
         <Heading
           level={3}
           className="mb-0 text-center tracking-wide uppercase md:text-left"

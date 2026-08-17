@@ -31,10 +31,9 @@ function isActivePath(pathname: string, href: string) {
 }
 
 const desktopNavLinkClass =
-  "relative whitespace-nowrap py-1 text-sm font-medium tracking-wide text-[#001F36]/70 transition-colors after:absolute after:right-0 after:-bottom-1 after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:bg-[#E87A01] after:transition-transform after:duration-300 hover:text-[#001F36]";
+  "text-primary-800/70 after:bg-secondary-500 hover:text-primary-800 relative whitespace-nowrap py-1 text-sm font-medium tracking-wide transition-colors after:absolute after:right-0 after:-bottom-1 after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:transition-transform after:duration-300";
 
-const activeNavLinkClass =
-  "text-[#001F36] after:scale-x-100";
+const activeNavLinkClass = "text-primary-800 after:scale-x-100";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -66,7 +65,7 @@ export function SiteHeader() {
       className={twMerge(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         solid ?
-          "border-b border-[#001F36]/10 bg-[#FAF9F8]/90 backdrop-blur-md"
+          "border-primary-500/10 bg-surface-50/90 border-b backdrop-blur-md"
         : "border-b border-transparent",
       )}
     >
@@ -129,13 +128,13 @@ export function SiteHeader() {
             onClick={openCart}
             aria-label="Open cart"
             className={twMerge(
-              "relative text-[#001F36]",
+              "text-primary-800 relative",
               isDisabled && "invisible",
             )}
           >
             <CartIcon className="size-6" />
             {quantity > 0 && (
-              <span className="pointer-events-none absolute -top-2 -right-2 flex size-[18px] items-center justify-center rounded-full bg-[#EFAA9C] text-[0.65rem] font-semibold text-[#001F36]">
+              <span className="bg-accent-700 text-primary-800 pointer-events-none absolute -top-2 -right-2 flex size-[18px] items-center justify-center rounded-full text-[0.65rem] font-semibold">
                 {quantity}
               </span>
             )}
@@ -174,9 +173,9 @@ function MobileMenu() {
         onClick={() => setOpen(true)}
         className="flex flex-col gap-1.5"
       >
-        <span className="block h-0.5 w-6 bg-[#001F36]" />
-        <span className="block h-0.5 w-6 bg-[#001F36]" />
-        <span className="block h-0.5 w-4 bg-[#001F36]" />
+        <span className="bg-primary-500 block h-0.5 w-6" />
+        <span className="bg-primary-500 block h-0.5 w-6" />
+        <span className="bg-primary-500 block h-0.5 w-4" />
       </button>
       <div
         aria-hidden={!open}
@@ -190,13 +189,13 @@ function MobileMenu() {
           onClick={() => setOpen(false)}
           tabIndex={open ? 0 : -1}
           className={twMerge(
-            "absolute inset-0 bg-[#001F36]/45 backdrop-blur-sm transition-opacity duration-300 ease-out",
+            "bg-primary-500/45 absolute inset-0 backdrop-blur-sm transition-opacity duration-300 ease-out",
             open ? "opacity-100" : "opacity-0",
           )}
         />
         <div
           className={twMerge(
-            "relative h-dvh w-full overflow-y-auto bg-[#001F36] px-8 py-6 text-[#FAF9F8] shadow-2xl transition-all duration-300 ease-out",
+            "text-on-primary-500 bg-primary-500 relative h-dvh w-full overflow-y-auto px-8 py-6 shadow-2xl transition-all duration-300 ease-out",
             open ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0",
           )}
         >
@@ -224,7 +223,7 @@ function MobileMenu() {
                     open ?
                       "translate-x-0 opacity-100"
                     : "-translate-x-3 opacity-0",
-                    active && "bg-[#FAF9F8]/12 text-[#EFAA9C]",
+                    active && "bg-surface-50/12 text-accent-700",
                   )}
                 >
                   {i.label}
