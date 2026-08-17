@@ -9,10 +9,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import { COFFEE_PALETTES } from "~/app/shop/_components/coffee-palette";
+import { BrandingStylizedFont } from "~/app/fonts";
 import {
   type Coffee,
   Eyebrow,
-  accentClassFor,
   originName,
   tastingNotes,
   useQuickAdd,
@@ -113,46 +114,73 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
 }
 
 function FeaturedCard({ coffee }: { coffee: Coffee }) {
-  const accentClass = accentClassFor(coffee.color);
+  const palette = COFFEE_PALETTES[coffee.color];
   const { added, add } = useQuickAdd(coffee.id);
   const notes = tastingNotes(coffee);
 
   return (
-    <article className="border-primary-500/10 hover:shadow-primary-500/5 group bg-surface-50 flex w-[78vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border transition-shadow hover:shadow-xl sm:w-[60vw] md:w-auto">
-      {/* label treatment — no product photos exist, so accent + origin */}
-      <div
+    <article
+      className={twMerge(
+        "group flex w-[78vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border-2 transition-shadow hover:shadow-xl sm:w-[60vw] md:w-auto",
+        palette.surface,
+        palette.borderStrong,
+      )}
+    >
+      <Link
+        href={`/shop/${coffee.id}`}
+        aria-label={`View ${coffee.name ?? "coffee"}`}
         className={twMerge(
-          "relative flex aspect-[4/3] flex-col justify-between p-5",
-          accentClass,
+          "block bg-gradient-to-b p-4 text-center transition-opacity hover:opacity-95",
+          palette.panel,
+          palette.gradientFrom,
+          palette.gradientTo,
+          palette.panelText,
         )}
       >
-        <div className="flex items-center justify-between">
-          <span className="text-primary-800 bg-surface-50/25 rounded-full px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] uppercase">
-            {coffee.size}
-          </span>
-          {coffee.score ?
-            <span className="font-primary text-primary-800/80 text-sm font-semibold">
-              {coffee.score} pts
-            </span>
-          : null}
-        </div>
-        <div>
-          <p className="text-primary-800/60 text-[0.7rem] font-semibold tracking-[0.2em] uppercase">
-            {coffee.processing}
-          </p>
-          <h3 className="font-primary text-primary-800 mt-1 text-2xl leading-tight font-semibold">
-            {originName(coffee)}
-          </h3>
-          <p className="text-primary-800/70 text-sm">{coffee.farm}</p>
-        </div>
-      </div>
+        <p className="text-center text-[10px] font-semibold tracking-[0.25em] uppercase opacity-80">
+          {coffee.processing}
+        </p>
 
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex flex-wrap gap-1.5">
+        <Divider className="my-3 opacity-80">
+          {coffee.score ?
+            <span
+              className={twMerge(
+                "flex size-11 shrink-0 rotate-45 items-center justify-center rounded-[3px] opacity-100",
+                palette.accentBg,
+                palette.accentText,
+              )}
+            >
+              <span className="flex -rotate-45 flex-col items-center justify-center leading-none">
+                <span className="text-sm font-bold">{coffee.score}</span>
+                <span className="text-[8px] tracking-widest">pts</span>
+              </span>
+            </span>
+          : undefined}
+        </Divider>
+
+        <h3
+          className={twMerge(
+            "text-4xl leading-none tracking-wide uppercase",
+            BrandingStylizedFont.className,
+          )}
+        >
+          {originName(coffee)}
+        </h3>
+        <p className="mt-1.5 text-xs tracking-[0.2em] uppercase opacity-90">
+          {coffee.farm}
+        </p>
+      </Link>
+
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="flex flex-wrap justify-center gap-1.5">
           {notes.map((n) => (
             <span
               key={n}
-              className="text-primary-800/80 bg-surface-500/60 rounded-full px-2.5 py-1 text-xs"
+              className={twMerge(
+                "rounded-full px-3 py-0.5 text-xs font-medium",
+                palette.chipBg,
+                palette.chipText,
+              )}
             >
               {n}
             </span>
@@ -160,13 +188,22 @@ function FeaturedCard({ coffee }: { coffee: Coffee }) {
         </div>
 
         <div className="mt-5 flex items-center justify-between">
-          <span className="font-primary text-primary-800 text-xl font-semibold">
+          <span
+            className={twMerge(
+              "font-primary text-xl font-semibold",
+              palette.textStrong,
+            )}
+          >
             ${coffee.price}
           </span>
           <div className="flex items-center gap-2">
             <Link
-              href="/shop"
-              className="border-primary-500/20 text-primary-800 hover:border-primary-500 rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase"
+              href={`/shop/${coffee.id}`}
+              className={twMerge(
+                "rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase transition-opacity hover:opacity-80",
+                palette.border,
+                palette.textStrong,
+              )}
             >
               View
             </Link>
@@ -186,5 +223,21 @@ function FeaturedCard({ coffee }: { coffee: Coffee }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function Divider({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className={twMerge("flex items-center gap-3", className)}>
+      <span className="h-px flex-1 bg-current opacity-40" />
+      {children ?? <span className="size-1.5 rotate-45 bg-current" />}
+      <span className="h-px flex-1 bg-current opacity-40" />
+    </div>
   );
 }

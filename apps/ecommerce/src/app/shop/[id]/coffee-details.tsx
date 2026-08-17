@@ -47,11 +47,17 @@ function specRows(
   return rows;
 }
 
-function Diamond({ className }: { className?: string }) {
+function Diamond({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className={twMerge("flex items-center gap-3", className)}>
       <span className="h-px flex-1 bg-current opacity-40" />
-      <span className="size-2 rotate-45 bg-current" />
+      {children ?? <span className="size-2 rotate-45 bg-current" />}
       <span className="h-px flex-1 bg-current opacity-40" />
     </div>
   );
@@ -180,22 +186,26 @@ export function CoffeeDetails({
           <p className="text-xs tracking-[0.4em] uppercase opacity-70">
             Coffee Passport
           </p>
-          <Diamond className="my-6 opacity-80" />
-
-          {coffee.score && (
-            <div
-              className={twMerge(
-                "mx-auto mb-6 flex size-24 flex-col items-center justify-center rounded-full",
-                palette.accentBg,
-                palette.accentText,
-              )}
-            >
-              <span className="text-3xl leading-none font-bold">
-                {coffee.score}
+          <Diamond className="my-6 opacity-80">
+            {coffee.score ?
+              <span
+                className={twMerge(
+                  "flex size-16 shrink-0 rotate-45 items-center justify-center rounded-[4px] opacity-100",
+                  palette.accentBg,
+                  palette.accentText,
+                )}
+              >
+                <span className="flex -rotate-45 flex-col items-center justify-center leading-none">
+                  <span className="text-2xl leading-none font-bold">
+                    {coffee.score}
+                  </span>
+                  <span className="text-[9px] tracking-widest uppercase">
+                    pts
+                  </span>
+                </span>
               </span>
-              <span className="text-[10px] tracking-widest uppercase">pts</span>
-            </div>
-          )}
+            : undefined}
+          </Diamond>
 
           <h1
             className={twMerge(
