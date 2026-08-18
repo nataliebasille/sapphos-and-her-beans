@@ -65,3 +65,13 @@ button:not(:disabled),
 [role="button"]:not([aria-disabled="true"]) {
   cursor: pointer;
 }
+
+/* Horizontal scrollers (e.g. the mobile featured-coffees carousel) keep swipe
+ * scrolling but hide the scrollbar chrome. */
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

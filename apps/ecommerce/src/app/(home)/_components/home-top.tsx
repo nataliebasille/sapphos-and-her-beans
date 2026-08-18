@@ -91,7 +91,7 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
         </div>
 
         {/* horizontal scroll on mobile, grid on desktop */}
-        <CoffeeCardGrid className="-mx-6 snap-x auto-cols-[78vw] grid-flow-col overflow-x-auto px-6 pb-4 sm:auto-cols-[60vw] md:mx-0 md:auto-cols-auto md:grid-flow-row md:grid-cols-3 md:gap-x-6 md:overflow-visible md:px-0 md:pb-0">
+        <CoffeeCardGrid className="scrollbar-hide -mx-6 snap-x scroll-pl-6 auto-cols-[78vw] grid-flow-col overflow-x-auto px-6 pb-2 sm:auto-cols-[60vw] md:mx-0 md:auto-cols-auto md:grid-flow-row md:grid-cols-3 md:gap-x-6 md:overflow-visible md:px-0 md:pb-0">
           {groups.slice(0, 3).map((group) => (
             <CoffeeCard
               key={group.key}
@@ -101,12 +101,12 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
           ))}
         </CoffeeCardGrid>
 
-        <div className="mt-8 md:hidden">
+        <div className="mt-8 flex justify-center md:hidden">
           <Link
             href="/shop"
-            className="border-primary-500/25 text-primary-800 block w-full rounded-full border py-3.5 text-center text-sm font-semibold tracking-[0.14em] uppercase"
+            className="text-primary-800 text-sm font-semibold tracking-[0.16em] uppercase underline-offset-4 hover:underline"
           >
-            View all coffees
+            View all coffees &rarr;
           </Link>
         </div>
       </div>
