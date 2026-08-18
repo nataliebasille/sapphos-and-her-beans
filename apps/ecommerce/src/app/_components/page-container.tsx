@@ -12,7 +12,7 @@ export const PageContainer = ({
 }: PageContainerProps) => {
   return (
     <main className={twMerge("bg-surface-500 min-h-dvh w-full", className)}>
-      <div className={twMerge("pt-[calc(76px+1.5rem)]", contentClassName)}>
+      <div className={twMerge("pt-[calc(89px+1.5rem)]", contentClassName)}>
         {children}
       </div>
     </main>

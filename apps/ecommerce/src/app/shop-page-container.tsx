@@ -11,7 +11,7 @@ export function ShopPageContainer({ children }: { children: React.ReactNode }) {
       <>{children}</>
     : <PageContainer
         className={isCoffeePage ? "h-dvh" : undefined}
-        contentClassName={isCoffeePage ? "h-full pt-[69px]" : undefined}
+        contentClassName={isCoffeePage ? "h-full pt-[89px]" : undefined}
       >
         {children}
       </PageContainer>;

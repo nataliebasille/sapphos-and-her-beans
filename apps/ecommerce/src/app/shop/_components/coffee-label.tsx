@@ -15,7 +15,7 @@ export { Eyebrow };
  */
 export function FrostCanvas({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-surface-50 -mt-[calc(76px+1.5rem)] min-h-dvh pt-[76px]">
+    <div className="bg-surface-50 -mt-[calc(89px+1.5rem)] min-h-dvh pt-[89px]">
       {children}
     </div>
   );

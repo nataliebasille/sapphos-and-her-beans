@@ -38,6 +38,9 @@ const activeNavLinkClass = "text-primary-800 after:scale-x-100";
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  // `scrolled` flips as soon as the page leaves the very top, so both the solid
+  // background and the centered logo appear the moment you start scrolling
+  // rather than waiting for the hero to clear.
   const [scrolled, setScrolled] = useState(!isHome);
   const openCart = useOpenCart();
   const isDisabled = useCartIsDisabled();
@@ -51,7 +54,7 @@ export function SiteHeader() {
       return;
     }
 
-    const onScroll = () => setScrolled(window.scrollY > 120);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -96,7 +99,7 @@ export function SiteHeader() {
         <Link
           href="/"
           className={twMerge(
-            "relative mx-auto h-9 w-[130px] transition-opacity duration-500",
+            "relative mx-auto h-14 w-[150px] transition-opacity duration-500",
             logoVisible ? "opacity-100" : "opacity-0",
           )}
           aria-hidden={!logoVisible}
