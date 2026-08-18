@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { useProductList } from "~/app/_stores/products";
 import { groupByOrigin } from "./catalog-data";
 import { CoffeeCard } from "./coffee-card";
+import { CoffeeCardGrid } from "./coffee-card-layout";
 import { Eyebrow, FrostCanvas } from "./coffee-label";
 
 export function ShopCatalog() {
@@ -29,11 +30,11 @@ export function ShopCatalog() {
           </p>
         </header>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <CoffeeCardGrid className="mt-10 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
             <CoffeeCard key={g.key} group={g} />
           ))}
-        </div>
+        </CoffeeCardGrid>
       </div>
     </FrostCanvas>
   );

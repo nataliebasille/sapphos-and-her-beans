@@ -8,16 +8,11 @@
  */
 import Image from "next/image";
 import Link from "next/link";
-import { twMerge } from "tailwind-merge";
-import { COFFEE_PALETTES } from "~/app/shop/_components/coffee-palette";
-import { BrandingStylizedFont } from "~/app/fonts";
-import {
-  type Coffee,
-  Eyebrow,
-  originName,
-  tastingNotes,
-  useQuickAdd,
-} from "./sections";
+import { useMemo } from "react";
+import { CoffeeCard } from "~/app/shop/_components/coffee-card";
+import { CoffeeCardGrid } from "~/app/shop/_components/coffee-card-layout";
+import { groupByOrigin } from "~/app/shop/_components/catalog-data";
+import { type Coffee, Eyebrow } from "./sections";
 
 export function HomeHero() {
   return (
@@ -75,6 +70,8 @@ export function HomeHero() {
 }
 
 export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
+  const groups = useMemo(() => groupByOrigin(coffees), [coffees]);
+
   return (
     <section className="bg-surface-50 px-6 py-16 md:px-10 md:py-24">
       <div className="mx-auto max-w-6xl">
@@ -94,11 +91,15 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
         </div>
 
         {/* horizontal scroll on mobile, grid on desktop */}
-        <div className="-mx-6 flex snap-x gap-4 overflow-x-auto px-6 pb-4 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
-          {coffees.slice(0, 3).map((c) => (
-            <FeaturedCard key={c.id} coffee={c} />
+        <CoffeeCardGrid className="-mx-6 snap-x auto-cols-[78vw] grid-flow-col overflow-x-auto px-6 pb-4 sm:auto-cols-[60vw] md:mx-0 md:auto-cols-auto md:grid-flow-row md:grid-cols-3 md:gap-x-6 md:overflow-visible md:px-0 md:pb-0">
+          {groups.slice(0, 3).map((group) => (
+            <CoffeeCard
+              key={group.key}
+              group={group}
+              className="snap-start transition-shadow hover:shadow-xl"
+            />
           ))}
-        </div>
+        </CoffeeCardGrid>
 
         <div className="mt-8 md:hidden">
           <Link
@@ -110,134 +111,5 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
         </div>
       </div>
     </section>
-  );
-}
-
-function FeaturedCard({ coffee }: { coffee: Coffee }) {
-  const palette = COFFEE_PALETTES[coffee.color];
-  const { added, add } = useQuickAdd(coffee.id);
-  const notes = tastingNotes(coffee);
-
-  return (
-    <article
-      className={twMerge(
-        "group flex w-[78vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border-2 transition-shadow hover:shadow-xl sm:w-[60vw] md:w-auto",
-        palette.surface,
-        palette.borderStrong,
-      )}
-    >
-      <Link
-        href={`/shop/${coffee.id}`}
-        aria-label={`View ${coffee.name ?? "coffee"}`}
-        className={twMerge(
-          "block bg-gradient-to-b p-4 text-center transition-opacity hover:opacity-95",
-          palette.panel,
-          palette.gradientFrom,
-          palette.gradientTo,
-          palette.panelText,
-        )}
-      >
-        <p className="text-center text-[10px] font-semibold tracking-[0.25em] uppercase opacity-80">
-          {coffee.processing}
-        </p>
-
-        <Divider className="my-3 opacity-80">
-          {coffee.score ?
-            <span
-              className={twMerge(
-                "flex size-11 shrink-0 rotate-45 items-center justify-center rounded-[3px] opacity-100",
-                palette.accentBg,
-                palette.accentText,
-              )}
-            >
-              <span className="flex -rotate-45 flex-col items-center justify-center leading-none">
-                <span className="text-sm font-bold">{coffee.score}</span>
-                <span className="text-[8px] tracking-widest">pts</span>
-              </span>
-            </span>
-          : undefined}
-        </Divider>
-
-        <h3
-          className={twMerge(
-            "text-4xl leading-none tracking-wide uppercase",
-            BrandingStylizedFont.className,
-          )}
-        >
-          {originName(coffee)}
-        </h3>
-        <p className="mt-1.5 text-xs tracking-[0.2em] uppercase opacity-90">
-          {coffee.farm}
-        </p>
-      </Link>
-
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <div className="flex flex-wrap justify-center gap-1.5">
-          {notes.map((n) => (
-            <span
-              key={n}
-              className={twMerge(
-                "rounded-full px-3 py-0.5 text-xs font-medium",
-                palette.chipBg,
-                palette.chipText,
-              )}
-            >
-              {n}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-5 flex items-center justify-between">
-          <span
-            className={twMerge(
-              "font-primary text-xl font-semibold",
-              palette.textStrong,
-            )}
-          >
-            ${coffee.price}
-          </span>
-          <div className="flex items-center gap-2">
-            <Link
-              href={`/shop/${coffee.id}`}
-              className={twMerge(
-                "rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase transition-opacity hover:opacity-80",
-                palette.border,
-                palette.textStrong,
-              )}
-            >
-              View
-            </Link>
-            <button
-              onClick={add}
-              disabled={added}
-              className={twMerge(
-                "rounded-full px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase transition-colors",
-                added ?
-                  "bg-success-500 text-surface-50"
-                : "bg-primary-500 text-on-primary-500 hover:bg-primary-500/85",
-              )}
-            >
-              {added ? "Added ✓" : "Add"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function Divider({
-  className,
-  children,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div className={twMerge("flex items-center gap-3", className)}>
-      <span className="h-px flex-1 bg-current opacity-40" />
-      {children ?? <span className="size-1.5 rotate-45 bg-current" />}
-      <span className="h-px flex-1 bg-current opacity-40" />
-    </div>
   );
 }
