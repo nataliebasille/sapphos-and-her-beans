@@ -38,41 +38,49 @@ const activeNavLinkClass = "text-primary-800 after:scale-x-100";
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  // `scrolled` flips as soon as the page leaves the very top, so both the solid
-  // background and the centered logo appear the moment you start scrolling
-  // rather than waiting for the hero to clear.
-  const [scrolled, setScrolled] = useState(!isHome);
+  // `progress` ramps 0 → 1 over the first ~80px of scroll so the solid header
+  // background and the centered logo *fade* in with scroll position rather than
+  // snapping on at a threshold. Inner pages have no tall hero, so they stay
+  // fully solid (progress = 1).
+  const [progress, setProgress] = useState(isHome ? 0 : 1);
   const openCart = useOpenCart();
   const isDisabled = useCartIsDisabled();
   const quantity = useCartQuantity();
 
   useEffect(() => {
-    // Inner pages have no tall hero, so the header stays solid with the logo
-    // visible. Only the homepage reacts to scroll.
     if (!isHome) {
-      setScrolled(true);
+      setProgress(1);
       return;
     }
 
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () =>
+      setProgress(Math.min(1, Math.max(0, window.scrollY / 80)));
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
 
-  const solid = isHome ? scrolled : true;
-  const logoVisible = isHome ? scrolled : true;
-
   return (
-    <header
-      className={twMerge(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        solid ?
-          "border-primary-500/10 bg-surface-50/90 border-b backdrop-blur-md"
-        : "border-b border-transparent",
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/* Solid background layer — its opacity tracks scroll progress so the fill
+          and blur fade in smoothly (an opacity ramp avoids the backdrop-blur
+          "none → blur" pop that a class toggle produces). */}
+      <div
+        aria-hidden
+        style={{ opacity: progress }}
+        className="border-primary-500/10 bg-surface-50/90 pointer-events-none absolute inset-0 border-b backdrop-blur-md"
+      />
+      {/* Over the mobile photo hero, a soft light top wash calms the busy image
+          so the dark icons stay legible; it cross-fades out as the solid
+          background fades in on scroll. */}
+      {isHome && (
+        <div
+          aria-hidden
+          style={{ opacity: 1 - progress }}
+          className="from-surface-50/95 via-surface-50/55 pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b to-transparent md:hidden"
+        />
       )}
-    >
-      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">
+      <div className="relative z-[1] mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">
         {/* left nav */}
         <nav className="hidden items-center gap-7 md:flex">
           {NAV.map((item) => {
@@ -95,14 +103,12 @@ export function SiteHeader() {
         </nav>
         <MobileMenu />
 
-        {/* center logo — always visible off the homepage, fades in past the hero on home */}
+        {/* center logo — always visible off the homepage, fades in with scroll on home */}
         <Link
           href="/"
-          className={twMerge(
-            "relative mx-auto h-14 w-[150px] transition-opacity duration-500",
-            logoVisible ? "opacity-100" : "opacity-0",
-          )}
-          aria-hidden={!logoVisible}
+          style={{ opacity: progress }}
+          className="relative mx-auto h-14 w-[150px]"
+          aria-hidden={progress < 0.5}
         >
           <Image
             src="/images/sappho black logo cropped.png"
@@ -131,7 +137,7 @@ export function SiteHeader() {
             onClick={openCart}
             aria-label="Open cart"
             className={twMerge(
-              "text-primary-800 relative",
+              "text-primary-800 relative transition-all",
               isDisabled && "invisible",
             )}
           >
