@@ -98,6 +98,17 @@ const COLOR_CLASSES = {
     border: "border-emerald-900",
     borderDarkest: "border-emerald-950",
   },
+
+  violet: {
+    bgLight: "bg-violet-50",
+    bgNormal: "bg-violet-200",
+    bgDark: "bg-violet-900",
+    textLight: "text-violet-50",
+    textDark: "text-violet-900",
+    textDarkest: "text-violet-950",
+    border: "border-violet-900",
+    borderDarkest: "border-violet-950",
+  },
 } as const;
 
 export const ProductCard = (coffee: products.Product) => {
