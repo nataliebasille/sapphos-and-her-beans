@@ -62,7 +62,7 @@ export default function CheckoutCartPage() {
   if (isCompleting) {
     return (
       <CheckoutShell>
-        <div className="border-primary-500/10 flex min-h-72 items-center justify-center rounded-2xl border bg-white shadow-[0_1px_3px_rgba(0,31,54,0.06)]">
+        <div className="flex min-h-[520px] items-center justify-center">
           <Spinner />
         </div>
       </CheckoutShell>
