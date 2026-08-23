@@ -1,30 +1,25 @@
-"use client";
+"use server";
 
-import type { Product } from "~/app/_stores/products";
+import { cookies } from "next/headers";
+import type { CompletedOrder } from "./completed-order";
 
-const COMPLETED_ORDER_KEY = "sappho-completed-order";
+const COMPLETED_ORDER_COOKIE = "sappho-completed-order";
 
-export type CompletedOrderLine = {
-  id: string;
-  name: string;
-  detail: string;
-  quantity: number;
-  price: number;
-};
+export async function saveCompletedOrder(order: CompletedOrder) {
+  const cookieStore = await cookies();
 
-export type CompletedOrder = {
-  checkoutSessionId: string;
-  completedAt: string;
-  subtotal: number;
-  lines: CompletedOrderLine[];
-};
-
-export function saveCompletedOrder(order: CompletedOrder) {
-  window.sessionStorage.setItem(COMPLETED_ORDER_KEY, JSON.stringify(order));
+  cookieStore.set(COMPLETED_ORDER_COOKIE, JSON.stringify(order), {
+    httpOnly: true,
+    maxAge: 60 * 60 * 2,
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
 }
 
-export function loadCompletedOrder(): CompletedOrder | null {
-  const value = window.sessionStorage.getItem(COMPLETED_ORDER_KEY);
+export async function loadCompletedOrder(): Promise<CompletedOrder | null> {
+  const cookieStore = await cookies();
+  const value = cookieStore.get(COMPLETED_ORDER_COOKIE)?.value;
   if (!value) return null;
 
   try {
@@ -32,39 +27,4 @@ export function loadCompletedOrder(): CompletedOrder | null {
   } catch {
     return null;
   }
-}
-
-export function createCompletedOrderSnapshot({
-  cart,
-  checkoutSessionId,
-  products,
-}: {
-  cart: Record<string, { quantity: number }>;
-  checkoutSessionId: string;
-  products: Product[];
-}): CompletedOrder {
-  const productMap = new Map(products.map((product) => [product.id, product]));
-  const lines = Object.entries(cart).flatMap(([id, item]) => {
-    const product = productMap.get(id);
-    if (!product) return [];
-
-    return [
-      {
-        id,
-        name: product.name,
-        detail: [product.processing, product.tastingNotes]
-          .filter(Boolean)
-          .join(", "),
-        quantity: item.quantity,
-        price: product.price * item.quantity,
-      },
-    ];
-  });
-
-  return {
-    checkoutSessionId,
-    completedAt: new Date().toISOString(),
-    lines,
-    subtotal: lines.reduce((total, line) => total + line.price, 0),
-  };
 }

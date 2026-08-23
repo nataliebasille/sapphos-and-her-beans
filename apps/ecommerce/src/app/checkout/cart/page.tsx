@@ -9,10 +9,8 @@ import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
 import { useCartSelector } from "~/app/_stores/cart";
 import { useProductList } from "~/app/_stores/products";
 import { CheckoutForm } from "../_components/checkout-form";
-import {
-  createCompletedOrderSnapshot,
-  saveCompletedOrder,
-} from "../receipt/_components/completed-order-storage";
+import { createCompletedOrderSnapshot } from "../receipt/_components/completed-order";
+import { saveCompletedOrder } from "../receipt/_components/completed-order-storage";
 
 export default function CheckoutCartPage() {
   const fetchItems = useCheckoutItemsFetcher();
@@ -24,10 +22,10 @@ export default function CheckoutCartPage() {
   const quantity = useCartQuantity();
 
   const completeCheckout = useCallback(
-    ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
+    async ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
       const { cart } = cartStore.get();
       if (checkoutSessionId) {
-        saveCompletedOrder(
+        await saveCompletedOrder(
           createCompletedOrderSnapshot({
             cart,
             checkoutSessionId,

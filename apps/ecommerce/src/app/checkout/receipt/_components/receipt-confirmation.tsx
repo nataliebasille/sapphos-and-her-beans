@@ -1,15 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import {
-  loadCompletedOrder,
-  type CompletedOrder,
-} from "./completed-order-storage";
-import {
-  getCheckoutReceipt,
-  type CheckoutReceipt,
-} from "~/server/checkout/get_checkout_receipt";
+import type { CompletedOrder } from "./completed-order";
+import type { CheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
@@ -21,29 +12,14 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 type ReceiptConfirmationProps = {
-  checkoutSessionId: string;
+  order: CompletedOrder | null;
+  receipt: CheckoutReceipt | null;
 };
 
 export function ReceiptConfirmation({
-  checkoutSessionId,
+  order,
+  receipt,
 }: ReceiptConfirmationProps) {
-  const [order, setOrder] = useState<CompletedOrder | null>(null);
-  const [receipt, setReceipt] = useState<CheckoutReceipt | null>(null);
-
-  useEffect(() => {
-    setOrder(null);
-    setReceipt(null);
-
-    const completedOrder = loadCompletedOrder();
-
-    if (completedOrder?.checkoutSessionId === checkoutSessionId) {
-      setOrder(completedOrder);
-      return;
-    }
-
-    void getCheckoutReceipt(checkoutSessionId).then(setReceipt);
-  }, [checkoutSessionId]);
-
   const lines = receipt?.lines.length ? receipt.lines : (order?.lines ?? []);
   const completedAt = receipt?.completedAt ?? order?.completedAt;
   const email = receipt?.customerEmail;
