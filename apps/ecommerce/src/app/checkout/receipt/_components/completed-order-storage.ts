@@ -13,6 +13,7 @@ export type CompletedOrderLine = {
 };
 
 export type CompletedOrder = {
+  checkoutSessionId: string;
   completedAt: string;
   subtotal: number;
   lines: CompletedOrderLine[];
@@ -35,9 +36,11 @@ export function loadCompletedOrder(): CompletedOrder | null {
 
 export function createCompletedOrderSnapshot({
   cart,
+  checkoutSessionId,
   products,
 }: {
   cart: Record<string, { quantity: number }>;
+  checkoutSessionId: string;
   products: Product[];
 }): CompletedOrder {
   const productMap = new Map(products.map((product) => [product.id, product]));
@@ -59,6 +62,7 @@ export function createCompletedOrderSnapshot({
   });
 
   return {
+    checkoutSessionId,
     completedAt: new Date().toISOString(),
     lines,
     subtotal: lines.reduce((total, line) => total + line.price, 0),

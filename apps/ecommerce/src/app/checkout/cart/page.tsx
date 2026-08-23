@@ -26,12 +26,20 @@ export default function CheckoutCartPage() {
   const completeCheckout = useCallback(
     ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
       const { cart } = cartStore.get();
-      saveCompletedOrder(createCompletedOrderSnapshot({ cart, products }));
+      if (checkoutSessionId) {
+        saveCompletedOrder(
+          createCompletedOrderSnapshot({
+            cart,
+            checkoutSessionId,
+            products,
+          }),
+        );
+      }
       emptyCart();
       router.push(
         checkoutSessionId ?
-          `/checkout/receipt?session_id=${encodeURIComponent(checkoutSessionId)}`
-        : "/checkout/receipt",
+          `/checkout/receipt/${encodeURIComponent(checkoutSessionId)}`
+        : "/shop",
       );
     },
     [cartStore, emptyCart, products, router],

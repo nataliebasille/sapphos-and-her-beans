@@ -6,7 +6,10 @@ import {
   loadCompletedOrder,
   type CompletedOrder,
 } from "./completed-order-storage";
-import type { CheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
+import {
+  getCheckoutReceipt,
+  type CheckoutReceipt,
+} from "~/server/checkout/get_checkout_receipt";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
@@ -18,15 +21,28 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 type ReceiptConfirmationProps = {
-  receipt: CheckoutReceipt | null;
+  checkoutSessionId: string;
 };
 
-export function ReceiptConfirmation({ receipt }: ReceiptConfirmationProps) {
+export function ReceiptConfirmation({
+  checkoutSessionId,
+}: ReceiptConfirmationProps) {
   const [order, setOrder] = useState<CompletedOrder | null>(null);
+  const [receipt, setReceipt] = useState<CheckoutReceipt | null>(null);
 
   useEffect(() => {
-    setOrder(loadCompletedOrder());
-  }, []);
+    setOrder(null);
+    setReceipt(null);
+
+    const completedOrder = loadCompletedOrder();
+
+    if (completedOrder?.checkoutSessionId === checkoutSessionId) {
+      setOrder(completedOrder);
+      return;
+    }
+
+    void getCheckoutReceipt(checkoutSessionId).then(setReceipt);
+  }, [checkoutSessionId]);
 
   const lines = receipt?.lines.length ? receipt.lines : (order?.lines ?? []);
   const completedAt = receipt?.completedAt ?? order?.completedAt;
