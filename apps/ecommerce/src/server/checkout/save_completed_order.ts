@@ -1,7 +1,8 @@
 "use server";
 
+import "server-only";
 import { cookies } from "next/headers";
-import type { CompletedOrder } from "./completed-order";
+import type { CompletedOrder } from "~/app/checkout/receipt/_components/completed-order";
 
 const COMPLETED_ORDER_COOKIE = "sappho-completed-order";
 

@@ -1,6 +1,6 @@
 import { ReceiptConfirmation } from "../_components/receipt-confirmation";
-import { loadCompletedOrder } from "../_components/completed-order-storage";
 import { getCheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
+import { loadCompletedOrder } from "~/server/checkout/save_completed_order";
 
 type CheckoutReceiptPageProps = {
   params: Promise<{

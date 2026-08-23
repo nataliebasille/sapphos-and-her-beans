@@ -8,9 +8,9 @@ import { useCartQuantity, useEmptyCart } from "~/app/_stores/cart";
 import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
 import { useCartSelector } from "~/app/_stores/cart";
 import { useProductList } from "~/app/_stores/products";
+import { saveCompletedOrder } from "~/server/checkout/save_completed_order";
 import { CheckoutForm } from "../_components/checkout-form";
 import { createCompletedOrderSnapshot } from "../receipt/_components/completed-order";
-import { saveCompletedOrder } from "../receipt/_components/completed-order-storage";
 
 export default function CheckoutCartPage() {
   const fetchItems = useCheckoutItemsFetcher();
