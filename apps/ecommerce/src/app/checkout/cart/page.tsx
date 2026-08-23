@@ -1,18 +1,34 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Spinner } from "~/app/_components/spinner";
 import { useCartQuantity, useEmptyCart } from "~/app/_stores/cart";
 import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
 import { useCartSelector } from "~/app/_stores/cart";
+import { useProductList } from "~/app/_stores/products";
 import { CheckoutForm } from "../_components/checkout-form";
+import {
+  createCompletedOrderSnapshot,
+  saveCompletedOrder,
+} from "../receipt/_components/completed-order-storage";
 
 export default function CheckoutCartPage() {
   const fetchItems = useCheckoutItemsFetcher();
   const emptyCart = useEmptyCart();
+  const router = useRouter();
+  const cartStore = useCartStoreApi();
+  const products = useProductList();
   const hydrated = useCartSelector((state) => state.hydrated);
   const quantity = useCartQuantity();
+
+  const completeCheckout = useCallback(() => {
+    const { cart } = cartStore.get();
+    saveCompletedOrder(createCompletedOrderSnapshot({ cart, products }));
+    emptyCart();
+    router.push("/checkout/receipt");
+  }, [cartStore, emptyCart, products, router]);
 
   if (!hydrated) {
     return (
@@ -69,7 +85,7 @@ export default function CheckoutCartPage() {
         aria-label="Stripe checkout"
         className="border-primary-500/10 min-h-[520px] rounded-3xl border bg-white p-4 shadow-[0_1px_3px_rgba(0,31,54,0.06)] md:p-6"
       >
-        <CheckoutForm items={fetchItems} onComplete={emptyCart} />
+        <CheckoutForm items={fetchItems} onComplete={completeCheckout} />
       </section>
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
