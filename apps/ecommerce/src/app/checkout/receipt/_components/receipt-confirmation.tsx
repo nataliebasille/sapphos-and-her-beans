@@ -48,16 +48,15 @@ export function ReceiptConfirmation({
         <div className="border-primary-500/10 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-primary-800/50 text-xs font-semibold tracking-[0.18em] uppercase">
-              Confirmation
+              Order placed
             </p>
             <p className="text-primary-800 mt-1 text-xl font-semibold">
-              {receipt?.id ??
-                (completedAt ?
-                  dateFormatter.format(new Date(completedAt))
-                : "Thank you")}
+              {completedAt ?
+                dateFormatter.format(new Date(completedAt))
+              : "Order confirmed"}
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 sm:shrink-0">
             {receipt?.receiptUrl ?
               <Link
                 href={receipt.receiptUrl}
