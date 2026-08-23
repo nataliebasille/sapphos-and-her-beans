@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Spinner } from "~/app/_components/spinner";
 import { useCartQuantity, useEmptyCart } from "~/app/_stores/cart";
 import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
@@ -20,18 +20,24 @@ export default function CheckoutCartPage() {
   const products = useProductList();
   const hydrated = useCartSelector((state) => state.hydrated);
   const quantity = useCartQuantity();
+  const [isCompleting, setIsCompleting] = useState(false);
 
   const completeCheckout = useCallback(
     async ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
+      setIsCompleting(true);
       const { cart } = cartStore.get();
       if (checkoutSessionId) {
-        await saveCompletedOrder(
-          createCompletedOrderSnapshot({
-            cart,
-            checkoutSessionId,
-            products,
-          }),
-        );
+        try {
+          await saveCompletedOrder(
+            createCompletedOrderSnapshot({
+              cart,
+              checkoutSessionId,
+              products,
+            }),
+          );
+        } catch (cause) {
+          console.error("Unable to save completed order snapshot.", cause);
+        }
       }
       emptyCart();
       router.push(
@@ -44,6 +50,16 @@ export default function CheckoutCartPage() {
   );
 
   if (!hydrated) {
+    return (
+      <CheckoutShell>
+        <div className="border-primary-500/10 flex min-h-72 items-center justify-center rounded-2xl border bg-white shadow-[0_1px_3px_rgba(0,31,54,0.06)]">
+          <Spinner />
+        </div>
+      </CheckoutShell>
+    );
+  }
+
+  if (isCompleting) {
     return (
       <CheckoutShell>
         <div className="border-primary-500/10 flex min-h-72 items-center justify-center rounded-2xl border bg-white shadow-[0_1px_3px_rgba(0,31,54,0.06)]">
