@@ -27,6 +27,7 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const sessionIdRef = useRef<string | null>(null);
   const itemsFetcherRef = useRef(itemsFetcher);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [items, setItems] = useState(
     typeof itemsFetcher === "function" ? ("loading" as const) : itemsFetcher,
   );
@@ -82,11 +83,22 @@ export function CheckoutForm({
         stripe={stripePromise}
         options={{
           fetchClientSecret: async () => {
+            setCheckoutError(null);
             const response = await initiateCheckoutSession({
               items,
             });
 
-            return response.value ?? "";
+            if (response.type === "ok" && response.value) {
+              return response.value;
+            }
+
+            const message =
+              response.type === "error" ?
+                (response.value.message ??
+                "Checkout could not start. Please try again.")
+              : "Stripe did not return a checkout session secret. Please try again.";
+            setCheckoutError(message);
+            throw new Error(message);
           },
           onShippingDetailsChange: async (details) => {
             sessionIdRef.current = details.checkoutSessionId;
@@ -101,8 +113,28 @@ export function CheckoutForm({
           onComplete: handleOnComplete,
         }}
       >
-        <EmbeddedCheckout className={className} />
+        {checkoutError ?
+          <CheckoutError message={checkoutError} />
+        : <EmbeddedCheckout className={className} />}
       </EmbeddedCheckoutProvider>
     : <ShoppingBagEmpty />
+  );
+}
+
+function CheckoutError({ message }: { message: string }) {
+  return (
+    <div className="flex min-h-[360px] items-center justify-center px-4 text-center">
+      <div className="max-w-sm">
+        <p className="text-danger-700 text-[0.72rem] font-semibold tracking-[0.22em] uppercase">
+          Checkout unavailable
+        </p>
+        <h2 className="font-primary text-primary-800 mt-3 text-2xl font-semibold">
+          Stripe could not start.
+        </h2>
+        <p className="text-primary-800/65 mt-3 text-sm leading-relaxed">
+          {message}
+        </p>
+      </div>
+    </div>
   );
 }

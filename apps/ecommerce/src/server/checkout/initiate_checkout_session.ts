@@ -2,7 +2,7 @@
 
 import "server-only";
 import { initActionFactory } from "@action-rpc";
-import { stripe } from "~/server/+utils/stripe";
+import { stripe, type Stripe } from "~/server/+utils/stripe";
 import { z } from "zod";
 
 const initiateCheckoutSchema = z.object({
@@ -17,13 +17,35 @@ const initiateCheckoutSchema = z.object({
 export type InitiateCheckoutSession = z.infer<typeof initiateCheckoutSchema>;
 
 export const initiateCheckoutSession = initActionFactory().action(
-  async (input: InitiateCheckoutSession) => {
+  async (input: InitiateCheckoutSession, { error }) => {
     console.log("initiate checkout session", input);
-    const activeProducts = await stripe.products
-      .list({
-        active: true,
-      })
-      .then((r) => new Map(r.data.map((p) => [p.id, p] as const)));
+    let activeProducts: Map<string, Stripe.Product>;
+
+    try {
+      activeProducts = await stripe.products
+        .list({
+          active: true,
+          limit: 100,
+        })
+        .then((r) => new Map(r.data.map((p) => [p.id, p] as const)));
+    } catch (cause) {
+      console.error("Unable to load Stripe products for checkout.", cause);
+      return error(
+        "stripe_connection_failed",
+        "Checkout could not connect to Stripe. In local development, make sure network access to Stripe is available and STRIPE_KEY is configured.",
+      );
+    }
+
+    const missingProduct = input.items.find(
+      (item) => !activeProducts.has(item.id),
+    );
+
+    if (missingProduct) {
+      return error(
+        "stripe_product_not_found",
+        "Checkout can only start with products loaded from Stripe. Refresh the shop after Stripe products load, then add the item again.",
+      );
+    }
 
     const response = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
@@ -36,9 +58,7 @@ export const initiateCheckoutSession = initActionFactory().action(
       })),
       redirect_on_completion: "never",
       permissions: {
-        update: {
-          shipping_details: "server_only",
-        },
+        update_shipping_details: "server_only",
       },
       shipping_address_collection: {
         allowed_countries: ["US"],
