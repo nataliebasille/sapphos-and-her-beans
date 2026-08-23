@@ -7,38 +7,20 @@ import { Spinner } from "~/app/_components/spinner";
 import { useCartQuantity, useEmptyCart } from "~/app/_stores/cart";
 import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
 import { useCartSelector } from "~/app/_stores/cart";
-import { useProductList } from "~/app/_stores/products";
-import { saveCompletedOrder } from "~/server/checkout/save_completed_order";
 import { CheckoutForm } from "../_components/checkout-form";
-import { createCompletedOrderSnapshot } from "../receipt/_components/completed-order";
 
 export default function CheckoutCartPage() {
   const fetchItems = useCheckoutItemsFetcher();
   const emptyCart = useEmptyCart();
   const router = useRouter();
   const cartStore = useCartStoreApi();
-  const products = useProductList();
   const hydrated = useCartSelector((state) => state.hydrated);
   const quantity = useCartQuantity();
   const [isCompleting, setIsCompleting] = useState(false);
 
   const completeCheckout = useCallback(
-    async ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
+    ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
       setIsCompleting(true);
-      const { cart } = cartStore.get();
-      if (checkoutSessionId) {
-        try {
-          await saveCompletedOrder(
-            createCompletedOrderSnapshot({
-              cart,
-              checkoutSessionId,
-              products,
-            }),
-          );
-        } catch (cause) {
-          console.error("Unable to save completed order snapshot.", cause);
-        }
-      }
       emptyCart();
       router.push(
         checkoutSessionId ?
@@ -46,7 +28,7 @@ export default function CheckoutCartPage() {
         : "/shop",
       );
     },
-    [cartStore, emptyCart, products, router],
+    [emptyCart, router],
   );
 
   if (!hydrated) {

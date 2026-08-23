@@ -15,7 +15,6 @@ export type CheckoutReceipt = {
   id: string;
   completedAt: string | null;
   customerEmail: string | null;
-  receiptUrl: string | null;
   shippingAddress: string[];
   subtotal: number | null;
   shipping: number | null;
@@ -29,9 +28,7 @@ export async function getCheckoutReceipt(
   if (!checkoutSessionId) return null;
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(checkoutSessionId, {
-      expand: ["payment_intent"],
-    });
+    const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
     const lineItems = await stripe.checkout.sessions.listLineItems(
       checkoutSessionId,
       { limit: 100 },
@@ -42,7 +39,6 @@ export async function getCheckoutReceipt(
       completedAt:
         session.created ? new Date(session.created * 1000).toISOString() : null,
       customerEmail: session.customer_details?.email ?? null,
-      receiptUrl: await receiptUrlForSession(session),
       shippingAddress: shippingAddressForSession(session),
       subtotal: session.amount_subtotal ?? null,
       shipping: session.total_details?.amount_shipping ?? null,
@@ -59,21 +55,6 @@ export async function getCheckoutReceipt(
     console.error("Unable to load Stripe checkout receipt.", cause);
     return null;
   }
-}
-
-async function receiptUrlForSession(session: Stripe.Checkout.Session) {
-  const paymentIntent = session.payment_intent;
-  if (!paymentIntent || typeof paymentIntent === "string") return null;
-
-  const latestCharge = paymentIntent.latest_charge;
-  if (!latestCharge) return null;
-
-  if (typeof latestCharge === "string") {
-    const charge = await stripe.charges.retrieve(latestCharge);
-    return charge.receipt_url ?? null;
-  }
-
-  return latestCharge.receipt_url ?? null;
 }
 
 function shippingAddressForSession(session: Stripe.Checkout.Session) {

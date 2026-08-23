@@ -1,5 +1,4 @@
 import Link from "next/link";
-import type { CompletedOrder } from "./completed-order";
 import type { CheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -12,16 +11,12 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 type ReceiptConfirmationProps = {
-  order: CompletedOrder | null;
   receipt: CheckoutReceipt | null;
 };
 
-export function ReceiptConfirmation({
-  order,
-  receipt,
-}: ReceiptConfirmationProps) {
-  const lines = receipt?.lines.length ? receipt.lines : (order?.lines ?? []);
-  const completedAt = receipt?.completedAt ?? order?.completedAt;
+export function ReceiptConfirmation({ receipt }: ReceiptConfirmationProps) {
+  const lines = receipt?.lines ?? [];
+  const completedAt = receipt?.completedAt;
   const email = receipt?.customerEmail;
 
   return (
@@ -57,14 +52,6 @@ export function ReceiptConfirmation({
             </p>
           </div>
           <div className="flex flex-wrap gap-3 sm:shrink-0">
-            {receipt?.receiptUrl ?
-              <Link
-                href={receipt.receiptUrl}
-                className="border-primary-500/20 text-primary-800 inline-flex w-fit rounded-full border px-5 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
-              >
-                View Stripe receipt
-              </Link>
-            : null}
             <Link
               href="/shop"
               className="bg-primary-500 text-on-primary-500 inline-flex w-fit rounded-full px-5 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
@@ -92,9 +79,7 @@ export function ReceiptConfirmation({
                     </p>
                   </div>
                   <p className="text-primary-800 text-sm font-semibold">
-                    {currencyFormatter.format(
-                      "price" in line ? line.price : line.amount / 100,
-                    )}
+                    {currencyFormatter.format(line.amount / 100)}
                   </p>
                 </div>
               ))}
@@ -123,17 +108,7 @@ export function ReceiptConfirmation({
                     />
                   : null}
                 </>
-              : <>
-                  <ReceiptTotal
-                    label="Item subtotal"
-                    value={currencyFormatter.format(order?.subtotal ?? 0)}
-                  />
-                  <p className="text-primary-800/55 pt-2 text-[13px] leading-relaxed">
-                    Shipping, discounts, tax, and final payment details are on
-                    the Stripe receipt.
-                  </p>
-                </>
-              }
+              : null}
             </dl>
 
             {receipt?.shippingAddress.length ?
