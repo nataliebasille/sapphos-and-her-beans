@@ -65,6 +65,9 @@ export const initiateCheckoutSession = initActionFactory().action(
       },
     });
 
-    return response.client_secret;
+    return {
+      checkoutSessionId: response.id,
+      clientSecret: response.client_secret,
+    };
   },
 );

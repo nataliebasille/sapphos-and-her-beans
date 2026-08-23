@@ -6,6 +6,7 @@ import {
   loadCompletedOrder,
   type CompletedOrder,
 } from "./completed-order-storage";
+import type { CheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
@@ -16,12 +17,20 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   dateStyle: "long",
 });
 
-export function ReceiptConfirmation() {
+type ReceiptConfirmationProps = {
+  receipt: CheckoutReceipt | null;
+};
+
+export function ReceiptConfirmation({ receipt }: ReceiptConfirmationProps) {
   const [order, setOrder] = useState<CompletedOrder | null>(null);
 
   useEffect(() => {
     setOrder(loadCompletedOrder());
   }, []);
+
+  const lines = receipt?.lines.length ? receipt.lines : (order?.lines ?? []);
+  const completedAt = receipt?.completedAt ?? order?.completedAt;
+  const email = receipt?.customerEmail;
 
   return (
     <main className="mx-auto max-w-3xl px-4 pt-10 pb-28 md:px-6 md:pt-14">
@@ -36,8 +45,10 @@ export function ReceiptConfirmation() {
           Coffee is on the way.
         </h1>
         <p className="text-primary-800/65 mx-auto mt-4 max-w-xl text-sm leading-relaxed md:text-base">
-          Stripe will email the formal receipt to the address used at checkout.
-          Keep this page for a quick confirmation and order snapshot.
+          {email ?
+            `A receipt has been sent to ${email}. Keep this page for your order number and shipping details.`
+          : "A receipt has been sent to the email used at checkout. Keep this page for your order number and shipping details."
+          }
         </p>
       </section>
 
@@ -48,23 +59,34 @@ export function ReceiptConfirmation() {
               Confirmation
             </p>
             <p className="text-primary-800 mt-1 text-xl font-semibold">
-              {order ?
-                dateFormatter.format(new Date(order.completedAt))
-              : "Thank you"}
+              {receipt?.id ??
+                (completedAt ?
+                  dateFormatter.format(new Date(completedAt))
+                : "Thank you")}
             </p>
           </div>
-          <Link
-            href="/shop"
-            className="bg-primary-500 text-on-primary-500 inline-flex w-fit rounded-full px-5 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
-          >
-            Continue shopping
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            {receipt?.receiptUrl ?
+              <Link
+                href={receipt.receiptUrl}
+                className="border-primary-500/20 text-primary-800 inline-flex w-fit rounded-full border px-5 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+              >
+                View Stripe receipt
+              </Link>
+            : null}
+            <Link
+              href="/shop"
+              className="bg-primary-500 text-on-primary-500 inline-flex w-fit rounded-full px-5 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+            >
+              Continue shopping
+            </Link>
+          </div>
         </div>
 
-        {order && order.lines.length > 0 ?
+        {lines.length > 0 ?
           <>
             <div className="mt-6 space-y-4">
-              {order.lines.map((line) => (
+              {lines.map((line) => (
                 <div
                   key={line.id}
                   className="border-primary-500/10 grid grid-cols-[1fr_auto] gap-4 border-b pb-4 last:border-0 last:pb-0"
@@ -79,26 +101,68 @@ export function ReceiptConfirmation() {
                     </p>
                   </div>
                   <p className="text-primary-800 text-sm font-semibold">
-                    {currencyFormatter.format(line.price)}
+                    {currencyFormatter.format(
+                      "price" in line ? line.price : line.amount / 100,
+                    )}
                   </p>
                 </div>
               ))}
             </div>
 
             <dl className="border-primary-500/10 mt-6 space-y-2 border-t pt-5 text-sm">
-              <ReceiptTotal
-                label="Item subtotal"
-                value={currencyFormatter.format(order.subtotal)}
-              />
-              <p className="text-primary-800/55 pt-2 text-[13px] leading-relaxed">
-                Shipping, discounts, tax, and final payment details are on the
-                Stripe receipt.
-              </p>
+              {receipt ?
+                <>
+                  {receipt.subtotal !== null ?
+                    <ReceiptTotal
+                      label="Subtotal"
+                      value={currencyFormatter.format(receipt.subtotal / 100)}
+                    />
+                  : null}
+                  {receipt.shipping !== null ?
+                    <ReceiptTotal
+                      label="Shipping"
+                      value={currencyFormatter.format(receipt.shipping / 100)}
+                    />
+                  : null}
+                  {receipt.total !== null ?
+                    <ReceiptTotal
+                      label="Total"
+                      value={currencyFormatter.format(receipt.total / 100)}
+                      strong
+                    />
+                  : null}
+                </>
+              : <>
+                  <ReceiptTotal
+                    label="Item subtotal"
+                    value={currencyFormatter.format(order?.subtotal ?? 0)}
+                  />
+                  <p className="text-primary-800/55 pt-2 text-[13px] leading-relaxed">
+                    Shipping, discounts, tax, and final payment details are on
+                    the Stripe receipt.
+                  </p>
+                </>
+              }
             </dl>
+
+            {receipt?.shippingAddress.length ?
+              <div className="border-primary-500/10 mt-6 border-t pt-5">
+                <p className="text-primary-800/50 text-xs font-semibold tracking-[0.18em] uppercase">
+                  Ship to
+                </p>
+                <address className="text-primary-800/65 mt-2 text-sm leading-relaxed not-italic">
+                  {receipt.shippingAddress.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </address>
+              </div>
+            : null}
           </>
         : <p className="text-primary-800/65 mt-6 text-sm leading-relaxed">
-            Your payment was completed. If you need the itemized payment
-            receipt, check the email sent by Stripe.
+            Your payment was completed. Use the Stripe receipt email for the
+            itemized payment details.
           </p>
         }
       </section>
@@ -106,11 +170,31 @@ export function ReceiptConfirmation() {
   );
 }
 
-function ReceiptTotal({ label, value }: { label: string; value: string }) {
+function ReceiptTotal({
+  label,
+  value,
+  strong,
+}: {
+  label: string;
+  value: string;
+  strong?: boolean;
+}) {
   return (
     <div className="flex items-center justify-between">
-      <dt className="text-primary-800 font-semibold">{label}</dt>
-      <dd className="text-primary-800 text-lg font-semibold">{value}</dd>
+      <dt
+        className={
+          strong ? "text-primary-800 font-semibold" : "text-primary-800/60"
+        }
+      >
+        {label}
+      </dt>
+      <dd
+        className={
+          strong ? "text-primary-800 text-lg font-semibold" : "text-primary-800"
+        }
+      >
+        {value}
+      </dd>
     </div>
   );
 }

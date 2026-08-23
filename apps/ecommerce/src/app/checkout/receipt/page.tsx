@@ -1,9 +1,21 @@
 import { ReceiptConfirmation } from "./_components/receipt-confirmation";
+import { getCheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
 
-export default function CheckoutReceiptPage() {
+type CheckoutReceiptPageProps = {
+  searchParams?: Promise<{
+    session_id?: string;
+  }>;
+};
+
+export default async function CheckoutReceiptPage({
+  searchParams,
+}: CheckoutReceiptPageProps) {
+  const params = await searchParams;
+  const receipt = await getCheckoutReceipt(params?.session_id);
+
   return (
     <div className="bg-surface-50 -mt-[calc(89px+1.5rem)] min-h-dvh w-full pt-[89px]">
-      <ReceiptConfirmation />
+      <ReceiptConfirmation receipt={receipt} />
     </div>
   );
 }

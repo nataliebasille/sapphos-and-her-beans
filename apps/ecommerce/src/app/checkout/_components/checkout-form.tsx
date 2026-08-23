@@ -17,7 +17,7 @@ type CheckoutItem = { id: string; quantity: number };
 type CheckoutFormProps = {
   items: CheckoutItem[] | (() => Promise<CheckoutItem[]>);
   className?: string;
-  onComplete?: () => void;
+  onComplete?: (details: { checkoutSessionId: string | null }) => void;
 };
 
 export function CheckoutForm({
@@ -50,7 +50,7 @@ export function CheckoutForm({
       });
     }
 
-    onComplete?.();
+    onComplete?.({ checkoutSessionId: sessionIdRef.current });
   }, [onComplete]);
 
   useEffect(() => {
@@ -89,7 +89,8 @@ export function CheckoutForm({
             });
 
             if (response.type === "ok" && response.value) {
-              return response.value;
+              sessionIdRef.current = response.value.checkoutSessionId;
+              return response.value.clientSecret ?? "";
             }
 
             const message =

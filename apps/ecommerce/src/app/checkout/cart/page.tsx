@@ -23,12 +23,19 @@ export default function CheckoutCartPage() {
   const hydrated = useCartSelector((state) => state.hydrated);
   const quantity = useCartQuantity();
 
-  const completeCheckout = useCallback(() => {
-    const { cart } = cartStore.get();
-    saveCompletedOrder(createCompletedOrderSnapshot({ cart, products }));
-    emptyCart();
-    router.push("/checkout/receipt");
-  }, [cartStore, emptyCart, products, router]);
+  const completeCheckout = useCallback(
+    ({ checkoutSessionId }: { checkoutSessionId: string | null }) => {
+      const { cart } = cartStore.get();
+      saveCompletedOrder(createCompletedOrderSnapshot({ cart, products }));
+      emptyCart();
+      router.push(
+        checkoutSessionId ?
+          `/checkout/receipt?session_id=${encodeURIComponent(checkoutSessionId)}`
+        : "/checkout/receipt",
+      );
+    },
+    [cartStore, emptyCart, products, router],
+  );
 
   if (!hydrated) {
     return (
