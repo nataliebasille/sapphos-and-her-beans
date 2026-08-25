@@ -167,11 +167,11 @@ export function CoffeeDetails({
   const hasSizeChoice = sizes.length > 1;
 
   return (
-    <div className="md:flex md:h-full">
+    <div className="md:flex">
       {/* Passport panel */}
       <aside
         className={twMerge(
-          "flex flex-col justify-center bg-linear-to-b px-8 py-16 md:h-full md:w-2/5",
+          "flex flex-col justify-center bg-linear-to-b px-8 py-16 md:w-2/5",
           palette.panel,
           palette.gradientFrom,
           palette.gradientTo,
