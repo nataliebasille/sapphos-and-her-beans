@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { BrandingStylizedFont } from "~/app/fonts";
 import { type CoffeePalette } from "./coffee-palette";
 
-const CARD_ROWS = "auto-rows-[auto_auto_auto_auto_auto_auto_auto]";
+const CARD_ROWS = "auto-rows-[auto_auto_auto_auto_auto_auto_auto_auto]";
 
 export function CoffeeCardGrid({
   children,
@@ -33,7 +33,7 @@ export function CoffeeCardShell({
   return (
     <article
       className={twMerge(
-        "row-span-7 grid h-full grid-rows-subgrid gap-y-0 overflow-hidden rounded-2xl border-2",
+        "row-span-8 grid h-full grid-rows-subgrid gap-y-0 overflow-hidden rounded-2xl border-2",
         palette.surface,
         palette.borderStrong,
         className,
@@ -41,37 +41,6 @@ export function CoffeeCardShell({
     >
       {children}
     </article>
-  );
-}
-
-export function CoffeeCardPanel({
-  href,
-  ariaLabel,
-  palette,
-  children,
-  className,
-}: {
-  href: string;
-  ariaLabel: string;
-  palette: CoffeePalette;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-label={ariaLabel}
-      className={twMerge(
-        "row-span-4 grid grid-rows-subgrid gap-y-3 bg-linear-to-b p-4 text-center transition-opacity hover:opacity-95",
-        palette.panel,
-        palette.gradientFrom,
-        palette.gradientTo,
-        palette.panelText,
-        className,
-      )}
-    >
-      {children}
-    </Link>
   );
 }
 
@@ -128,7 +97,15 @@ export function CoffeeCardPassport({
   label: string;
 }) {
   return (
-    <CoffeeCardPanel href={href} ariaLabel={ariaLabel} palette={palette}>
+    <div
+      className={twMerge(
+        "row-span-5 grid grid-rows-subgrid gap-y-3 bg-linear-to-b p-4 text-center",
+        palette.panel,
+        palette.gradientFrom,
+        palette.gradientTo,
+        palette.panelText,
+      )}
+    >
       <p className="m-0! mt-3! text-center text-xs font-semibold tracking-[0.25em] uppercase opacity-80">
         {processing}
       </p>
@@ -150,7 +127,21 @@ export function CoffeeCardPassport({
       <p className="m-0! text-xs tracking-[0.2em] uppercase opacity-90">
         {label}
       </p>
-    </CoffeeCardPanel>
+      <Link
+        href={href}
+        aria-label={ariaLabel}
+        className={twMerge(
+          "btn-solid/primary btn-size-sm w-full self-end font-extrabold tracking-[0.16em] uppercase transition-[filter] hover:brightness-110",
+          palette.accentBg,
+          palette.accentText,
+        )}
+      >
+        View coffee{" "}
+        <span aria-hidden="true" className="ml-2">
+          →
+        </span>
+      </Link>
+    </div>
   );
 }
 

@@ -3,8 +3,8 @@
 /**
  * Shop catalog card — a "mini passport" that echoes the individual coffee page:
  * a gradient origin panel (MedievalSharp country, diamond dividers, score) over
- * a light body with flavor chips and one-click per-size add. The panel links
- * through to the full coffee passport at /shop/[id].
+ * a light body with flavor chips and one-click per-size add. A dedicated
+ * action row links through to the full coffee passport at /shop/[id].
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -49,7 +49,7 @@ export function CoffeeCard({
       <CoffeeCardBody>
         <CoffeeTastingNotes notes={group.notes} palette={palette} />
 
-        <div className="flex flex-wrap content-end justify-center gap-1.5">
+        <div className="flex flex-wrap content-start justify-center gap-1.5">
           {group.sizes.map((s) => (
             <SizeAdd key={s.id} coffee={s} palette={palette} />
           ))}
@@ -89,7 +89,11 @@ function SizeAdd({
       type="button"
       onClick={handleAdd}
       disabled={added}
-      aria-label={`Add ${sizeLabel(coffee.size)} to cart`}
+      aria-label={
+        added ?
+          `${sizeLabel(coffee.size)} added to cart`
+        : `Add ${sizeLabel(coffee.size)} to cart`
+      }
       className={twMerge(
         "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold tracking-wide uppercase transition-opacity hover:opacity-90",
         palette.panel,
@@ -102,7 +106,7 @@ function SizeAdd({
       : <Plus className="size-4" />}
       <span>{sizeLabel(coffee.size)}</span>
       <span className="opacity-60">·</span>
-      <span>{added ? "Added" : `$${coffee.price}`}</span>
+      <span className="tabular-nums">${coffee.price}</span>
     </button>
   );
 }

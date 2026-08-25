@@ -31,8 +31,8 @@ export function ShopCatalog() {
         </header>
 
         <CoffeeCardGrid className="mt-10 sm:grid-cols-2 lg:grid-cols-3">
-          {groups.map((g) => (
-            <CoffeeCard key={g.key} group={g} />
+          {groups.map((group) => (
+            <CoffeeCard key={group.key} group={group} />
           ))}
         </CoffeeCardGrid>
       </div>
