@@ -286,6 +286,29 @@ export function NewsletterFooter() {
               New coffees, limited releases, pop-ups, and community events —
               straight to your inbox, never too often.
             </p>
+            <div className="mt-8 flex items-center gap-3">
+              <span className="text-on-primary-500/70 text-xs font-medium tracking-[0.14em] uppercase">
+                Follow Sappho
+              </span>
+              <a
+                href="https://www.facebook.com/p/Sappho-and-her-beans-100094171081242/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Sappho on Facebook"
+                className="bg-surface-50/10 text-on-primary-500 hover:bg-accent-500 hover:text-primary-800 inline-flex size-10 items-center justify-center rounded-full transition-colors"
+              >
+                <FacebookIcon className="size-5" />
+              </a>
+              <a
+                href="https://www.instagram.com/sapphoandherbeans/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Sappho on Instagram"
+                className="bg-surface-50/10 text-on-primary-500 hover:bg-accent-500 hover:text-primary-800 inline-flex size-10 items-center justify-center rounded-full transition-colors"
+              >
+                <InstagramIcon className="size-5" />
+              </a>
+            </div>
           </div>
           <form
             className="flex w-full max-w-md flex-col gap-3 sm:flex-row md:ml-auto"
@@ -307,67 +330,14 @@ export function NewsletterFooter() {
           </form>
         </div>
 
-        <div className="flex flex-col gap-10 py-14 md:flex-row md:justify-between">
-          <div className="max-w-xs">
-            <p className="font-primary text-xl tracking-[0.12em] uppercase">
-              Sappho &amp; Her Beans
-            </p>
-            <p className="text-on-primary-500/60 mt-3 text-sm leading-relaxed">
-              LGBTQ+ owned specialty coffee roasted around relationships.
-            </p>
-            <div className="mt-5 flex gap-4">
-              <a
-                href="https://www.facebook.com/p/Sappho-and-her-beans-100094171081242/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Sappho on Facebook"
-                className="text-on-primary-500/70 hover:text-accent-500 transition-colors"
-              >
-                <FacebookIcon className="size-6" />
-              </a>
-              <a
-                href="https://www.instagram.com/sapphoandherbeans/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Sappho on Instagram"
-                className="text-on-primary-500/70 hover:text-accent-500 transition-colors"
-              >
-                <InstagramIcon className="size-6" />
-              </a>
-            </div>
-          </div>
-
-          <nav className="grid grid-cols-2 gap-x-14 gap-y-3 text-sm sm:grid-cols-3">
-            <FooterLink href="/shop">Shop Coffee</FooterLink>
-            <FooterLink href="/wholesale">Wholesale</FooterLink>
-            <FooterLink href="/about">Our Story</FooterLink>
-            <FooterLink href="/locations">Find Us</FooterLink>
-          </nav>
-        </div>
-
-        <div className="border-surface-50/10 text-on-primary-500/45 border-t py-6 text-xs">
-          © {new Date().getFullYear()} Sappho &amp; Her Beans. All rights
-          reserved.
+        <div className="border-surface-50/10 border-t py-6 text-xs">
+          <p className="text-on-primary-500/45">
+            © {new Date().getFullYear()} Sappho &amp; Her Beans. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="text-on-primary-500/75 hover:text-accent-500 transition-colors"
-    >
-      {children}
-    </Link>
   );
 }
 
