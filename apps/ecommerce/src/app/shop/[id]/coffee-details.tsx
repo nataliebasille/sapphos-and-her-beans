@@ -167,7 +167,7 @@ export function CoffeeDetails({
   const hasSizeChoice = sizes.length > 1;
 
   return (
-    <div className="md:flex">
+    <div className="min-h-[calc(100dvh-89px)] md:flex">
       {/* Passport panel */}
       <aside
         className={twMerge(
@@ -255,7 +255,7 @@ export function CoffeeDetails({
       {/* Detail column */}
       <main
         className={twMerge(
-          "flex-1 px-8 py-16 pb-28 md:px-14 md:pb-16",
+          "flex-1 px-8 py-16 pb-40 md:px-14 md:pb-16",
           palette.surface,
         )}
       >
