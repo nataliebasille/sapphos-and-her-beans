@@ -39,7 +39,7 @@ export function Cart() {
       <aside
         ref={cartRef}
         className={twMerge(
-          "border-primary-900/20 bg-surface-50 fixed inset-y-0 right-0 z-101 flex w-full max-w-xl translate-x-full flex-col border-l transition-transform duration-300",
+          "bg-surface-50 fixed inset-y-0 right-0 z-101 flex w-full max-w-xl translate-x-full flex-col transition-transform duration-300",
           isOpen && "translate-x-0 shadow-[-18px_0_60px_rgba(0,31,54,0.18)]",
         )}
         aria-hidden={!isOpen}
@@ -71,7 +71,7 @@ function CartHeader({ onClose }: { onClose: () => void }) {
           <Close className="size-7.5" />
         </button>
       </div>
-      <span className="mt-1 hidden min-w-15 flex-1 items-center gap-2.5 opacity-70 sm:flex">
+      <span className="mt-1 flex min-w-15 flex-1 items-center gap-2.5 opacity-70">
         <span className="h-px flex-1 bg-current" />
         <span className="bg-accent-500 size-2 rotate-45" />
         <span className="h-px flex-1 bg-current" />
@@ -224,9 +224,6 @@ function EmptyBag() {
           Your bag
         </p>
         <h3 className="font-primary mt-2.5 text-3xl">Ready for coffee.</h3>
-        <p className="text-primary-700 mt-2 text-[13px]">
-          Pick a coffee passport to get started.
-        </p>
       </div>
     </div>
   );
