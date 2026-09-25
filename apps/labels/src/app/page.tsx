@@ -23,7 +23,7 @@ const BrandingStylizedFont = MedievalSharp({
 export default function Home() {
   return (
     <div className="grid h-full w-full grid-cols-1 place-items-center items-center justify-center gap-3">
-      <Label coffee="CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g" />
+      <Label coffee="PUMPKIN_SPICE_MACERATION_MADNESS_250g" />
     </div>
   );
 }
@@ -49,6 +49,17 @@ const COLORS = {
     textDarkest: "text-sky-950",
     border: "border-sky-900",
     borderDarkest: "border-sky-950",
+  },
+
+  navy: {
+    bgLight: "bg-navy-50",
+    bgNormal: "bg-navy-200",
+    bgDark: "bg-navy-900",
+    textLight: "text-navy-50",
+    textDark: "text-navy-900",
+    textDarkest: "text-navy-950",
+    border: "border-navy-900",
+    borderDarkest: "border-navy-950",
   },
 
   yellow: {
@@ -127,6 +138,17 @@ const COLORS = {
     border: "border-violet-900",
     borderDarkest: "border-violet-950",
   },
+
+  pumpkin: {
+    bgLight: "bg-pumpkin-50",
+    bgNormal: "bg-pumpkin-200",
+    bgDark: "bg-pumpkin-900",
+    textLight: "text-pumpkin-50",
+    textDark: "text-pumpkin-900",
+    textDarkest: "text-pumpkin-950",
+    border: "border-pumpkin-900",
+    borderDarkest: "border-pumpkin-950",
+  },
 } as const;
 
 const Label = (props: { coffee: keyof Coffee }) => {
@@ -151,7 +173,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
         )}
       >
         <div className="absolute flex flex-1 flex-col p-2">
-          <div className="relative h-[58px] w-[58px]">
+          <div className="relative h-[50px] w-[50px]">
             <Image
               src="/site qr code.png"
               alt="qr-code"
@@ -196,7 +218,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
         <div className="flex flex-initial">
           <div
             className={twMerge(
-              "mt-[4.5rem] flex w-full items-center gap-4 px-2",
+              "mt-[4rem] flex w-full items-center gap-4 px-2",
               BrandingStylizedFont.className,
             )}
           >
@@ -270,18 +292,30 @@ const Label = (props: { coffee: keyof Coffee }) => {
         <div className="grid flex-1 content-start">
           <div
             className={twMerge(
-              "mb-2 mt-2 flex-1 px-2 text-center",
+              "mb-1 mt-1 flex-1 px-2 text-center",
               colors.textDarkest,
             )}
           >
-            {"fermentation" in coffee &&
-              typeof coffee.fermentation !== "string" && (
-                <div className="mb-[.125rem] text-sm uppercase tracking-widest">
-                  {coffee.fermentation.type === "cofermentation" ?
-                    "CO-FERMENTED"
-                  : "ANAEROBIC"}
-                </div>
-              )}
+            {(
+              "fermentation" in coffee &&
+              typeof coffee.fermentation !== "string"
+            ) ?
+              <div className="mb-[.125rem] text-[0.8rem] uppercase tracking-widest">
+                {coffee.fermentation.type === "cofermentation" ?
+                  `CO-FERMENTED WITH ${coffee.fermentation.ingredient}`
+                : "ANAEROBIC"}
+              </div>
+            : "callout" in coffee && coffee.callout ?
+              <div className="mb-[.125rem] text-[0.8rem] uppercase tracking-widest">
+                {coffee.callout}
+              </div>
+            : <div
+                aria-hidden
+                className="mb-[.125rem] text-[0.8rem] uppercase tracking-widest"
+              >
+                &nbsp;
+              </div>
+            }
             <span className="text-lg/5 font-bold italic tracking-wide">
               {coffee.tastingNotes}
             </span>
@@ -296,7 +330,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
             colors.textDarkest,
           )}
         >
-          <div className="flex flex-nowrap items-end text-nowrap text-[.7rem] leading-[10px]">
+          <div className="mb-[.125rem] flex flex-nowrap items-end text-nowrap text-[.7rem] leading-[10px]">
             Roasted on:{" "}
             <div
               className={twMerge(
@@ -310,7 +344,7 @@ const Label = (props: { coffee: keyof Coffee }) => {
             />{" "}
           </div>
 
-          <span className="ml-auto text-nowrap text-[.6rem] italic">
+          <span className="ml-auto mt-1 text-nowrap text-[.6rem] italic">
             Traceable to <span>{coffee.traceable}</span>
           </span>
         </div>
@@ -372,7 +406,7 @@ function CoffeeInfo({ coffee }: { coffee: Coffee[keyof Coffee] }) {
           </div>
         )}
         <div
-          className={`bg-${coffee.color}-50 px-2 font-bold uppercase tracking-wider`}
+          className={`bg-${coffee.color}-50 px-2 text-[0.7rem] font-bold uppercase leading-[0.95rem] tracking-wider`}
         >
           {coffee.processing}
         </div>

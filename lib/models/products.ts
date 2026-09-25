@@ -12,16 +12,19 @@ export type Product = {
   lot?: string;
   story?: string;
   featured?: boolean;
+  callout?: string;
   color:
     | "cyan"
     | "sky"
+    | "navy"
     | "yellow"
     | "rose"
     | "slate"
     | "purple"
     | "amber"
     | "emerald"
-    | "violet";
+    | "violet"
+    | "pumpkin";
   isDecaf: boolean;
   farm: string;
   traceable: string;
@@ -30,7 +33,8 @@ export type Product = {
   fermentation?:
     | { type: "cofermentation"; ingredient: string }
     | { type: "anaerobic"; duration?: string }
-    | `${number} hours`;
+    | `${number} hours`
+    | (string & {});
   score?: number;
 };
 
@@ -274,6 +278,14 @@ export const MARACATURRA_MACERATION_GRENADINE_100g = {
   featured: false,
 } as const satisfies Product;
 
+export const MARACATURRA_MACERATION_GRENADINE_250g = {
+  ...MARACATURRA_MACERATION_GRENADINE_100g,
+  id: "8001",
+  size: "250g",
+  price: 40,
+  name: 'Nicaragua - Maracaturra Maceration "Grenadine" - 250g',
+} as const satisfies Product;
+
 export const CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g = {
   type: "coffee",
   id: "9000",
@@ -306,23 +318,124 @@ export const CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g = {
   name: "Colombia - Castillo Washed Co-fermented with Wine Yeast + Blackberry - 250g",
 } as const satisfies Product;
 
+export const PUMPKIN_SPICE_MACERATION_MADNESS_250g = {
+  type: "coffee",
+  id: "10000",
+  name: "Nicaragua - Pumpkin Spice Maceration Madness - 250g",
+  price: 32,
+  country: "Nicaragua",
+  color: "pumpkin",
+  farm: "Finca Idealista",
+  tastingNotes: "Pumpkin pie, brown sugar, cinnamon, nutmeg",
+  processing: "Carbonic maceration double fermentation with pumpkin spice",
+  region: "Matagalpa, Nicaragua",
+  lot: "NANO",
+  varietals: "Pacamara",
+  size: "250g",
+  traceable: "Benjamin Weiner",
+  altitude: "1200 meters",
+  fermentation: { type: "cofermentation", ingredient: "Pumpkin Spice" },
+  isDecaf: false,
+  featured: false,
+} as const satisfies Product;
+
+export const PUMPKIN_SPICE_MACERATION_MADNESS_100g = {
+  ...PUMPKIN_SPICE_MACERATION_MADNESS_250g,
+  id: "10001",
+  size: "100g",
+  price: 14,
+  name: "Nicaragua - Pumpkin Spice Maceration Madness - 100g",
+} as const satisfies Product;
+
+export const JINOTEGA_COMMUNITY_COFFEE_250g = {
+  type: "coffee",
+  id: "11000",
+  name: "Nicaragua - Jinotega Community Coffee - 250g",
+  price: 24,
+  country: "Nicaragua",
+  color: "sky",
+  farm: "Jinotega Community Members",
+  tastingNotes: "Cherry, apple, cranberry",
+  processing: "Washed",
+  lot: "Community",
+  region: "Jinotega, Nicaragua",
+  varietals: "Red & Yellow Caturra, Red & Yellow Catuai, Bourbon, Pache",
+  size: "250g",
+  traceable: "GMCG Member Farmers",
+  altitude: "1300 to 1600 meters",
+  fermentation: "18.25 hours",
+  story:
+    "This popular coffee is a great value option without sacrificing quality!",
+  isDecaf: false,
+  featured: false,
+} as const satisfies Product;
+
+export const JINOTEGA_COMMUNITY_COFFEE_100g = {
+  ...JINOTEGA_COMMUNITY_COFFEE_250g,
+  id: "11001",
+  size: "100g",
+  price: 12,
+  name: "Nicaragua - Jinotega Community Coffee - 100g",
+} as const satisfies Product;
+
+export const THIS_ISNT_SUMATRA_250g = {
+  type: "coffee",
+  id: "12000",
+  name: "Nicaragua - This Isn't Sumatra - 250g",
+  price: 24,
+  country: "Nicaragua",
+  color: "navy",
+  farm: "GMGG Farmers",
+  tastingNotes: "Pecan, apple sauce, Brazil nut",
+  processing: "Washed",
+  lot: "Community",
+  region: "Jinotega & Matagalpa, Nicaragua",
+  varietals:
+    "Catuai, Caturra, Caturra Estrella, Pache Colis, Catimor, Parainema, Siquia",
+  size: "250g",
+  traceable: "GMCG Member Farmers",
+  altitude: "1200 to 1400 meters",
+  callout: "This isn't sumatra?",
+  story:
+    "What??? This isn't Sumatra? But it tastes just like it (just cleaner)! By cupping every day lot of picking, we're able to find lots with the taste profile of a clean Sumatra. This is a community lot from a handful of Gold Mountain farmers. We did a bunch of experimenting and even tried wet hulling (as is done in Sumatra). In the end, we found ours tastes cleanest by doing regular dry hulling rather than wet hulling--then we search through 3,000+ coffees for this cup profile. This is a really awesome and more dependable alternative if you're looking for a Sumatra taste profile.",
+  isDecaf: false,
+  featured: false,
+} as const satisfies Product;
+
+export const THIS_ISNT_SUMATRA_100g = {
+  ...THIS_ISNT_SUMATRA_250g,
+  id: "12001",
+  size: "100g",
+  price: 12,
+  name: "Nicaragua - This Isn't Sumatra - 100g",
+} as const satisfies Product;
+
 export const PRODUCTS = [
   // MEXICO_250g,
   MEXICO_100g,
   MEXICO_SINGLESERVE,
   //COFERMENTED_WINE_YEAST_LYCHEE_250g,
-  COFERMENTED_WINE_YEAST_LYCHEE_100g,
+  //COFERMENTED_WINE_YEAST_LYCHEE_100g,
   // ETHIOPIA_YIRGACHEFF_BANKO_GOTITI_250g,
   // ETHIOPIA_YIRGACHEFF_BANKO_GOTITI_100g,
   // KENYA_NYERI_NYERI_GICHICHI_AA_250g,
   // KENYA_NYERI_NYERI_GICHICHI_AA_100g,
-  ETHIOPIA_GUJI_TUKU_250g,
-  ETHIOPIA_GUJI_TUKU_100g,
+  CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g,
+  CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
+  // ETHIOPIA_GUJI_TUKU_250g,
+  // ETHIOPIA_GUJI_TUKU_100g,
   YELLOW_BOURBON_CONCOCTION_250g,
   YELLOW_BOURBON_CONCOCTION_100g,
-  YELLOW_PACAMARA_WASHED_250g,
-  YELLOW_PACAMARA_WASHED_100g,
+  // YELLOW_PACAMARA_WASHED_250g,
+  // YELLOW_PACAMARA_WASHED_100g,
   MARACATURRA_MACERATION_GRENADINE_100g,
+  MARACATURRA_MACERATION_GRENADINE_250g,
+  PUMPKIN_SPICE_MACERATION_MADNESS_250g,
+  PUMPKIN_SPICE_MACERATION_MADNESS_100g,
+  JINOTEGA_COMMUNITY_COFFEE_250g,
+  JINOTEGA_COMMUNITY_COFFEE_100g,
+  THIS_ISNT_SUMATRA_250g,
+  THIS_ISNT_SUMATRA_100g,
   CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
   CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g,
 ] as const satisfies Product[];
