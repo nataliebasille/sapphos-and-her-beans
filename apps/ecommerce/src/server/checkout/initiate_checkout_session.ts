@@ -58,7 +58,9 @@ export const initiateCheckoutSession = initActionFactory().action(
       })),
       redirect_on_completion: "never",
       permissions: {
-        update_shipping_details: "server_only",
+        update: {
+          shipping_details: "server_only",
+        },
       },
       shipping_address_collection: {
         allowed_countries: ["US"],
