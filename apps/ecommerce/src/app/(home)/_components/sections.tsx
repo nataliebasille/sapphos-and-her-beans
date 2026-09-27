@@ -197,25 +197,19 @@ export function FindUsLocally() {
         <div className="mb-10">
           <Eyebrow className="text-accent-700">Find Us Locally</Eyebrow>
           <h2 className="font-primary text-primary-800 mt-3 max-w-xl text-3xl md:text-4xl">
-            Now pouring at Forest City Vault.
+            Whole beans by the bag at Forest City Vault.
           </h2>
         </div>
 
         <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-10">
-          {/* Storefront photo — replaceable placeholder. */}
-          <div
-            data-replaceable="storefront-photo"
-            className="bg-primary-500 relative flex min-h-[220px] flex-col items-center justify-center overflow-hidden rounded-2xl p-8 text-center md:min-h-[320px]"
-          >
-            <span className="text-accent-500 bg-surface-50/10 flex size-12 items-center justify-center rounded-full">
-              <PinIcon className="size-6" />
-            </span>
-            <p className="text-on-primary-500/60 mt-4 text-xs tracking-[0.22em] uppercase">
-              Storefront photo
-            </p>
-            <p className="text-on-primary-500/45 text-[13px]">
-              Placeholder — add final image
-            </p>
+          {/* Storefront photo — Forest City Vault interior. */}
+          <div className="bg-primary-500 relative min-h-[220px] overflow-hidden rounded-2xl md:min-h-[320px]">
+            <Image
+              src="/images/forest city vault.jpg"
+              alt="Inside Forest City Vault in Cleveland, OH"
+              fill
+              className="object-cover object-[37%_top]"
+            />
           </div>
 
           {/* Details */}
@@ -227,8 +221,9 @@ export function FindUsLocally() {
               {s.city}
             </p>
             <p className="text-primary-800/70 mt-5 max-w-md text-[15px] leading-relaxed">
-              Forest City Vault is the only place to pick up our coffee in
-              person right now — stop in, say hi, and grab a bag fresh.
+              Forest City Vault is the only place to buy our whole beans in
+              person right now. Grab a bag by the roaster to brew at home, and
+              say hi while you&apos;re there.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <a
@@ -250,23 +245,6 @@ export function FindUsLocally() {
         </div>
       </div>
     </section>
-  );
-}
-
-function PinIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
   );
 }
 
