@@ -34,9 +34,8 @@ export function originName(coffee: Coffee): string {
 export function tastingNotes(coffee: Coffee, max = 4): string[] {
   return (coffee.tastingNotes ?? "")
     .split(",")
-    .map((n) => n.trim())
-    .filter(Boolean)
-    .slice(0, max);
+    .map((n) => n.trim().replace(/^and\s+/i, ""))
+    .filter(Boolean);
 }
 
 export function sizeLabel(size: Coffee["size"]): string {
