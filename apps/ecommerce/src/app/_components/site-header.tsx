@@ -20,9 +20,9 @@ import {
   useOpenCart,
 } from "../_stores/cart";
 
-const NAV = [
+const NAV: { label: string; href: string; badge?: string }[] = [
   { label: "Shop Coffee", href: "/shop" },
-  { label: "Wholesale", href: "/wholesale" },
+  { label: "Wholesale", href: "/wholesale", badge: "Soon" },
   { label: "Our Story", href: "/about" },
 ];
 
@@ -97,6 +97,11 @@ export function SiteHeader() {
                 )}
               >
                 {item.label}
+                {item.badge && (
+                  <span className="bg-accent-500/25 text-accent-700 ml-1.5 inline-block rounded-full px-1.5 py-0.5 align-middle text-[0.6rem] font-semibold tracking-[0.1em] uppercase">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -236,6 +241,11 @@ function MobileMenu() {
                   )}
                 >
                   {i.label}
+                  {"badge" in i && i.badge && (
+                    <span className="bg-accent-500/25 text-accent-700 ml-2 inline-block rounded-full px-2 py-0.5 align-middle text-xs font-semibold tracking-[0.1em] uppercase">
+                      {i.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
