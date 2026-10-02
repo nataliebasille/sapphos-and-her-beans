@@ -12,12 +12,13 @@ import { twMerge } from "tailwind-merge";
 import { Check } from "~/app/_components/icons/check";
 import { Plus } from "~/app/_components/icons/plus";
 import { useAddToCart } from "~/app/_stores/cart";
-import { type Coffee, type OriginGroup, sizeLabel } from "./catalog-data";
+import { type OriginGroup, sizeLabel } from "./catalog-data";
 import {
   CoffeeCardBody,
   CoffeeCardFooterRow,
   CoffeeCardPassport,
   CoffeeCardShell,
+  CoffeeCardViewBar,
   CoffeeTastingNotes,
   CoffeeTraceability,
 } from "./coffee-card-layout";
@@ -36,8 +37,6 @@ export function CoffeeCard({
   return (
     <CoffeeCardShell palette={palette} className={className}>
       <CoffeeCardPassport
-        href={href}
-        ariaLabel={`View ${group.origin} — ${group.label}`}
         palette={palette}
         processing={group.processing}
         score={group.score}
@@ -45,38 +44,49 @@ export function CoffeeCard({
         label={group.label}
       />
 
-      {/* Body — flavor chips + one-click per-size add */}
+      {/* Body — flavor chips + per-size add */}
       <CoffeeCardBody>
         <CoffeeTastingNotes notes={group.notes} palette={palette} />
-
-        <div className="flex flex-wrap content-start justify-center gap-1.5">
-          {group.sizes.map((s) => (
-            <SizeAdd key={s.id} coffee={s} palette={palette} />
-          ))}
-        </div>
 
         <CoffeeCardFooterRow>
           <CoffeeTraceability traceable={group.traceable} palette={palette} />
         </CoffeeCardFooterRow>
+
+        <SizePicker group={group} palette={palette} />
       </CoffeeCardBody>
+
+      {/* Full-width accent bar linking through to the full coffee passport */}
+      <CoffeeCardViewBar
+        href={href}
+        ariaLabel={`View ${group.origin} — ${group.label}`}
+        palette={palette}
+      />
     </CoffeeCardShell>
   );
 }
 
-function SizeAdd({
-  coffee,
+function SizePicker({
+  group,
   palette,
 }: {
-  coffee: Coffee;
+  group: OriginGroup;
   palette: CoffeePalette;
 }) {
   const addToCart = useAddToCart();
+  const [selectedId, setSelectedId] = useState(group.sizes[0]!.id);
   const [added, setAdded] = useState(false);
 
+  const selected =
+    group.sizes.find((s) => s.id === selectedId) ?? group.sizes[0]!;
+
   const handleAdd = useCallback(() => {
-    addToCart(`${coffee.id}`, { quantity: 1 });
+    addToCart(`${selected.id}`, { quantity: 1 });
     setAdded(true);
-  }, [addToCart, coffee.id]);
+  }, [addToCart, selected.id]);
+
+  useEffect(() => {
+    setAdded(false);
+  }, [selectedId]);
 
   useEffect(() => {
     if (!added) return;
@@ -85,28 +95,66 @@ function SizeAdd({
   }, [added]);
 
   return (
-    <button
-      type="button"
-      onClick={handleAdd}
-      disabled={added}
-      aria-label={
-        added ?
-          `${sizeLabel(coffee.size)} added to cart`
-        : `Add ${sizeLabel(coffee.size)} to cart`
-      }
+    <div
       className={twMerge(
-        "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold tracking-wide uppercase transition-opacity hover:opacity-90",
-        palette.panel,
-        palette.panelText,
-        added && "!bg-success-500 !text-surface-50",
+        "flex flex-col overflow-hidden rounded-xl border-2",
+        palette.border,
       )}
     >
-      {added ?
-        <Check className="size-4" />
-      : <Plus className="size-4" />}
-      <span>{sizeLabel(coffee.size)}</span>
-      <span className="opacity-60">·</span>
-      <span className="tabular-nums">${coffee.price}</span>
-    </button>
+      <div className="flex">
+        {group.sizes.map((s, i) => {
+          const active = s.id === selectedId;
+          return (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setSelectedId(s.id)}
+              aria-pressed={active}
+              className={twMerge(
+                "flex flex-1 flex-col items-center justify-center gap-0.5 px-3 py-2 text-center leading-none transition-colors",
+                i > 0 && twMerge("border-l-2", palette.border),
+                active ?
+                  twMerge(palette.accentBg, palette.accentText)
+                : twMerge(palette.textStrong, "hover:opacity-70"),
+              )}
+            >
+              <span className="text-sm font-extrabold tracking-wide uppercase">
+                {sizeLabel(s.size)}
+              </span>
+              <span className="text-[0.7rem] font-semibold tabular-nums opacity-70">
+                ${s.price}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        onClick={handleAdd}
+        disabled={added}
+        aria-label={
+          added ?
+            `${sizeLabel(selected.size)} added to cart`
+          : `Add ${sizeLabel(selected.size)} to cart`
+        }
+        className={twMerge(
+          "flex w-full items-center justify-center gap-2 border-t-2 px-5 py-3 text-sm font-extrabold tracking-[0.12em] uppercase transition-[filter] hover:brightness-110",
+          palette.border,
+          palette.panel,
+          palette.panelText,
+          added && "!bg-success-500 !text-surface-50",
+        )}
+      >
+        {added ?
+          <Check className="size-5" />
+        : <Plus className="size-5" />}
+        <span>{added ? "Added" : "Add"}</span>
+        <span aria-hidden="true" className="opacity-60">
+          ·
+        </span>
+        <span className="tabular-nums">${selected.price}</span>
+      </button>
+    </div>
   );
 }

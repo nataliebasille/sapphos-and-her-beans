@@ -79,17 +79,29 @@ export function CoffeeCardDivider({
   );
 }
 
+const PROCESSING_TEXT_SIZES = [
+  { maxLength: 16, className: "text-base tracking-[0.3em]" },
+  { maxLength: 28, className: "text-sm tracking-[0.25em]" },
+  { maxLength: 44, className: "text-xs tracking-[0.2em]" },
+] as const;
+
+const PROCESSING_TEXT_SIZE_FALLBACK = "text-[0.625rem] tracking-[0.15em]";
+
+function getProcessingTextClasses(processing?: string) {
+  const length = processing?.length ?? 0;
+  return (
+    PROCESSING_TEXT_SIZES.find(({ maxLength }) => length <= maxLength)
+      ?.className ?? PROCESSING_TEXT_SIZE_FALLBACK
+  );
+}
+
 export function CoffeeCardPassport({
-  href,
-  ariaLabel,
   palette,
   processing,
   score,
   origin,
   label,
 }: {
-  href: string;
-  ariaLabel: string;
   palette: CoffeePalette;
   processing?: string;
   score?: number;
@@ -99,14 +111,19 @@ export function CoffeeCardPassport({
   return (
     <div
       className={twMerge(
-        "row-span-5 grid grid-rows-subgrid gap-y-3 bg-linear-to-b p-4 text-center",
+        "row-span-4 grid grid-rows-subgrid gap-y-3 bg-linear-to-b p-4 text-center",
         palette.panel,
         palette.gradientFrom,
         palette.gradientTo,
         palette.panelText,
       )}
     >
-      <p className="m-0! mt-3! text-center text-xs font-semibold tracking-[0.25em] uppercase opacity-80">
+      <p
+        className={twMerge(
+          "m-0! self-center text-center font-semibold uppercase opacity-80",
+          getProcessingTextClasses(processing),
+        )}
+      >
         {processing}
       </p>
 
@@ -118,30 +135,45 @@ export function CoffeeCardPassport({
 
       <h3
         className={twMerge(
-          "m-0! text-4xl leading-none tracking-wide uppercase",
+          "m-0! text-xl! leading-none tracking-wide uppercase",
           BrandingStylizedFont.className,
         )}
       >
         {origin}
       </h3>
-      <p className="m-0! text-xs tracking-[0.2em] uppercase opacity-90">
+      <p className="m-0! self-center text-xs tracking-[0.2em] uppercase opacity-90">
         {label}
       </p>
-      <Link
-        href={href}
-        aria-label={ariaLabel}
-        className={twMerge(
-          "btn-solid/primary btn-size-sm w-full self-end font-extrabold tracking-[0.16em] uppercase transition-[filter] hover:brightness-110",
-          palette.accentBg,
-          palette.accentText,
-        )}
-      >
-        View coffee{" "}
-        <span aria-hidden="true" className="ml-2">
-          →
-        </span>
-      </Link>
     </div>
+  );
+}
+
+export function CoffeeCardViewBar({
+  href,
+  ariaLabel,
+  palette,
+  className,
+}: {
+  href: string;
+  ariaLabel: string;
+  palette: CoffeePalette;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-label={ariaLabel}
+      className={twMerge(
+        "row-span-1 flex items-center justify-center gap-2 border-t-2 px-4 py-3 text-xs font-extrabold tracking-[0.18em] uppercase transition-[filter] hover:brightness-105",
+        palette.borderStrong,
+        palette.accentBg,
+        palette.accentText,
+        className,
+      )}
+    >
+      View coffee
+      <span aria-hidden="true">→</span>
+    </Link>
   );
 }
 
@@ -157,7 +189,7 @@ export function CoffeeTastingNotes({
   return (
     <div
       className={twMerge(
-        "flex flex-wrap content-start justify-center gap-1.5",
+        "flex flex-wrap content-start justify-center gap-1.5 self-center",
         className,
       )}
     >
