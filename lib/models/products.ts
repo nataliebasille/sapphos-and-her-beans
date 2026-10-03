@@ -195,6 +195,15 @@ export const ETHIOPIA_GUJI_TUKU_100g = {
   name: "Ethiopia - Guji Tuku - 100g",
 } as const satisfies Product;
 
+export const ETHIOPIA_GUJI_TUKU_SINGLESERVE = {
+  ...ETHIOPIA_GUJI_TUKU_250g,
+  id: "5002",
+  size: "singleserve",
+  price: 3.5,
+  featured: false,
+  name: "Ethiopia - Guji Tuku - Single Serve",
+} as const satisfies Product;
+
 export const YELLOW_BOURBON_CONCOCTION_250g = {
   type: "coffee",
   id: "6000",
@@ -256,11 +265,20 @@ export const YELLOW_PACAMARA_WASHED_100g = {
   name: "Nicaragua - Yellow Pacamara Washed - 100g",
 } as const satisfies Product;
 
+export const YELLOW_PACAMARA_WASHED_SINGLESERVE = {
+  ...YELLOW_PACAMARA_WASHED_250g,
+  id: "7002",
+  size: "singleserve",
+  price: 3.5,
+  featured: false,
+  name: "Nicaragua - Yellow Pacamara Washed - Single Serve",
+} as const satisfies Product;
+
 export const MARACATURRA_MACERATION_GRENADINE_100g = {
   type: "coffee",
   id: "8000",
   name: 'Nicaragua - Maracaturra Maceration "Grenadine" - 100g',
-  price: 18,
+  price: 22,
   score: 94,
   country: "Nicaragua",
   color: "slate",
@@ -282,7 +300,7 @@ export const MARACATURRA_MACERATION_GRENADINE_250g = {
   ...MARACATURRA_MACERATION_GRENADINE_100g,
   id: "8001",
   size: "250g",
-  price: 40,
+  price: 45,
   name: 'Nicaragua - Maracaturra Maceration "Grenadine" - 250g',
 } as const satisfies Product;
 
@@ -290,7 +308,7 @@ export const CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g = {
   type: "coffee",
   id: "9000",
   name: "Colombia - Castillo Washed Co-fermented with Wine Yeast + Blackberry - 100g",
-  price: 15,
+  price: 18,
   country: "Colombia",
   color: "violet",
   farm: "Jairo Arcila",
@@ -314,7 +332,7 @@ export const CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g = {
   ...CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
   id: "9001",
   size: "250g",
-  price: 35,
+  price: 36,
   name: "Colombia - Castillo Washed Co-fermented with Wine Yeast + Blackberry - 250g",
 } as const satisfies Product;
 
@@ -322,7 +340,7 @@ export const PUMPKIN_SPICE_MACERATION_MADNESS_250g = {
   type: "coffee",
   id: "10000",
   name: "Nicaragua - Pumpkin Spice Maceration Madness - 250g",
-  price: 32,
+  price: 45,
   country: "Nicaragua",
   color: "pumpkin",
   farm: "Finca Idealista",
@@ -343,7 +361,7 @@ export const PUMPKIN_SPICE_MACERATION_MADNESS_100g = {
   ...PUMPKIN_SPICE_MACERATION_MADNESS_250g,
   id: "10001",
   size: "100g",
-  price: 14,
+  price: 22,
   name: "Nicaragua - Pumpkin Spice Maceration Madness - 100g",
 } as const satisfies Product;
 
@@ -351,7 +369,7 @@ export const JINOTEGA_COMMUNITY_COFFEE_250g = {
   type: "coffee",
   id: "11000",
   name: "Nicaragua - Jinotega Community Coffee - 250g",
-  price: 24,
+  price: 28,
   country: "Nicaragua",
   color: "sky",
   farm: "Jinotega Community Members",
@@ -374,7 +392,7 @@ export const JINOTEGA_COMMUNITY_COFFEE_100g = {
   ...JINOTEGA_COMMUNITY_COFFEE_250g,
   id: "11001",
   size: "100g",
-  price: 12,
+  price: 14,
   name: "Nicaragua - Jinotega Community Coffee - 100g",
 } as const satisfies Product;
 
@@ -382,7 +400,7 @@ export const THIS_ISNT_SUMATRA_250g = {
   type: "coffee",
   id: "12000",
   name: "Nicaragua - This Isn't Sumatra - 250g",
-  price: 24,
+  price: 28,
   country: "Nicaragua",
   color: "navy",
   farm: "GMGG Farmers",
@@ -406,13 +424,13 @@ export const THIS_ISNT_SUMATRA_100g = {
   ...THIS_ISNT_SUMATRA_250g,
   id: "12001",
   size: "100g",
-  price: 12,
+  price: 14,
   name: "Nicaragua - This Isn't Sumatra - 100g",
 } as const satisfies Product;
 
 export const PRODUCTS = [
   // MEXICO_250g,
-  MEXICO_100g,
+  // MEXICO_100g,
   MEXICO_SINGLESERVE,
   //COFERMENTED_WINE_YEAST_LYCHEE_250g,
   //COFERMENTED_WINE_YEAST_LYCHEE_100g,
@@ -424,10 +442,12 @@ export const PRODUCTS = [
   CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
   // ETHIOPIA_GUJI_TUKU_250g,
   // ETHIOPIA_GUJI_TUKU_100g,
+  ETHIOPIA_GUJI_TUKU_SINGLESERVE,
   YELLOW_BOURBON_CONCOCTION_250g,
   YELLOW_BOURBON_CONCOCTION_100g,
   // YELLOW_PACAMARA_WASHED_250g,
   // YELLOW_PACAMARA_WASHED_100g,
+  YELLOW_PACAMARA_WASHED_SINGLESERVE,
   MARACATURRA_MACERATION_GRENADINE_100g,
   MARACATURRA_MACERATION_GRENADINE_250g,
   PUMPKIN_SPICE_MACERATION_MADNESS_250g,
@@ -436,6 +456,4 @@ export const PRODUCTS = [
   JINOTEGA_COMMUNITY_COFFEE_100g,
   THIS_ISNT_SUMATRA_250g,
   THIS_ISNT_SUMATRA_100g,
-  CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_100g,
-  CASTILLO_WASHED_WINE_YEAST_BLACKBERRY_250g,
 ] as const satisfies Product[];
