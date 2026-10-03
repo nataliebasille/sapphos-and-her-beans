@@ -97,7 +97,7 @@ function SizePicker({
   return (
     <div
       className={twMerge(
-        "flex flex-col overflow-hidden rounded-xl border-2",
+        "flex flex-col self-start overflow-hidden rounded-xl border-2",
         palette.border,
       )}
     >
@@ -139,7 +139,7 @@ function SizePicker({
           : `Add ${sizeLabel(selected.size)} to cart`
         }
         className={twMerge(
-          "flex w-full items-center justify-center gap-2 border-t-2 px-5 py-3 text-sm font-extrabold tracking-[0.12em] uppercase transition-[filter] hover:brightness-110",
+          "flex w-full items-center justify-center gap-2 border-t-2 px-5 py-3 text-sm font-extrabold tracking-[0.12em] whitespace-nowrap uppercase transition-[filter] hover:brightness-110",
           palette.border,
           palette.panel,
           palette.panelText,
@@ -150,10 +150,18 @@ function SizePicker({
           <Check className="size-5" />
         : <Plus className="size-5" />}
         <span>{added ? "Added" : "Add"}</span>
-        <span aria-hidden="true" className="opacity-60">
-          ·
-        </span>
-        <span className="tabular-nums">${selected.price}</span>
+        {!added && (
+          <>
+            <span aria-hidden="true" className="opacity-60">
+              ·
+            </span>
+            <span>{sizeLabel(selected.size)}</span>
+            <span aria-hidden="true" className="opacity-60">
+              ·
+            </span>
+            <span className="tabular-nums">${selected.price}</span>
+          </>
+        )}
       </button>
     </div>
   );
