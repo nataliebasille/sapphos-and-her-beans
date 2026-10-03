@@ -1,222 +1,177 @@
+/**
+ * `/locations` — Sappho sells in person at exactly one spot right now
+ * (Forest City Vault). A storefront banner (placeholder until the real photo
+ * lands) sits up top, then the name, intro, highlights, directions, and an
+ * hours card. Data lives in ./data.
+ */
 import Image from "next/image";
-import { Fragment } from "react";
+import Link from "next/link";
 import { twMerge } from "tailwind-merge";
-import { Heading } from "../_components/heading";
+import { directionsUrl, FOREST_CITY_VAULT } from "./data";
 
-const cities = [
-  {
-    city: "Akron, OH",
-    locations: [
-      {
-        name: "Northside Market Place",
-        address: "21 Furnace St., Akron, OH 44308",
-        imageSrc: "/images/northside market place.jpg",
-        website: "https://www.northsidemarketplace.com/",
-        mapsQuery: "northside market place akron oh",
-        description: `The location that started it all - our home base! 
-          Here you'll find our entire seasonally rotating catalog. We are proud to be the featured coffee partner of NOMZ.`,
-      },
-      {
-        name: "Little Blue Pastries & Cafe",
-        address: "1827 Merriman Road, Akron, OH 44313",
-        imageSrc: "/images/little blue.jpg",
-        website:
-          "https://www.facebook.com/p/little-blue-pastries-cafe-100082812447513/",
-        description: `Here you'll find our seasonally rotating catalog. Little Blue proudly serves our coffee on drip along side their wonderful breakfast and lunch options.`,
-      },
-    ],
-  },
-  {
-    city: "Cleveland, OH",
-    locations: [
-      {
-        name: "The Westside Cleveland Outpost",
-        address: "1442 West. 28th St., Hanger 3, Cleveland, OH 44113",
-        imageSrc: "/images/funkiniland.jpeg",
-        mapsQuery: "City Goods Hanger 3 1442 West. 28th St.",
-        website: "https://red-burgundy-m29y.squarespace.com/the-shops",
-        description:
-          "Here you'll find our seasonally rotating catalog. Grinder on site if needed.",
-      },
-      {
-        name: "The Grocery - City Goods",
-        address: "1442 West. 28th St., Hanger 2, Cleveland, OH 44113",
-        imageSrc: "/images/the grocery.png",
-        mapsQuery: "The Grocery 1442 West. 28th St.",
-        website: "https://red-burgundy-m29y.squarespace.com/the-grocery",
-        description: `Here you'll find our seasonally rotating catalog. Along side other phenomenal local grocery brands`,
-      },
-      {
-        name: "The Lounge - City Goods",
-        address: "1442 West. 28th St., Cleveland, OH 44113",
-        imageSrc: "/images/the lounge.jpg",
-        website: "https://red-burgundy-m29y.squarespace.com/the-lounge",
-        mapsQuery: "The Lounge 1442 West. 28th St.",
-      },
-      {
-        name: "The Corner - Van Aken",
-        address: "3441 Tuttle Rd, Shaker Heights, OH 44122",
-        imageSrc: "/images/the corner.jpg",
-        mapsQuery: "the corner van aken",
-        website: "https://thecorneratvanaken.com/",
-      },
-      {
-        name: "Made Cleveland",
-        address: "1807 Coventry Rd, Cleveland Heights, OH 44118",
-        imageSrc: "/images/made cleveland.png",
-        mapsQuery: "Made Cleveland 1807 Coventry Rd",
-        website: "http://madecleveland.com/",
-      },
-    ],
-  },
-  {
-    city: "Toledo, OH",
-    locations: [
-      {
-        name: "Blended",
-        address: "5001 Monroe St Suite 1150, Toledo, OH 43623",
-        imageSrc: "/images/blended.jpg",
-        mapsQuery: "blended toledo ohio",
-        website: "https://www.blendedlocal.com/",
-      },
-    ],
-  },
-
-  {
-    city: "New Castle, PA",
-    locations: [
-      {
-        name: "The Epic Find",
-        address: "2656 Ellwood Rd, Suite 102, New Castle, PA",
-        mapsQuery: "The Epic Find 2656 Ellwood Rd",
-        imageSrc: "/images/the epic find.jpg",
-        website: "https://www.theepicfind.com/",
-      },
-    ],
-  },
-];
-
-export default function LocationsPage() {
-  return (
-    <>
-      {cities
-        .filter((x) => x.locations.length > 0)
-        .map(({ city, locations }, index) => (
-          <Fragment key={index}>
-            <div
-              className={twMerge(
-                "mx-10 mb-4 border-b-[1px] border-black/30 md:col-span-2",
-                index !== 0 && "mt-10",
-              )}
-            >
-              <Heading
-                level={3}
-                className="mb-0 text-center uppercase tracking-wide md:text-left"
-              >
-                {city}
-              </Heading>
-            </div>
-
-            <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-0">
-              {locations.map((location, locationIndex) => (
-                <Location
-                  key={locationIndex}
-                  {...location}
-                  index={locationIndex}
-                />
-              ))}
-            </div>
-          </Fragment>
-        ))}
-    </>
-  );
-}
-
-type LocationProps = (typeof cities)[number]["locations"][number] & {
-  index: number;
+export const metadata = {
+  title: "Visit Us",
+  description:
+    "Find Sappho's whole beans in person at Forest City Vault in Cleveland, OH.",
 };
 
-function Location({
-  imageSrc,
-  name,
-  address,
-  website,
-  mapsQuery,
-  description,
-  index,
-}: LocationProps) {
-  const orientation = index % 2 === 1 ? "right" : "left";
+export default function LocationsPage() {
+  const s = FOREST_CITY_VAULT;
+
   return (
-    <div className="grid grid-cols-subgrid md:col-span-2">
-      <a className="px-2 text-center md:hidden" href={website} target="_blank">
-        <Heading level={4} className="mb-1 font-bold md:mb-4 md:font-normal">
-          {name}
-        </Heading>
-      </a>
+    <div className="bg-surface-50 -mt-[calc(89px+1.5rem)] pt-[calc(89px+1.5rem)]">
+      {/* Storefront banner */}
+      <section className="mx-auto max-w-6xl px-6 pt-6 md:px-12 md:pt-10">
+        <Storefront className="aspect-video w-full md:aspect-21/9" />
+      </section>
 
-      <div
-        className={twMerge(
-          "relative aspect-square h-64 w-full md:h-[450px]",
-          orientation === "right" && "md:order-last",
-        )}
-      >
-        <a href={website} target="_blank">
-          <Image src={imageSrc} alt={name} className="object-cover" fill />
-        </a>
-      </div>
+      {/* Name + details */}
+      <section className="mx-auto max-w-6xl px-6 py-12 md:px-12 md:py-16">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] md:gap-16">
+          <div>
+            <Eyebrow className="text-accent-700">Visit Us</Eyebrow>
+            <h1 className="font-primary text-primary-800 mt-3 text-4xl leading-[1.05] md:text-6xl">
+              {s.name}
+            </h1>
+            <p className="text-primary-800/55 mt-3 inline-flex items-center gap-2 text-sm font-semibold tracking-[0.16em] uppercase">
+              <PinIcon className="size-4" /> {s.city}
+            </p>
+            <p className="text-primary-800/75 mt-6 max-w-md text-[15px] leading-relaxed md:text-lg">
+              {s.blurb}
+            </p>
+            <ul className="mt-7 grid gap-2.5 sm:grid-cols-2">
+              {s.highlights.map((h) => (
+                <li
+                  key={h}
+                  className="text-primary-800/75 flex items-start gap-2 text-sm"
+                >
+                  <span className="bg-accent-500 mt-1.5 size-1.5 shrink-0 rounded-full" />
+                  {h}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-nowrap items-center gap-3">
+              <a
+                href={directionsUrl(s)}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-primary-500 text-on-primary-500 hover:bg-primary-700 inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold tracking-[0.14em] whitespace-nowrap uppercase transition-transform hover:-translate-y-0.5"
+              >
+                <PinIcon className="size-4" /> Get directions
+              </a>
+              <Link
+                href="/shop"
+                className="border-primary-500/25 text-primary-800 hover:bg-primary-500/5 rounded-full border px-7 py-3 text-sm font-semibold tracking-[0.14em] whitespace-nowrap uppercase transition-colors"
+              >
+                Shop online
+              </Link>
+            </div>
+          </div>
 
-      <div className="grid grid-cols-subgrid grid-rows-[max-content_max-content_max-content] content-center px-7 md:px-10">
-        <a className="hidden md:block" href={website} target="_blank">
-          <Heading level={2} className="mb-0 md:mb-4">
-            {name}
-          </Heading>
-        </a>
-
-        <a
-          href={`https://maps.google.com/?q=${mapsQuery ?? `${name} ${address}`}`}
-          target="_blank"
-        >
-          <Heading level={5} className="mt-2 whitespace-pre-line">
-            {address}
-          </Heading>
-        </a>
-
-        {description && (
-          <p className="mt-1 whitespace-pre-line text-justify leading-7 tracking-wider md:mt-4">
-            {description}
-          </p>
-        )}
-      </div>
+          <div className="border-primary-500/10 bg-surface-500/40 h-max rounded-2xl border p-7 md:p-8">
+            <span className="text-primary-800 flex items-center gap-2">
+              <ClockIcon className="size-5" />
+              <span className="font-primary text-lg">Hours</span>
+            </span>
+            <dl className="text-primary-800/80 mt-5 space-y-2 text-sm">
+              {s.hours.map((h) => (
+                <div
+                  key={h.day}
+                  className="border-primary-500/10 flex justify-between gap-4 border-b pb-2 last:border-0 last:pb-0"
+                >
+                  <dt className="text-primary-800/55 whitespace-nowrap">
+                    {h.day}
+                  </dt>
+                  <dd className="tabular-nums whitespace-nowrap">{h.time}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
-{
-  /* <div
-        className={twMerge(
-          "w-full self-center px-4 pb-10 pt-6 md:w-1/2 md:px-14 md:pb-0 md:pt-0",
-          orientation === "right" && "md:order-first",
-        )}
-      >
-        <a href={website} target="_blank">
-          <Heading level={2} className="mb-0 md:mb-4">
-            {name}
-          </Heading>
-        </a>
+/**
+ * Storefront photo — the Forest City Vault interior where Sappho's beans are
+ * sold in person.
+ */
+function Storefront({
+  className,
+  rounded = "rounded-[2rem]",
+}: {
+  className?: string;
+  rounded?: string;
+}) {
+  return (
+    <div
+      className={twMerge(
+        "bg-primary-500 relative overflow-hidden",
+        rounded,
+        className,
+      )}
+    >
+      <Image
+        src="/images/forest city vault.jpg"
+        alt="Inside Forest City Vault in Cleveland, OH"
+        fill
+        priority
+        className="object-cover object-top"
+      />
+    </div>
+  );
+}
 
-        <a
-          href={`https://maps.google.com/?q=${mapsQuery ?? `${name} ${address}`}`}
-          target="_blank"
-        >
-          <Heading level={5} className="mt-2 whitespace-pre-line">
-            {address}
-          </Heading>
-        </a>
+function Eyebrow({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <span
+      className={
+        "text-[0.72rem] font-semibold tracking-[0.28em] uppercase " +
+        (className ?? "")
+      }
+    >
+      {children}
+    </span>
+  );
+}
 
-        {description && (
-          <p className="mt-4 whitespace-pre-line text-justify leading-7 tracking-wider">
-            {description}
-          </p>
-        )}
-      </div> */
+function PinIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+
+function ClockIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
 }

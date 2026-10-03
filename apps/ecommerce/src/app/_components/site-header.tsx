@@ -1,0 +1,257 @@
+"use client";
+
+/**
+ * Shared site header — the editorial nav introduced on the homepage, promoted
+ * to every route.
+ *
+ * On the homepage the header starts transparent and the centered logo fades in
+ * once the hero scrolls past. On every other route there is no tall hero, so the
+ * header renders solid with the logo visible from the start.
+ */
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { Cart as CartIcon } from "./icons/cart";
+import {
+  useCartIsDisabled,
+  useCartQuantity,
+  useOpenCart,
+} from "../_stores/cart";
+
+const NAV: { label: string; href: string; badge?: string }[] = [
+  { label: "Shop Coffee", href: "/shop" },
+  { label: "Wholesale", href: "/wholesale", badge: "Soon" },
+  { label: "Our Story", href: "/about" },
+];
+
+function isActivePath(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const desktopNavLinkClass =
+  "text-primary-800/70 after:bg-secondary-500 hover:text-primary-800 relative whitespace-nowrap py-1 text-sm font-medium tracking-wide transition-colors after:absolute after:right-0 after:-bottom-1 after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:transition-transform after:duration-300";
+
+const activeNavLinkClass = "text-primary-800 after:scale-x-100";
+
+export function SiteHeader() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  // `progress` ramps 0 → 1 over the first ~80px of scroll so the solid header
+  // background and the centered logo *fade* in with scroll position rather than
+  // snapping on at a threshold. Inner pages have no tall hero, so they stay
+  // fully solid (progress = 1).
+  const [progress, setProgress] = useState(isHome ? 0 : 1);
+  const openCart = useOpenCart();
+  const isDisabled = useCartIsDisabled();
+  const quantity = useCartQuantity();
+
+  useEffect(() => {
+    if (!isHome) {
+      setProgress(1);
+      return;
+    }
+
+    const onScroll = () =>
+      setProgress(Math.min(1, Math.max(0, window.scrollY / 80)));
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+
+  return (
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/* Solid background layer — its opacity tracks scroll progress so the fill
+          and blur fade in smoothly (an opacity ramp avoids the backdrop-blur
+          "none → blur" pop that a class toggle produces). */}
+      <div
+        aria-hidden
+        style={{ opacity: progress }}
+        className="border-primary-500/10 bg-surface-50/90 pointer-events-none absolute inset-0 border-b backdrop-blur-md"
+      />
+      {/* Over the mobile photo hero, a soft light top wash calms the busy image
+          so the dark icons stay legible; it cross-fades out as the solid
+          background fades in on scroll. */}
+      {isHome && (
+        <div
+          aria-hidden
+          style={{ opacity: 1 - progress }}
+          className="from-surface-50/95 via-surface-50/55 pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b to-transparent md:hidden"
+        />
+      )}
+      <div className="relative z-[1] mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4 md:px-10">
+        {/* left nav */}
+        <nav className="hidden items-center gap-7 md:flex">
+          {NAV.map((item) => {
+            const active = isActivePath(pathname, item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={twMerge(
+                  desktopNavLinkClass,
+                  active && activeNavLinkClass,
+                )}
+              >
+                {item.label}
+                {item.badge && (
+                  <span className="bg-accent-500/25 text-accent-700 ml-1.5 inline-block rounded-full px-1.5 py-0.5 align-middle text-[0.6rem] font-semibold tracking-[0.1em] uppercase">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+        <MobileMenu />
+
+        {/* center logo — always visible off the homepage, fades in with scroll on home */}
+        <Link
+          href="/"
+          style={{ opacity: progress }}
+          className="relative mx-auto h-14 w-[150px]"
+          aria-hidden={progress < 0.5}
+        >
+          <Image
+            src="/images/sappho black logo cropped.png"
+            alt="Sappho & Her Beans"
+            fill
+            className="object-contain"
+          />
+        </Link>
+
+        {/* right actions */}
+        <div className="flex items-center justify-end gap-5">
+          <Link
+            href="/locations"
+            aria-current={
+              isActivePath(pathname, "/locations") ? "page" : undefined
+            }
+            className={twMerge(
+              desktopNavLinkClass,
+              "hidden md:block",
+              isActivePath(pathname, "/locations") && activeNavLinkClass,
+            )}
+          >
+            Find Us
+          </Link>
+          <button
+            onClick={openCart}
+            aria-label="Open cart"
+            className={twMerge(
+              "text-primary-800 relative transition-all",
+              isDisabled && "invisible",
+            )}
+          >
+            <CartIcon className="size-6" />
+            {quantity > 0 && (
+              <span className="bg-accent-700 text-primary-800 pointer-events-none absolute -top-2 -right-2 flex size-[18px] items-center justify-center rounded-full text-[0.65rem] font-semibold">
+                {quantity}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function MobileMenu() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div className="md:hidden">
+      <button
+        aria-label="Open menu"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+        className="flex flex-col gap-1.5"
+      >
+        <span className="bg-primary-500 block h-0.5 w-6" />
+        <span className="bg-primary-500 block h-0.5 w-6" />
+        <span className="bg-primary-500 block h-0.5 w-4" />
+      </button>
+      <div
+        aria-hidden={!open}
+        className={twMerge(
+          "fixed inset-x-0 top-0 z-[110] h-dvh",
+          open ? "pointer-events-auto" : "pointer-events-none",
+        )}
+      >
+        <button
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          tabIndex={open ? 0 : -1}
+          className={twMerge(
+            "bg-primary-500/45 absolute inset-0 backdrop-blur-sm transition-opacity duration-300 ease-out",
+            open ? "opacity-100" : "opacity-0",
+          )}
+        />
+        <div
+          className={twMerge(
+            "text-on-primary-500 bg-primary-500 relative h-dvh w-full overflow-y-auto px-8 py-6 shadow-2xl transition-all duration-300 ease-out",
+            open ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0",
+          )}
+        >
+          <button
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+            tabIndex={open ? 0 : -1}
+            className="mb-16 text-3xl leading-none transition-transform duration-300 hover:rotate-90"
+          >
+            ×
+          </button>
+          <nav className="flex flex-col gap-7 text-2xl">
+            {[...NAV, { label: "Find Us", href: "/locations" }].map((i) => {
+              const active = isActivePath(pathname, i.href);
+
+              return (
+                <Link
+                  key={i.href}
+                  href={i.href}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                  tabIndex={open ? 0 : -1}
+                  className={twMerge(
+                    "-mx-3 rounded px-3 py-2 transition-all duration-300 ease-out",
+                    open ?
+                      "translate-x-0 opacity-100"
+                    : "-translate-x-3 opacity-0",
+                    active && "bg-surface-50/12 text-accent-700",
+                  )}
+                >
+                  {i.label}
+                  {"badge" in i && i.badge && (
+                    <span className="bg-accent-500/25 text-accent-700 ml-2 inline-block rounded-full px-2 py-0.5 align-middle text-xs font-semibold tracking-[0.1em] uppercase">
+                      {i.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+    </div>
+  );
+}

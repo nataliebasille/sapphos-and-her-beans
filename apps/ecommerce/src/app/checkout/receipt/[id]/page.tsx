@@ -1,0 +1,26 @@
+import { notFound } from "next/navigation";
+import { ReceiptConfirmation } from "../_components/receipt-confirmation";
+import { ReceiptStatus } from "../_components/receipt-status";
+import { getCheckoutReceipt } from "~/server/checkout/get_checkout_receipt";
+
+type CheckoutReceiptPageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function CheckoutReceiptPage({
+  params,
+}: CheckoutReceiptPageProps) {
+  const { id } = await params;
+  const result = await getCheckoutReceipt(id);
+  if (result.type === "not_found") notFound();
+
+  return (
+    <div className="bg-surface-50 -mt-[calc(89px+1.5rem)] min-h-dvh w-full pt-[89px]">
+      {result.type === "found" ?
+        <ReceiptConfirmation receipt={result.receipt} />
+      : <ReceiptStatus type="unavailable" />}
+    </div>
+  );
+}

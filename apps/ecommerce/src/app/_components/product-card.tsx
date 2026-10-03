@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Check } from "~/app/_components/icons/check";
@@ -97,6 +98,39 @@ const COLOR_CLASSES = {
     border: "border-emerald-900",
     borderDarkest: "border-emerald-950",
   },
+
+  violet: {
+    bgLight: "bg-violet-50",
+    bgNormal: "bg-violet-200",
+    bgDark: "bg-violet-900",
+    textLight: "text-violet-50",
+    textDark: "text-violet-900",
+    textDarkest: "text-violet-950",
+    border: "border-violet-900",
+    borderDarkest: "border-violet-950",
+  },
+
+  navy: {
+    bgLight: "bg-blue-50",
+    bgNormal: "bg-blue-200",
+    bgDark: "bg-blue-900",
+    textLight: "text-blue-50",
+    textDark: "text-blue-900",
+    textDarkest: "text-blue-950",
+    border: "border-blue-900",
+    borderDarkest: "border-blue-950",
+  },
+
+  pumpkin: {
+    bgLight: "bg-orange-50",
+    bgNormal: "bg-orange-200",
+    bgDark: "bg-orange-900",
+    textLight: "text-orange-50",
+    textDark: "text-orange-900",
+    textDarkest: "text-orange-950",
+    border: "border-orange-900",
+    borderDarkest: "border-orange-950",
+  },
 } as const;
 
 export const ProductCard = (coffee: products.Product) => {
@@ -130,14 +164,20 @@ export const ProductCard = (coffee: products.Product) => {
         COLOR_CLASSES[coffee.color].borderDarkest,
       )}
     >
-      <WebsiteLabel {...coffee} />
+      <Link
+        href={`/shop/${coffee.id}`}
+        className="flex flex-col transition-opacity hover:opacity-90"
+        aria-label={`View details for ${coffee.name ?? "coffee"}`}
+      >
+        <WebsiteLabel {...coffee} />
+      </Link>
 
       <div className={twMerge("mt-auto p-3")}>
         <button
           type="button"
           className={twMerge(
             "btn-solid/primary btn-size-sm flex w-full items-center justify-center uppercase tracking-wider",
-            added && "!bg-[#4BB543]",
+            added && "!bg-success-500 !text-surface-50",
           )}
           onClick={handleAddToCart}
           disabled={added}

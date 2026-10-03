@@ -5,8 +5,13 @@ import { PageContainer } from "./_components/page-container";
 
 export function ShopPageContainer({ children }: { children: React.ReactNode }) {
   const path = usePathname();
+  const isCoffeePage = /^\/shop\/[^/]+$/.test(path);
 
   return path === "/" ?
       <>{children}</>
-    : <PageContainer>{children}</PageContainer>;
+    : <PageContainer
+        contentClassName={isCoffeePage ? "pt-[89px]" : undefined}
+      >
+        {children}
+      </PageContainer>;
 }
