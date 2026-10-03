@@ -4,17 +4,33 @@ import { products } from "../lib/models";
 
 dotenv.config({ path: ".env" });
 
+async function listAllActiveProducts(
+  stripe: Stripe,
+): Promise<Stripe.Product[]> {
+  const all: Stripe.Product[] = [];
+  let startingAfter: string | undefined;
+  for (;;) {
+    const page = await stripe.products.list({
+      active: true,
+      limit: 100,
+      expand: ["data.default_price"],
+      ...(startingAfter ? { starting_after: startingAfter } : {}),
+    });
+    all.push(...page.data);
+    if (!page.has_more) break;
+    startingAfter = page.data[page.data.length - 1]!.id;
+  }
+  return all;
+}
+
 async function main() {
   const stripe = new Stripe(process.env.STRIPE_KEY!);
 
-  const existingProducts = await stripe.products.list({
-    active: true,
-    expand: ["data.default_price"],
-  });
+  const existingProducts = await listAllActiveProducts(stripe);
 
-  console.log("existingProducts", JSON.stringify(existingProducts, null, 2));
+  console.log(`existingProducts: ${existingProducts.length} active`);
 
-  const existingStripeNamesToIdsMap = existingProducts.data.reduce(
+  const existingStripeNamesToIdsMap = existingProducts.reduce(
     (acc, product) => {
       acc[product.name] = product.id;
       return acc;

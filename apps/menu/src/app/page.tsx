@@ -47,10 +47,7 @@ export default async function LandingPage() {
 }
 
 async function getProducts() {
-  const stripeProducts = await stripe.products.list({
-    active: true,
-    expand: ["data.default_price"],
-  });
+  const stripeProducts = { data: await listAllActiveProducts() };
 
   const productsById = stripeProducts.data.reduce(
     (acc, product) => {
@@ -95,4 +92,21 @@ async function getProducts() {
           ),
       }) as const,
   );
+}
+
+async function listAllActiveProducts(): Promise<Stripe.Product[]> {
+  const all: Stripe.Product[] = [];
+  let startingAfter: string | undefined;
+  for (;;) {
+    const page = await stripe.products.list({
+      active: true,
+      limit: 100,
+      expand: ["data.default_price"],
+      ...(startingAfter ? { starting_after: startingAfter } : {}),
+    });
+    all.push(...page.data);
+    if (!page.has_more) break;
+    startingAfter = page.data[page.data.length - 1]!.id;
+  }
+  return all;
 }
