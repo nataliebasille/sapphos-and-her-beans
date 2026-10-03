@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-nocheck
 ((window.heapReadyCb = window.heapReadyCb || []),
   (window.heap = window.heap || []),
   (heap.load = function (e, t) {

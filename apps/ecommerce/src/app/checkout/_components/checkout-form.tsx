@@ -45,7 +45,7 @@ export function CheckoutForm({
         checkoutSessionId: sessionIdRef.current,
       }).then((result) => {
         if (result.value) {
-          window.heap.identify(result.value);
+          window.heap?.identify(result.value);
         }
       });
     }
@@ -126,7 +126,7 @@ function CheckoutError({ message }: { message: string }) {
   return (
     <div className="flex min-h-[360px] items-center justify-center px-4 text-center">
       <div className="max-w-sm">
-        <p className="text-danger-700 text-[0.72rem] font-semibold tracking-[0.22em] uppercase">
+        <p className="text-danger-700 text-[0.72rem] font-semibold uppercase tracking-[0.22em]">
           Checkout unavailable
         </p>
         <h2 className="font-primary text-primary-800 mt-3 text-2xl font-semibold">
