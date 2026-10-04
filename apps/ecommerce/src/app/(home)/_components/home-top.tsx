@@ -83,8 +83,8 @@ export function HomeHero() {
       </section>
 
       {/* Desktop: editorial split — copy left, warm photo with a soft organic curve. */}
-      <section className="relative hidden overflow-hidden pt-28 md:block">
-        <div className="mx-auto grid max-w-6xl grid-cols-[1fr_1.05fr] items-center gap-14 px-10 pt-14 pb-24">
+      <section className="relative hidden overflow-hidden pt-16 md:block">
+        <div className="mx-auto grid max-w-6xl grid-cols-[1fr_1.05fr] items-center gap-14 px-10 pt-8 pb-10">
           <div className="max-w-xl">
             <Eyebrow className="text-accent-700">
               LGBTQ+ Owned Specialty Coffee
@@ -141,7 +141,7 @@ export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
   const groups = useMemo(() => groupByOrigin(coffees), [coffees]);
 
   return (
-    <section className="bg-surface-50 px-6 py-16 md:px-10 md:py-24">
+    <section className="bg-surface-50 px-6 py-16 md:px-10 md:pt-4 md:pb-24">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
