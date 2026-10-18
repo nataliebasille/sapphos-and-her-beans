@@ -9,6 +9,7 @@ import { ProductsProvider } from "./_stores/products/products-provider";
 import { primaryFont, secondaryFont, tertiaryFont } from "./fonts";
 import { SiteHeader } from "./_components/site-header";
 import { ShopPageContainer } from "./shop-page-container";
+import { VacationStickyNote } from "./_components/vacation-notice";
 
 export const metadata: Metadata = {
   title: "Sappho and her beans - Coffee Roasters",
@@ -42,6 +43,7 @@ export default async function RootLayout({
             <Cart />
             <SiteHeader />
             <ShopPageContainer>{children}</ShopPageContainer>
+            <VacationStickyNote />
           </CartProvider>
         </ProductsProvider>
       </body>

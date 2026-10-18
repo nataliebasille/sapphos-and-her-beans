@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { Spinner } from "~/app/_components/spinner";
+import { CheckoutVacationNotice } from "~/app/_components/vacation-notice";
 import { useCartQuantity, useEmptyCart } from "~/app/_stores/cart";
 import { useCartStoreApi } from "~/app/_stores/cart/cart-provider";
 import { useCartSelector } from "~/app/_stores/cart";
@@ -91,6 +92,7 @@ export default function CheckoutCartPage() {
           Almost yours.
         </h1>
       </header>
+      <CheckoutVacationNotice />
 
       <section
         aria-label="Stripe checkout"
