@@ -7,7 +7,7 @@
  * their own once `RETURN_DATE` arrives (in the shopper's local time).
  */
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 import { twMerge } from "tailwind-merge";
 
 const RETURN_DATE = new Date(2026, 10, 6);
@@ -15,21 +15,24 @@ const RETURN_LABEL_SHORT = "Nov 6";
 const RETURN_LABEL_LONG = "Friday, November 6";
 const CHECKOUT_PATH = "/checkout/cart";
 const COFFEE_DETAIL_PATH = /^\/shop\/[^/]+$/;
-const NOTE_SEEN_KEY = "sappho:vacation-note-seen:2026-11-06";
+const NOTE_STATE_KEY = "sappho:vacation-note:2026-11-06";
 
-// Storage can be unavailable (SSR, privacy modes); treat that as "not seen"
-// for reads and silently skip writes.
-function hasSeenNote() {
+// Storage can be unavailable (SSR, privacy modes); fall back to expanded on
+// read and silently skip writes.
+function readNoteMinimized() {
   try {
-    return window.localStorage.getItem(NOTE_SEEN_KEY) === "1";
+    return window.localStorage.getItem(NOTE_STATE_KEY) === "minimized";
   } catch {
     return false;
   }
 }
 
-function markNoteSeen() {
+function writeNoteMinimized(minimized: boolean) {
   try {
-    window.localStorage.setItem(NOTE_SEEN_KEY, "1");
+    window.localStorage.setItem(
+      NOTE_STATE_KEY,
+      minimized ? "minimized" : "expanded",
+    );
   } catch {}
 }
 
@@ -48,24 +51,15 @@ function useIsOnVacation() {
 export function VacationStickyNote() {
   const pathname = usePathname();
   const isOnVacation = useIsOnVacation();
-  const visible = isOnVacation && pathname !== CHECKOUT_PATH;
-  // The note greets a shopper once, expanded, on their first page view; after
-  // that (any navigation, reload, or return visit) it stays tucked away as the
-  // small tab unless they reopen it.
-  const [minimized, setMinimized] = useState(hasSeenNote);
-  const lastPathname = useRef(pathname);
+  // Starts expanded and only changes when the shopper toggles it; the choice
+  // is remembered across navigations, reloads, and return visits.
+  const [minimized, setMinimizedState] = useState(readNoteMinimized);
+  const setMinimized = useCallback((value: boolean) => {
+    setMinimizedState(value);
+    writeNoteMinimized(value);
+  }, []);
 
-  useEffect(() => {
-    if (lastPathname.current === pathname) return;
-    lastPathname.current = pathname;
-    setMinimized(true);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (visible && !minimized) markNoteSeen();
-  }, [visible, minimized]);
-
-  if (!visible) return null;
+  if (!isOnVacation || pathname === CHECKOUT_PATH) return null;
 
   // Coffee detail pages pin a buy bar (up to ~134px tall) to the bottom of
   // the screen on mobile; keep the note above it so it never covers the CTA.
