@@ -1,7 +1,12 @@
 import Image from "next/image";
-import type { PropsWithChildren } from "react";
+import { Suspense, type PropsWithChildren } from "react";
 import * as products from "../../../../lib/models/products";
 import { twMerge } from "tailwind-merge";
+import { PrototypeSwitcher } from "./_prototype/prototype-switcher";
+import { COFFEE_KEYS, type CoffeeKey, getCoffee } from "./_prototype/shared";
+import * as variantB from "./_prototype/variant-b-brand-poster";
+import * as variantC from "./_prototype/variant-c-seal-and-stub";
+import * as variantD from "./_prototype/variant-d-field-specimen";
 
 type Coffee = {
   [
@@ -20,11 +25,74 @@ const BrandingStylizedFont = MedievalSharp({
   weight: "400",
 });
 
-export default function Home() {
+// PROTOTYPE — label redesign: 4 variants on `/`, switchable via `?variant=A|B|C|D` (+ `?coffee=<KEY>|all`).
+const PROTOTYPE_VARIANTS = [
+  {
+    key: "A",
+    name: "Current label",
+    Component: ({ coffee }: { coffee: CoffeeKey }) => <Label coffee={coffee} />,
+  },
+  {
+    key: "B",
+    name: variantB.name,
+    Component: ({ coffee }: { coffee: CoffeeKey }) => (
+      <variantB.VariantB coffee={getCoffee(coffee)} />
+    ),
+  },
+  {
+    key: "C",
+    name: variantC.name,
+    Component: ({ coffee }: { coffee: CoffeeKey }) => (
+      <variantC.VariantC coffee={getCoffee(coffee)} />
+    ),
+  },
+  {
+    key: "D",
+    name: variantD.name,
+    Component: ({ coffee }: { coffee: CoffeeKey }) => (
+      <variantD.VariantD coffee={getCoffee(coffee)} />
+    ),
+  },
+];
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ variant?: string; coffee?: string }>;
+}) {
+  const params = await searchParams;
+  const variant =
+    PROTOTYPE_VARIANTS.find((v) => v.key === params.variant) ??
+    PROTOTYPE_VARIANTS[0];
+  const coffeeParam = params.coffee ?? "PUMPKIN_SPICE_MACERATION_MADNESS";
+  const coffees =
+    coffeeParam === "all" ? COFFEE_KEYS
+    : COFFEE_KEYS.includes(coffeeParam as CoffeeKey) ?
+      [coffeeParam as CoffeeKey]
+    : ["PUMPKIN_SPICE_MACERATION_MADNESS" as const];
+
   return (
-    <div className="grid h-full w-full grid-cols-1 place-items-center items-center justify-center gap-3">
-      <Label coffee="PUMPKIN_SPICE_MACERATION_MADNESS" />
-    </div>
+    <>
+      <div
+        className={twMerge(
+          "grid min-h-full w-full grid-cols-1 place-items-center items-center justify-center gap-3",
+          coffeeParam === "all" &&
+            "grid-cols-[repeat(auto-fill,minmax(4.75in,1fr))] gap-16 bg-neutral-200 p-16 pb-28",
+        )}
+      >
+        {coffees.map((c) => (
+          <variant.Component key={c} coffee={c} />
+        ))}
+      </div>
+      <Suspense>
+        <PrototypeSwitcher
+          variants={PROTOTYPE_VARIANTS.map(({ key, name }) => ({ key, name }))}
+          current={variant.key}
+          coffees={COFFEE_KEYS}
+          currentCoffee={coffeeParam}
+        />
+      </Suspense>
+    </>
   );
 }
 
