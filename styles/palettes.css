@@ -1,0 +1,35 @@
+/*
+ * Shared Natcore custom palettes for Sappho and her beans (natcore >= 2.2.0).
+ *
+ * Single source of truth for the brand's custom palettes. Each name is a single
+ * color that becomes the 500 anchor; Natcore derives the full 50-950 ramp, the
+ * mirrored dark side, and readable on-{name} text colors. This unlocks the whole
+ * token surface for the palette: bg-{name}-{shade}, text-on-{name}-{shade}, the
+ * palette-{name} tone modifier, and component modifiers like btn-solid/{name}.
+ *
+ * Apps consume this with a plain CSS @import; each app inlines it into its entry
+ * stylesheet before the Natcore transform runs (see the inline-shared-palettes
+ * PostCSS plugin wired in the app postcss config).
+ */
+
+@natcore-palettes {
+  /*
+   * Deep Navy (#001f36) is a near-black navy, so it anchors the dark 950 end of
+   * the ramp rather than the 500 midpoint. The full 50-950 ramp is pinned so the
+   * light shades stay light (interpolating from a single dark color made every
+   * shade look dark).
+   */
+  navy-50: #eaf1f8;
+  navy-100: #c1d2e3;
+  navy-200: #98b3cd;
+  navy-300: #7095b8;
+  navy-400: #4978a3;
+  navy-500: #1d5b8d;
+  navy-600: #154e7a;
+  navy-700: #0e4268;
+  navy-800: #073657;
+  navy-900: #032a46;
+  navy-950: #001f36; /* Deep Navy */
+
+  pumpkin: #e87a01; /* Sunset Orange */
+}

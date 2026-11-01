@@ -2,6 +2,14 @@
 @import "@nataliebasille/natcore-design-system/css";
 
 /*
+ * Brand custom palettes (navy, pumpkin) live in the repo-root shared file
+ * ../../../../styles/palettes.css. It is inlined into this entry stylesheet by
+ * the inline-shared-palettes PostCSS plugin before the Natcore transform runs
+ * (see postcss.config.mjs).
+ */
+@import "../../../../styles/palettes.css";
+
+/*
  * Brand theme for Sappho and her beans.
  * Palette + typography come from the brand guidelines; hex anchors drive the
  * full 50–950 ramp that Natcore v2 derives.
