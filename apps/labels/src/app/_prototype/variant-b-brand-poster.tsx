@@ -84,7 +84,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
           {coffee.farm}
         </div>
         {fermentation ?
-          <div className="mt-3 flex items-stretch self-start border-2 border-[var(--c800)]">
+          <div className="mt-3 flex items-stretch border-2 border-[var(--c800)]">
             <div className="flex items-center bg-[var(--c800)] px-2 text-white">
               {fermentation.anaerobic ?
                 <FlaskRound className="size-6" />
