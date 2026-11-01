@@ -40,7 +40,7 @@ export const getProducts = unstable_cache(
     // When Stripe isn't configured (local/preview without a key), fall back to
     // the repo's seed catalog so the storefront still renders.
     if (!process.env.STRIPE_KEY) {
-      return fallbackProducts();
+      return sortCoffees(fallbackProducts());
     }
 
     let list;
@@ -56,7 +56,7 @@ export const getProducts = unstable_cache(
           "Unable to load products from Stripe; using seed catalog.",
           error,
         );
-        return fallbackProducts();
+        return sortCoffees(fallbackProducts());
       }
 
       throw error;
@@ -93,11 +93,13 @@ export const getProducts = unstable_cache(
       } satisfies products.Product;
     });
 
-    return groupStripeVariants(
-      list.data.map((p, i) => ({
-        coffeeId: p.metadata.product_id ?? legacyCoffeeId(p.name),
-        variant: variants[i]!,
-      })),
+    return sortCoffees(
+      groupStripeVariants(
+        list.data.map((p, i) => ({
+          coffeeId: p.metadata.product_id ?? legacyCoffeeId(p.name),
+          variant: variants[i]!,
+        })),
+      ),
     );
   },
   ["products"],
@@ -108,6 +110,13 @@ export const getProducts = unstable_cache(
 );
 
 type CatalogCoffee = products.ProductWithVariants<products.Product>;
+
+/** Coffees ordered by country of origin. */
+function sortCoffees(coffees: CatalogCoffee[]): CatalogCoffee[] {
+  return [...coffees].sort((a, b) =>
+    (a.country ?? "").localeCompare(b.country ?? ""),
+  );
+}
 
 /** Every purchasable size as a full product, keyed by its Stripe product id. */
 export async function getProductVariants(): Promise<products.Product[]> {
