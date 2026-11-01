@@ -88,7 +88,7 @@ export function PrototypeSwitcher({
           value={currentCoffee}
           onChange={(e) => setParam("coffee", e.target.value)}
         >
-          <option value="all">— All active coffees —</option>
+          <option value="all">— All coffees —</option>
           {coffees.map((c) => (
             <option key={c} value={c}>
               {c}

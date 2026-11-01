@@ -56,12 +56,16 @@ export default async function Home({
   const variant =
     PROTOTYPE_VARIANTS.find((v) => v.key === params.variant) ??
     PROTOTYPE_VARIANTS[0];
-  const coffeeParam = params.coffee ?? "PUMPKIN_SPICE_MACERATION_MADNESS";
+  const activeCoffees = COFFEE_KEYS.filter((k) => getCoffee(k).active);
+  const coffeeParam =
+    (
+      params.coffee === "all" ||
+      activeCoffees.includes(params.coffee as CoffeeKey)
+    ) ?
+      params.coffee!
+    : "PUMPKIN_SPICE_MACERATION_MADNESS";
   const coffees =
-    coffeeParam === "all" ? COFFEE_KEYS.filter((k) => getCoffee(k).active)
-    : COFFEE_KEYS.includes(coffeeParam as CoffeeKey) ?
-      [coffeeParam as CoffeeKey]
-    : ["PUMPKIN_SPICE_MACERATION_MADNESS" as const];
+    coffeeParam === "all" ? activeCoffees : [coffeeParam as CoffeeKey];
 
   return (
     <>
@@ -80,7 +84,7 @@ export default async function Home({
         <PrototypeSwitcher
           variants={PROTOTYPE_VARIANTS.map(({ key, name }) => ({ key, name }))}
           current={variant.key}
-          coffees={COFFEE_KEYS}
+          coffees={activeCoffees}
           currentCoffee={coffeeParam}
         />
       </Suspense>
