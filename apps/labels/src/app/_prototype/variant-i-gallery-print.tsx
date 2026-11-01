@@ -82,7 +82,6 @@ function Painting({ coffee }: { coffee: Coffee }) {
       <div className="absolute inset-0 blur-[18px]">
         {washes.map((b, i) => (
           <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: static generated art
             key={i}
             className="absolute rounded-full"
             style={{
@@ -98,7 +97,6 @@ function Painting({ coffee }: { coffee: Coffee }) {
       </div>
       {shapes.map((sh, i) => (
         <div
-          // biome-ignore lint/suspicious/noArrayIndexKey: static generated art
           key={i}
           className="absolute opacity-80 mix-blend-multiply"
           style={{
@@ -115,7 +113,6 @@ function Painting({ coffee }: { coffee: Coffee }) {
       <div className="absolute inset-0 blur-[1.5px]">
         {strokes.map((st, i) => (
           <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: static generated art
             key={i}
             className="absolute -left-10 w-[140%] rounded-full opacity-85"
             style={{
@@ -173,8 +170,9 @@ export function VariantI({ coffee }: { coffee: Coffee }) {
           {coffee.farm}
         </div>
         <div className="text-[10px] leading-snug opacity-70">
-          {coffee.country}
-          {coffee.region && `, ${coffee.region.trim()}`}
+          {coffee.region?.includes(coffee.country ?? "") ?
+            coffee.region.trim()
+          : [coffee.country, coffee.region?.trim()].filter(Boolean).join(", ")}
         </div>
 
         <div className="mt-2.5 text-balance text-[16px] italic leading-snug">
