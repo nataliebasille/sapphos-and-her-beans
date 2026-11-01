@@ -23,7 +23,7 @@ const BrandingStylizedFont = MedievalSharp({
 export default function Home() {
   return (
     <div className="grid h-full w-full grid-cols-1 place-items-center items-center justify-center gap-3">
-      <Label coffee="PUMPKIN_SPICE_MACERATION_MADNESS_250g" />
+      <Label coffee="PUMPKIN_SPICE_MACERATION_MADNESS" />
     </div>
   );
 }
