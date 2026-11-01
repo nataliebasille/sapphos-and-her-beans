@@ -1,6 +1,8 @@
 // PROTOTYPE — Variant B "Brand poster": white (printable) background, brand navy type, coffee colour only as an accent band.
 // Hierarchy: farm name is the hero → flavour band → spec sheet → QR footer.
 import { Fragment } from "react";
+import { Bubbles } from "../../../../ecommerce/src/app/_components/icons/bubbles";
+import { FlaskRound } from "../../../../ecommerce/src/app/_components/icons/flask-round";
 import {
   BRAND,
   type Coffee,
@@ -21,15 +23,20 @@ export const name = "Brand poster";
 
 function fermentationParts(
   coffee: Coffee,
-): { kicker: string; value: string } | undefined {
+): { kicker: string; value: string; anaerobic: boolean } | undefined {
   if (!("fermentation" in coffee) || !coffee.fermentation) return undefined;
   const f = coffee.fermentation;
-  if (typeof f === "string") return { kicker: "Fermented for", value: f };
+  if (typeof f === "string")
+    return { kicker: "Fermented for", value: f, anaerobic: false };
   if (f.type === "cofermentation")
-    return { kicker: "Co-fermented with", value: f.ingredient };
+    return {
+      kicker: "Co-fermented with",
+      value: f.ingredient,
+      anaerobic: false,
+    };
   return f.duration ?
-      { kicker: "Anaerobic fermentation", value: f.duration }
-    : { kicker: "Fermentation", value: "Anaerobic" };
+      { kicker: "Anaerobic fermentation", value: f.duration, anaerobic: true }
+    : { kicker: "Fermentation", value: "Anaerobic", anaerobic: true };
 }
 
 export function VariantB({ coffee }: { coffee: Coffee }) {
@@ -81,8 +88,10 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         </h1>
         {fermentation ?
           <div className="mt-3 flex items-stretch self-start border-2 border-[var(--c800)]">
-            <div className="flex items-center bg-[var(--c800)] px-2 text-lg leading-none text-white">
-              ✦
+            <div className="flex items-center bg-[var(--c800)] px-2 text-white">
+              {fermentation.anaerobic ?
+                <FlaskRound className="size-6" />
+              : <Bubbles className="size-6" />}
             </div>
             <div className="px-3 py-1.5">
               <div className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[var(--c700)]">
