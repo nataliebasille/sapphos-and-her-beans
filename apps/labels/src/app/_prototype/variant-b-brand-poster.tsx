@@ -10,7 +10,6 @@ import {
   Logo,
   QrCode,
   antic,
-  callout,
   detailRows,
   fermentationInfo,
   montserrat,
@@ -31,7 +30,6 @@ function headlineSize(text: string) {
 }
 
 export function VariantB({ coffee }: { coffee: Coffee }) {
-  const tag = callout(coffee);
   const fermentation = fermentationInfo(coffee);
   const pts = score(coffee);
 
@@ -76,7 +74,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         >
           {coffee.name}
         </h1>
-        {fermentation ?
+        {fermentation && (
           <div className="mt-3 flex items-stretch border-2 border-[var(--c800)]">
             <div className="flex items-center bg-[var(--c800)] px-2 text-white">
               {fermentation.anaerobic ?
@@ -92,14 +90,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
               </div>
             </div>
           </div>
-        : tag && (
-            <p
-              className={`mt-2 text-[13px] italic text-[var(--c800)] ${antic.className}`}
-            >
-              {tag}
-            </p>
-          )
-        }
+        )}
       </section>
 
       <section className="bg-[var(--c800)] px-5 py-3 text-[var(--c50)]">

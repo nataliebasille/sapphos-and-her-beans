@@ -7,7 +7,6 @@ import {
   LabelFrame,
   Logo,
   QrCode,
-  callout,
   courierPrime,
   detailRows,
   fermentationInfo,
@@ -21,7 +20,6 @@ export const name = "Field specimen";
 
 export function VariantD({ coffee }: { coffee: Coffee }) {
   const ferment = fermentationInfo(coffee);
-  const tag = callout(coffee);
   const pts = score(coffee);
 
   return (
@@ -69,7 +67,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
           {coffee.name}
         </h1>
 
-        {ferment ?
+        {ferment && (
           <div className="mt-3 flex items-center gap-2.5 border-y-2 border-dashed border-[var(--c700)] py-2">
             {ferment.anaerobic ?
               <FlaskRound className="size-7 shrink-0 text-[var(--c700)]" />
@@ -85,12 +83,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
               </div>
             </div>
           </div>
-        : tag && (
-            <div className="mt-2 text-[11px] italic text-[var(--c800)]">
-              {tag}
-            </div>
-          )
-        }
+        )}
 
         <ol className="my-auto flex flex-col gap-1 py-3">
           {tastingNotes(coffee).map((note, i) => (

@@ -143,8 +143,6 @@ export function detailRows(coffee: Coffee): [string, string][] {
 
 export const score = (coffee: Coffee) =>
   "score" in coffee ? coffee.score : undefined;
-export const callout = (coffee: Coffee) =>
-  "callout" in coffee ? coffee.callout : undefined;
 
 /** Labels always use the black, transparent-background logo (copied from apps/ecommerce/public/images). */
 export function Logo({ className }: { className?: string }) {
