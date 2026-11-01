@@ -29,10 +29,7 @@ export default async function Home({
       <Suspense>
         <CoffeePicker
           current={selected ?? "all"}
-          coffees={ACTIVE_COFFEE_KEYS.map((key) => {
-            const c = getCoffee(key);
-            return { key, label: `${c.country} — ${c.name}` };
-          })}
+          coffees={ACTIVE_COFFEE_KEYS}
         />
       </Suspense>
       {keys.map((key) => (
