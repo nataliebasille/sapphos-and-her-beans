@@ -19,7 +19,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@nataliebasille/natcore-design-system": "^2.0.3",
+    "@nataliebasille/natcore-design-system": "^2.2.1",
     "@nataliebasille/typescript-utils": "^1.1.5",
     "@sentry/nextjs": "^8.35.0",
     "@stripe/react-stripe-js": "^5.2.0",

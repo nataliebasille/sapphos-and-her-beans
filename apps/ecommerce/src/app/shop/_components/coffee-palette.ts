@@ -5,6 +5,7 @@ import { type products } from "@models";
  * `color`. Written out in full so Tailwind's compiler can see every class.
  */
 export type CoffeePalette = {
+  palette: string;
   surface: string;
   panel: string;
   panelText: string;
@@ -23,6 +24,7 @@ export type CoffeePalette = {
 export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
   {
     cyan: {
+      palette: "palette-cyan",
       surface: "bg-cyan-50",
       panel: "bg-cyan-900",
       panelText: "text-cyan-50",
@@ -38,6 +40,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-cyan-700",
     },
     sky: {
+      palette: "palette-sky",
       surface: "bg-sky-50",
       panel: "bg-sky-900",
       panelText: "text-sky-50",
@@ -53,6 +56,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-sky-700",
     },
     yellow: {
+      palette: "palette-yellow",
       surface: "bg-yellow-50",
       panel: "bg-yellow-900",
       panelText: "text-yellow-50",
@@ -68,6 +72,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-yellow-700",
     },
     rose: {
+      palette: "palette-rose",
       surface: "bg-rose-50",
       panel: "bg-rose-900",
       panelText: "text-rose-50",
@@ -83,6 +88,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-rose-700",
     },
     slate: {
+      palette: "palette-slate",
       surface: "bg-slate-50",
       panel: "bg-slate-900",
       panelText: "text-slate-50",
@@ -98,6 +104,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-slate-700",
     },
     purple: {
+      palette: "palette-purple",
       surface: "bg-purple-50",
       panel: "bg-purple-900",
       panelText: "text-purple-50",
@@ -113,6 +120,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-purple-700",
     },
     amber: {
+      palette: "palette-amber",
       surface: "bg-amber-50",
       panel: "bg-amber-900",
       panelText: "text-amber-50",
@@ -128,6 +136,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-amber-700",
     },
     emerald: {
+      palette: "palette-emerald",
       surface: "bg-emerald-50",
       panel: "bg-emerald-900",
       panelText: "text-emerald-50",
@@ -143,6 +152,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-emerald-700",
     },
     violet: {
+      palette: "palette-violet",
       surface: "bg-violet-50",
       panel: "bg-violet-900",
       panelText: "text-violet-50",
@@ -158,6 +168,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-violet-700",
     },
     navy: {
+      palette: "palette-navy",
       surface: "bg-blue-50",
       panel: "bg-blue-900",
       panelText: "text-blue-50",
@@ -173,6 +184,7 @@ export const COFFEE_PALETTES: Record<products.Product["color"], CoffeePalette> =
       gradientTo: "to-blue-700",
     },
     pumpkin: {
+      palette: "palette-pumpkin",
       surface: "bg-orange-50",
       panel: "bg-orange-900",
       panelText: "text-orange-50",
