@@ -1,5 +1,7 @@
 // PROTOTYPE — Variant D "Field specimen": asymmetric layout with a full-height coloured spine and typewriter field notes.
-// Hierarchy: country on the spine → numbered flavour list → dotted-leader data table with rubber stamps.
+// Hierarchy: country + score on the spine → name → fermentation row → numbered flavour list → dotted-leader data table.
+import { Bubbles } from "../../../../ecommerce/src/app/_components/icons/bubbles";
+import { FlaskRound } from "../../../../ecommerce/src/app/_components/icons/flask-round";
 import {
   type Coffee,
   LabelFrame,
@@ -19,8 +21,7 @@ export const name = "Field specimen";
 
 export function VariantD({ coffee }: { coffee: Coffee }) {
   const ferment = fermentationInfo(coffee);
-  const tag =
-    ferment ? `${ferment.kicker} · ${ferment.value}` : callout(coffee);
+  const tag = callout(coffee);
   const pts = score(coffee);
 
   return (
@@ -29,7 +30,16 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
       style={paletteVars(coffee.color)}
     >
       <aside className="flex w-[78px] shrink-0 flex-col items-center justify-between bg-[var(--c900)] py-4 text-[var(--c50)]">
-        <span className="text-[9px] tracking-widest opacity-80">SAPPHO</span>
+        {pts !== undefined ?
+          <span
+            className={`flex flex-col items-center leading-none ${montserrat.className}`}
+          >
+            <span className="text-xl font-black">{pts}</span>
+            <span className="mt-0.5 text-[8px] font-semibold tracking-[0.25em] opacity-80">
+              PTS
+            </span>
+          </span>
+        : <span className="text-[9px] tracking-widest opacity-80">SAPPHO</span>}
         <span
           className={`whitespace-nowrap font-black uppercase leading-none tracking-tight ${montserrat.className}`}
           style={{
@@ -70,7 +80,32 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
         </h1>
         <div className="text-[10px] text-[var(--c800)]">{coffee.farm}</div>
 
-        <ol className="mt-3 flex flex-col gap-1">
+        {ferment ?
+          <div className="mt-3 flex items-stretch border-2 border-[var(--c800)]">
+            <div className="flex items-center bg-[var(--c800)] px-2 text-white">
+              {ferment.anaerobic ?
+                <FlaskRound className="size-5" />
+              : <Bubbles className="size-5" />}
+            </div>
+            <div className="px-2.5 py-1">
+              <div className="text-[9px] uppercase tracking-[0.2em] text-[var(--c700)]">
+                {ferment.kicker}
+              </div>
+              <div
+                className={`text-[15px] font-extrabold uppercase leading-tight text-[var(--c800)] ${montserrat.className}`}
+              >
+                {ferment.value}
+              </div>
+            </div>
+          </div>
+        : tag && (
+            <div className="mt-2 text-[11px] italic text-[var(--c800)]">
+              {tag}
+            </div>
+          )
+        }
+
+        <ol className="my-auto flex flex-col gap-1 py-3">
           {tastingNotes(coffee).map((note, i) => (
             <li
               key={note}
@@ -88,18 +123,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
           ))}
         </ol>
 
-        <dl className="relative mt-auto flex flex-col gap-1 text-[10px] leading-tight">
-          {tag && (
-            <div className="absolute -top-14 right-0 rotate-[-8deg] border-2 border-[var(--c700)] px-2 py-0.5 text-center text-[10px] font-bold uppercase leading-tight text-[var(--c700)] opacity-85">
-              {tag}
-            </div>
-          )}
-          {pts !== undefined && (
-            <div className="absolute -top-16 left-0 flex h-12 w-12 rotate-[10deg] flex-col items-center justify-center rounded-full border-2 border-[var(--c700)] font-bold leading-none text-[var(--c700)] opacity-85">
-              <span className="text-sm">{pts}</span>
-              <span className="text-[7px]">PTS</span>
-            </div>
-          )}
+        <dl className="flex flex-col gap-1 text-[10px] leading-tight">
           {detailRows(coffee).map(([label, value]) => (
             <div key={label} className="flex items-end gap-1">
               <dt className="shrink-0 uppercase">{label}</dt>
