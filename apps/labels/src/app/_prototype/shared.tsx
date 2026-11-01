@@ -131,6 +131,7 @@ export function tastingNotes(coffee: Coffee): string[] {
 // Same labels/order as the shop: "Processing" (card) then the passport spec rows.
 export function detailRows(coffee: Coffee): [string, string][] {
   const rows: [string, string | undefined][] = [
+    ["Farm", coffee.farm],
     ["Processing", coffee.processing],
     ["Varietals", coffee.varietals],
     ["Altitude", "altitude" in coffee ? coffee.altitude : undefined],

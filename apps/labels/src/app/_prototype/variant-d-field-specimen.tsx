@@ -121,10 +121,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
         </ol>
 
         <dl className="flex flex-col gap-1 text-[10px] leading-tight">
-          {[
-            ["Farm", coffee.farm] as [string, string],
-            ...detailRows(coffee),
-          ].map(([label, value]) => (
+          {detailRows(coffee).map(([label, value]) => (
             <div key={label} className="flex items-end gap-1">
               <dt className="shrink-0 uppercase">{label}</dt>
               <span className="mb-[3px] min-w-3 flex-1 border-b border-dotted border-current" />

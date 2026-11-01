@@ -80,9 +80,6 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         >
           {coffee.name}
         </h1>
-        <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] opacity-70">
-          {coffee.farm}
-        </div>
         {fermentation ?
           <div className="mt-3 flex items-stretch border-2 border-[var(--c800)]">
             <div className="flex items-center bg-[var(--c800)] px-2 text-white">
@@ -157,7 +154,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
           <span
             className={`font-semibold uppercase tracking-[0.2em] ${montserrat.className}`}
           >
-            Scan to meet the farmers
+            Scan to visit our shop
           </span>
           <span className="italic">Traceable to {coffee.traceable}</span>
         </div>
