@@ -66,7 +66,7 @@ export function CoffeeCard({
             {group.origin}
           </h2>
 
-          <h1
+          <h3
             className={twMerge(
               "text-balance",
               getProcessingTextClasses(group.label),
@@ -74,7 +74,7 @@ export function CoffeeCard({
             )}
           >
             {group.label}
-          </h1>
+          </h3>
         </div>
 
         <div className="flex text-xl">
@@ -143,7 +143,9 @@ export function CoffeeCard({
                 <Fragment key={index}>
                   <li>{note}</li>
                   {group.notes.length - 1 !== index && (
-                    <li className="opacity-50">✦</li>
+                    <li aria-hidden="true" className="opacity-50">
+                      ✦
+                    </li>
                   )}
                 </Fragment>
               );
