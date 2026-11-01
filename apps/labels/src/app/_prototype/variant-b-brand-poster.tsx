@@ -10,7 +10,6 @@ import {
   antic,
   callout,
   detailRows,
-  fermentationText,
   montserrat,
   notoSans,
   paletteVars,
@@ -20,8 +19,22 @@ import {
 
 export const name = "Brand poster";
 
+function fermentationParts(
+  coffee: Coffee,
+): { kicker: string; value: string } | undefined {
+  if (!("fermentation" in coffee) || !coffee.fermentation) return undefined;
+  const f = coffee.fermentation;
+  if (typeof f === "string") return { kicker: "Fermented for", value: f };
+  if (f.type === "cofermentation")
+    return { kicker: "Co-fermented with", value: f.ingredient };
+  return f.duration ?
+      { kicker: "Anaerobic fermentation", value: f.duration }
+    : { kicker: "Fermentation", value: "Anaerobic" };
+}
+
 export function VariantB({ coffee }: { coffee: Coffee }) {
-  const tag = fermentationText(coffee) ?? callout(coffee);
+  const tag = callout(coffee);
+  const fermentation = fermentationParts(coffee);
   const pts = score(coffee);
 
   return (
@@ -66,13 +79,28 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         <h1 className="mt-1 text-balance text-[34px] font-black uppercase leading-[0.95] tracking-tight">
           {coffee.farm}
         </h1>
-        {tag && (
-          <p
-            className={`mt-2 text-[13px] italic text-[var(--c800)] ${antic.className}`}
-          >
-            {tag}
-          </p>
-        )}
+        {fermentation ?
+          <div className="mt-3 flex items-stretch self-start border-2 border-[var(--c800)]">
+            <div className="flex items-center bg-[var(--c800)] px-2 text-lg leading-none text-white">
+              ✦
+            </div>
+            <div className="px-3 py-1.5">
+              <div className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[var(--c700)]">
+                {fermentation.kicker}
+              </div>
+              <div className="text-balance text-[17px] font-extrabold uppercase leading-tight tracking-wide text-[var(--c800)]">
+                {fermentation.value}
+              </div>
+            </div>
+          </div>
+        : tag && (
+            <p
+              className={`mt-2 text-[13px] italic text-[var(--c800)] ${antic.className}`}
+            >
+              {tag}
+            </p>
+          )
+        }
       </section>
 
       <section className="bg-[var(--c800)] px-5 py-3 text-[var(--c50)]">
