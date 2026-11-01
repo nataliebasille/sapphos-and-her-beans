@@ -40,7 +40,7 @@ export const getProducts = unstable_cache(
     // When Stripe isn't configured (local/preview without a key), fall back to
     // the repo's seed catalog so the storefront still renders.
     if (!process.env.STRIPE_KEY) {
-      return fallbackProducts();
+      return sortCoffees(fallbackProducts());
     }
 
     let list;
@@ -56,13 +56,13 @@ export const getProducts = unstable_cache(
           "Unable to load products from Stripe; using seed catalog.",
           error,
         );
-        return fallbackProducts();
+        return sortCoffees(fallbackProducts());
       }
 
       throw error;
     }
 
-    return list.data.map((p) => {
+    const variants = list.data.map((p) => {
       const price =
         ((p.default_price as typeof p.default_price & object)?.unit_amount ??
           0) / 100;
@@ -71,8 +71,10 @@ export const getProducts = unstable_cache(
       return {
         type: "coffee",
         id: p.id,
-        name: p.name,
+        name: p.metadata.product_name ?? legacyCoffeeName(p.name),
+        deprecated_stripe_name: p.name,
         price: price,
+        active: p.active,
         color: p.metadata.label_color as products.Product["color"],
         size: p.metadata.size ?? "",
         region: p.metadata.region,
@@ -90,6 +92,15 @@ export const getProducts = unstable_cache(
         isDecaf: p.metadata.decaf === "true",
       } satisfies products.Product;
     });
+
+    return sortCoffees(
+      groupStripeVariants(
+        list.data.map((p, i) => ({
+          coffeeId: p.metadata.product_id ?? legacyCoffeeId(p.name),
+          variant: variants[i]!,
+        })),
+      ),
+    );
   },
   ["products"],
   {
@@ -98,8 +109,64 @@ export const getProducts = unstable_cache(
   },
 );
 
-function fallbackProducts() {
-  return products.PRODUCTS as unknown as products.Product[];
+type CatalogCoffee = products.ProductWithVariants<products.Product>;
+
+/** Coffees ordered by country of origin. */
+function sortCoffees(coffees: CatalogCoffee[]): CatalogCoffee[] {
+  return [...coffees].sort((a, b) =>
+    (a.country ?? "").localeCompare(b.country ?? ""),
+  );
+}
+
+/** Every purchasable size as a full product, keyed by its Stripe product id. */
+export async function getProductVariants(): Promise<products.Product[]> {
+  return (await getProducts()).flatMap((coffee) =>
+    products.resolveVariants(coffee),
+  );
+}
+
+/** Only coffees and sizes flagged active in the seed catalog. */
+function fallbackProducts(): CatalogCoffee[] {
+  return products.PRODUCTS.map((coffee): CatalogCoffee => ({
+    ...coffee,
+    variants: coffee.variants.filter((variant) => variant.active),
+  })).filter((coffee) => coffee.variants.length > 0);
+}
+
+/** Stripe stores one product per size; collapse them back into coffees. */
+function groupStripeVariants(
+  rows: { coffeeId: string; variant: products.Product }[],
+): CatalogCoffee[] {
+  const coffees = new Map<string, CatalogCoffee>();
+  for (const { coffeeId, variant } of rows) {
+    const { type: _, ...overrides } = variant;
+    const existing = coffees.get(coffeeId);
+    if (existing) {
+      coffees.set(coffeeId, {
+        ...existing,
+        variants: [...existing.variants, overrides],
+      });
+    } else {
+      coffees.set(coffeeId, {
+        ...variant,
+        id: coffeeId,
+        variants: [overrides],
+      });
+    }
+  }
+  return [...coffees.values()];
+}
+
+// Stripe products seeded before `product_id`/`product_name` metadata existed are
+// named "Origin - Coffee name - Size".
+function legacyCoffeeId(stripeName: string) {
+  const parts = stripeName.split(" - ");
+  return parts.length >= 2 ? parts.slice(0, -1).join(" - ") : stripeName;
+}
+
+function legacyCoffeeName(stripeName: string) {
+  const parts = stripeName.split(" - ");
+  return parts.length >= 3 ? parts.slice(1, -1).join(" - ") : stripeName;
 }
 
 function shouldUseFallbackProducts() {

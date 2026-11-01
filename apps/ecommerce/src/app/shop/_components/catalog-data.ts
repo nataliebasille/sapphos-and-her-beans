@@ -1,4 +1,4 @@
-import { type products } from "@models";
+import { products } from "@models";
 
 /**
  * Pure catalog data helpers — no JSX, no hooks, no "use client" — so they can be
@@ -7,6 +7,7 @@ import { type products } from "@models";
  */
 
 export type Coffee = products.Product;
+export type CatalogCoffee = products.ProductWithVariants<Coffee>;
 
 export type OriginGroup = {
   key: string;
@@ -28,7 +29,7 @@ export type OriginGroup = {
 };
 
 export function originName(coffee: Coffee): string {
-  return coffee.country ?? coffee.name?.split(" - ")[0] ?? "Coffee";
+  return coffee.country ?? "Coffee";
 }
 
 export function tastingNotes(coffee: Coffee, max = 4): string[] {
@@ -74,68 +75,42 @@ export function headerFermentKicker(group: OriginGroup): string | null {
 
 const SIZE_ORDER = ["250g", "100g", "singleserve"];
 
-/** Base product name with the trailing size segment removed. */
-function baseName(p: Coffee): string {
-  const parts = (p.name ?? "").split(" - ");
-  return parts.length >= 2 ? parts.slice(0, -1).join(" - ") : `${p.farm}`;
-}
+function toGroup(coffee: CatalogCoffee): OriginGroup {
+  const sizes = products
+    .resolveVariants(coffee)
+    .sort((a, b) => SIZE_ORDER.indexOf(a.size) - SIZE_ORDER.indexOf(b.size));
 
-/** The distinguishing lot label (name minus country + size), else the farm. */
-function lotLabel(p: Coffee): string {
-  const parts = (p.name ?? "").split(" - ");
-  if (parts.length >= 3) return parts.slice(1, -1).join(" - ");
-  return p.farm;
-}
-
-function toGroup(p: Coffee): OriginGroup {
   return {
-    key: baseName(p),
-    origin: originName(p),
-    label: lotLabel(p),
-    farm: p.farm,
-    color: p.color,
-    processing: p.processing,
-    region: p.region,
-    altitude: p.altitude,
-    varietals: p.varietals,
-    lot: p.lot,
-    fermentation: p.fermentation,
-    score: p.score,
-    notes: tastingNotes(p, 4),
-    traceable: p.traceable,
-    isDecaf: p.isDecaf,
-    sizes: [],
+    key: coffee.id,
+    origin: originName(coffee),
+    label: coffee.name,
+    farm: coffee.farm,
+    color: coffee.color,
+    processing: coffee.processing,
+    region: coffee.region,
+    altitude: coffee.altitude,
+    varietals: coffee.varietals,
+    lot: coffee.lot,
+    fermentation: coffee.fermentation,
+    score: coffee.score,
+    notes: tastingNotes(coffee, 4),
+    traceable: coffee.traceable,
+    isDecaf: coffee.isDecaf,
+    sizes,
   };
 }
 
-function sortSizes(group: OriginGroup): void {
-  group.sizes.sort(
-    (a, b) => SIZE_ORDER.indexOf(a.size) - SIZE_ORDER.indexOf(b.size),
-  );
+/** One group per coffee, with its purchasable sizes resolved and ordered. */
+export function toOriginGroups(coffees: CatalogCoffee[]): OriginGroup[] {
+  return coffees.filter((coffee) => coffee.variants.length > 0).map(toGroup);
 }
 
-/** Collapse per-size SKUs into one group per distinct coffee. */
-export function groupByOrigin(list: Coffee[]): OriginGroup[] {
-  const map = new Map<string, OriginGroup>();
-  for (const p of list) {
-    const key = baseName(p);
-    let g = map.get(key);
-    if (!g) {
-      g = toGroup(p);
-      map.set(key, g);
-    }
-    g.sizes.push(p);
-  }
-  for (const g of map.values()) sortSizes(g);
-  return [...map.values()];
-}
-
-/** The origin group that contains the given product id, if any. */
+/** The origin group that contains the given size (variant) id, if any. */
 export function groupForId(
-  list: Coffee[],
+  coffees: CatalogCoffee[],
   id: string,
 ): OriginGroup | undefined {
-  return groupByOrigin(list).find((g) => g.sizes.some((s) => s.id === id));
+  return toOriginGroups(coffees).find((g) => g.sizes.some((s) => s.id === id));
 }
 
 /** Min–max price label for a group's sizes. */

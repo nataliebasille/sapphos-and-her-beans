@@ -52,7 +52,7 @@ export function tastingNotes(coffee: Coffee, max = 3): string[] {
 }
 
 export function originName(coffee: Coffee): string {
-  return coffee.country ?? coffee.name?.split(" - ")[0] ?? "Coffee";
+  return coffee.country ?? "Coffee";
 }
 
 /* ------------------------------------------------------------------ *
