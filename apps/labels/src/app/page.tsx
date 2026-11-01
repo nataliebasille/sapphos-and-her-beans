@@ -58,7 +58,7 @@ export default async function Home({
     PROTOTYPE_VARIANTS[0];
   const coffeeParam = params.coffee ?? "PUMPKIN_SPICE_MACERATION_MADNESS";
   const coffees =
-    coffeeParam === "all" ? COFFEE_KEYS
+    coffeeParam === "all" ? COFFEE_KEYS.filter((k) => getCoffee(k).active)
     : COFFEE_KEYS.includes(coffeeParam as CoffeeKey) ?
       [coffeeParam as CoffeeKey]
     : ["PUMPKIN_SPICE_MACERATION_MADNESS" as const];
