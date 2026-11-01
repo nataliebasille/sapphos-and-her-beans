@@ -96,6 +96,23 @@ export function paletteVars(color: Coffee["color"]): CSSProperties {
   ) as CSSProperties;
 }
 
+// Mirrors the shop card's fermentation kicker/value (apps/ecommerce/src/app/shop/_components/coffee-card.tsx).
+export function fermentationInfo(
+  coffee: Coffee,
+): { kicker: string; value: string; anaerobic: boolean } | undefined {
+  if (!("fermentation" in coffee) || !coffee.fermentation) return undefined;
+  const f = coffee.fermentation;
+  if (typeof f === "string")
+    return { kicker: "Fermentation", value: f, anaerobic: false };
+  if (f.type === "cofermentation")
+    return { kicker: "Co-Fermentation", value: f.ingredient, anaerobic: false };
+  return {
+    kicker: "Anaerobic",
+    value: f.duration ?? "Anaerobic",
+    anaerobic: true,
+  };
+}
+
 export function fermentationText(coffee: Coffee): string | undefined {
   if (!("fermentation" in coffee) || !coffee.fermentation) return undefined;
   const f = coffee.fermentation;
@@ -106,17 +123,18 @@ export function fermentationText(coffee: Coffee): string | undefined {
 
 export function tastingNotes(coffee: Coffee): string[] {
   return (coffee.tastingNotes ?? "")
-    .split(/,\s*(?:and\s+)?/i)
-    .map((n) => n.trim())
+    .split(",")
+    .map((n) => n.trim().replace(/^and\s+/i, ""))
     .filter(Boolean);
 }
 
+// Same labels/order as the shop: "Processing" (card) then the passport spec rows.
 export function detailRows(coffee: Coffee): [string, string][] {
   const rows: [string, string | undefined][] = [
-    ["Process", coffee.processing],
-    ["Region", coffee.region?.trim()],
+    ["Processing", coffee.processing],
     ["Varietals", coffee.varietals],
     ["Altitude", "altitude" in coffee ? coffee.altitude : undefined],
+    ["Region", coffee.region?.trim()],
     ["Lot", coffee.lot],
   ];
   return rows.filter((r): r is [string, string] => Boolean(r[1]));

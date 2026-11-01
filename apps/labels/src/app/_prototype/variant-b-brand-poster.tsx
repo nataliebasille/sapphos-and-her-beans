@@ -1,5 +1,5 @@
 // PROTOTYPE — Variant B "Brand poster": white (printable) background, brand navy type, coffee colour only as an accent band.
-// Hierarchy: farm name is the hero → flavour band → spec sheet → QR footer.
+// Hierarchy: product name (same as the shop card heading) is the hero → tasting-notes band → spec sheet → QR footer.
 import { Fragment } from "react";
 import { Bubbles } from "../../../../ecommerce/src/app/_components/icons/bubbles";
 import { FlaskRound } from "../../../../ecommerce/src/app/_components/icons/flask-round";
@@ -12,6 +12,7 @@ import {
   antic,
   callout,
   detailRows,
+  fermentationInfo,
   montserrat,
   notoSans,
   paletteVars,
@@ -21,27 +22,17 @@ import {
 
 export const name = "Brand poster";
 
-function fermentationParts(
-  coffee: Coffee,
-): { kicker: string; value: string; anaerobic: boolean } | undefined {
-  if (!("fermentation" in coffee) || !coffee.fermentation) return undefined;
-  const f = coffee.fermentation;
-  if (typeof f === "string")
-    return { kicker: "Fermented for", value: f, anaerobic: false };
-  if (f.type === "cofermentation")
-    return {
-      kicker: "Co-fermented with",
-      value: f.ingredient,
-      anaerobic: false,
-    };
-  return f.duration ?
-      { kicker: "Anaerobic fermentation", value: f.duration, anaerobic: true }
-    : { kicker: "Fermentation", value: "Anaerobic", anaerobic: true };
+// Shrinks long product names, like the shop card's getProcessingTextClasses.
+function headlineSize(text: string) {
+  if (text.length <= 16) return 34;
+  if (text.length <= 24) return 28;
+  if (text.length <= 36) return 24;
+  return 21;
 }
 
 export function VariantB({ coffee }: { coffee: Coffee }) {
   const tag = callout(coffee);
-  const fermentation = fermentationParts(coffee);
+  const fermentation = fermentationInfo(coffee);
   const pts = score(coffee);
 
   return (
@@ -77,15 +68,21 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
       </header>
 
       <section
-        className={`flex flex-1 flex-col justify-center px-5 ${montserrat.className}`}
+        className={`flex flex-1 flex-col justify-center px-5 pb-4 pt-2 ${montserrat.className}`}
       >
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.35em]">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-[var(--c700)]" />
           {coffee.country}
         </div>
-        <h1 className="mt-1 text-balance text-[34px] font-black uppercase leading-[0.95] tracking-tight">
-          {coffee.farm}
+        <h1
+          className="mt-1 text-balance font-black uppercase leading-[0.95] tracking-tight"
+          style={{ fontSize: headlineSize(coffee.name) }}
+        >
+          {coffee.name}
         </h1>
+        <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] opacity-70">
+          {coffee.farm}
+        </div>
         {fermentation ?
           <div className="mt-3 flex items-stretch self-start border-2 border-[var(--c800)]">
             <div className="flex items-center bg-[var(--c800)] px-2 text-white">
@@ -116,7 +113,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         <div
           className={`text-[9px] font-semibold uppercase tracking-[0.3em] opacity-80 ${montserrat.className}`}
         >
-          In the cup
+          Tasting Notes
         </div>
         <p
           className={`mt-1 text-balance text-[19px] leading-tight ${antic.className}`}

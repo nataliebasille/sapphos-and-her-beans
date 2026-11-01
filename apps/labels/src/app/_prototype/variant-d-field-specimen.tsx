@@ -8,7 +8,7 @@ import {
   callout,
   courierPrime,
   detailRows,
-  fermentationText,
+  fermentationInfo,
   montserrat,
   paletteVars,
   score,
@@ -18,7 +18,9 @@ import {
 export const name = "Field specimen";
 
 export function VariantD({ coffee }: { coffee: Coffee }) {
-  const tag = fermentationText(coffee) ?? callout(coffee);
+  const ferment = fermentationInfo(coffee);
+  const tag =
+    ferment ? `${ferment.kicker} · ${ferment.value}` : callout(coffee);
   const pts = score(coffee);
 
   return (
@@ -63,12 +65,10 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
           />
         </header>
 
-        <h1 className="mt-2 text-[22px] font-bold leading-tight">
-          {coffee.farm}
+        <h1 className="mt-2 text-balance text-[22px] font-bold leading-tight">
+          {coffee.name}
         </h1>
-        <div className="text-[10px] text-[var(--c800)]">
-          {coffee.region?.trim()}
-        </div>
+        <div className="text-[10px] text-[var(--c800)]">{coffee.farm}</div>
 
         <ol className="mt-3 flex flex-col gap-1">
           {tastingNotes(coffee).map((note, i) => (
