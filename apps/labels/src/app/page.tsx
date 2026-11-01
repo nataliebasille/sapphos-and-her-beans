@@ -6,7 +6,7 @@ import { PrototypeSwitcher } from "./_prototype/prototype-switcher";
 import { COFFEE_KEYS, type CoffeeKey, getCoffee } from "./_prototype/shared";
 import * as variantB from "./_prototype/variant-b-brand-poster";
 import * as variantD from "./_prototype/variant-d-field-specimen";
-import * as variantH from "./_prototype/variant-h-arch-and-story";
+import * as variantI from "./_prototype/variant-i-gallery-print";
 
 type Coffee = {
   [
@@ -25,7 +25,7 @@ const BrandingStylizedFont = MedievalSharp({
   weight: "400",
 });
 
-// PROTOTYPE — label redesign: variants on `/`, switchable via `?variant=A|B|D|H` (+ `?coffee=<KEY>|all`). Rejected: C ("Seal & stub"), E ("Bento grid"), F ("Bold classic"), G ("Refined classic").
+// PROTOTYPE — label redesign: variants on `/`, switchable via `?variant=A|B|D|I` (+ `?coffee=<KEY>|all`). Rejected: C ("Seal & stub"), E ("Bento grid"), F ("Bold classic"), G ("Refined classic"), H ("Arch & story").
 const PROTOTYPE_VARIANTS = [
   {
     key: "A",
@@ -47,10 +47,10 @@ const PROTOTYPE_VARIANTS = [
     ),
   },
   {
-    key: "H",
-    name: variantH.name,
+    key: "I",
+    name: variantI.name,
     Component: ({ coffee }: { coffee: CoffeeKey }) => (
-      <variantH.VariantH coffee={getCoffee(coffee)} />
+      <variantI.VariantI coffee={getCoffee(coffee)} />
     ),
   },
 ];
