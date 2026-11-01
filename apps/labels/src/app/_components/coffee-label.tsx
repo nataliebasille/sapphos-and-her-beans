@@ -1,30 +1,36 @@
-// PROTOTYPE — Variant D "Field specimen": asymmetric layout with a full-height coloured spine and typewriter field notes.
-// Hierarchy: country + score on the spine → name → fermentation row → numbered flavour list → dotted-leader data table.
-import { Bubbles } from "../../../../ecommerce/src/app/_components/icons/bubbles";
-import { FlaskRound } from "../../../../ecommerce/src/app/_components/icons/flask-round";
+import { Courier_Prime, Montserrat } from "next/font/google";
+import { Bubbles } from "./icons/bubbles";
+import { FlaskRound } from "./icons/flask-round";
 import {
   type Coffee,
-  LabelFrame,
-  Logo,
-  QrCode,
-  courierPrime,
   detailRows,
   fermentationInfo,
-  montserrat,
   paletteVars,
   score,
   tastingNotes,
-} from "./shared";
+} from "./coffee-label-data";
 
-export const name = "Field specimen";
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["600", "800", "900"],
+});
+const courierPrime = Courier_Prime({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
-export function VariantD({ coffee }: { coffee: Coffee }) {
+/**
+ * 4x6in printable coffee bag label: a coloured spine (score, country, size) beside
+ * a white panel with the black logo, product name, fermentation, tasting notes,
+ * details and the QR code.
+ */
+export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
   const ferment = fermentationInfo(coffee);
   const pts = score(coffee);
 
   return (
-    <LabelFrame
-      className={`flex bg-white text-[var(--c950)] ${courierPrime.className}`}
+    <article
+      className={`relative flex h-[6in] w-[4in] shrink-0 overflow-hidden bg-white text-[var(--c950)] shadow-xl print:break-after-page print:shadow-none ${courierPrime.className}`}
       style={paletteVars(coffee.color)}
     >
       <aside className="flex w-[78px] shrink-0 flex-col items-center justify-between bg-[var(--c900)] py-4 text-[var(--c50)]">
@@ -43,6 +49,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
           style={{
             writingMode: "vertical-rl",
             transform: "rotate(180deg)",
+            // Shrink long country names so they fit the spine.
             fontSize: Math.min(
               46,
               460 / ((coffee.country?.length ?? 1) * 0.72),
@@ -58,14 +65,18 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
         </span>
       </aside>
 
-      <main className="relative flex flex-1 flex-col px-4 pb-4 pt-3">
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-3">
         <header className="flex justify-center border-b border-[var(--c900)] pb-2">
-          <Logo className="w-[150px]" />
+          <img
+            src="/sappho black logo cropped.png"
+            alt="Sappho & her beans coffee"
+            className="h-auto w-[150px] object-contain"
+          />
         </header>
 
-        <h1 className="mt-3 text-balance text-[22px] font-bold leading-tight">
+        <h2 className="mt-3 text-balance text-[22px] font-bold leading-tight">
           {coffee.name}
-        </h1>
+        </h2>
 
         {ferment && (
           <div className="mt-3 flex items-center gap-2.5 border-y-2 border-dashed border-[var(--c700)] py-2">
@@ -114,7 +125,11 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
         </dl>
 
         <footer className="mt-3 flex items-center gap-3 border-t border-[var(--c900)] pt-2">
-          <QrCode className="h-12 w-12" />
+          <img
+            src="/site qr code.png"
+            alt="QR code linking to the Sappho & her beans shop"
+            className="h-12 w-12 [image-rendering:pixelated]"
+          />
           <div className="flex-1 text-[9px] leading-snug">
             {/* TODO: once the QR points at /shop/[id], say "Scan for this coffee's full story". */}
             <div className="font-bold uppercase tracking-[0.1em] text-[var(--c800)]">
@@ -127,7 +142,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
             </div>
           </div>
         </footer>
-      </main>
-    </LabelFrame>
+      </div>
+    </article>
   );
 }

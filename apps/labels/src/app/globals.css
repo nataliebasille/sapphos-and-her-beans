@@ -7,3 +7,22 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Labels print one per 4x6in page, with their colours (the spine) kept. */
+@page {
+  size: 4in 6in;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    width: auto;
+    height: auto;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
