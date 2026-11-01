@@ -39,7 +39,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
               PTS
             </span>
           </span>
-        : <span className="text-[9px] tracking-widest opacity-80">SAPPHO</span>}
+        : <span aria-hidden />}
         <span
           className={`whitespace-nowrap font-black uppercase leading-none tracking-tight ${montserrat.className}`}
           style={{
@@ -61,15 +61,15 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
       </aside>
 
       <main className="relative flex flex-1 flex-col px-4 pb-4 pt-3">
-        <header>
+        <header className="flex justify-center border-b border-[var(--c900)] pb-2">
           <Logo
             color="var(--c900)"
-            className="aspect-[5/3] w-[110px]"
+            className="aspect-[5/3] w-[150px]"
             style={{ maskPosition: "center 47%" }}
           />
         </header>
 
-        <h1 className="mt-2 text-balance text-[22px] font-bold leading-tight">
+        <h1 className="mt-3 text-balance text-[22px] font-bold leading-tight">
           {coffee.name}
         </h1>
 
