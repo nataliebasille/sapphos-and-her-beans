@@ -1,5 +1,6 @@
 // PROTOTYPE — Variant B "Brand poster": brand pink/navy everywhere, coffee colour only as an accent band.
 // Hierarchy: farm name is the hero → flavour band → spec sheet → QR footer.
+import { Fragment } from "react";
 import {
   BRAND,
   type Coffee,
@@ -55,7 +56,9 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         </div>
       </header>
 
-      <section className={`px-5 pt-3 ${montserrat.className}`}>
+      <section
+        className={`flex flex-1 flex-col justify-center px-5 ${montserrat.className}`}
+      >
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.35em]">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-[var(--c700)]" />
           {coffee.country}
@@ -72,7 +75,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
         )}
       </section>
 
-      <section className="mt-3 bg-[var(--c800)] px-5 py-3 text-[var(--c50)]">
+      <section className="bg-[var(--c800)] px-5 py-3 text-[var(--c50)]">
         <div
           className={`text-[9px] font-semibold uppercase tracking-[0.3em] opacity-80 ${montserrat.className}`}
         >
@@ -82,29 +85,34 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
           className={`mt-1 text-balance text-[19px] leading-tight ${antic.className}`}
         >
           {tastingNotes(coffee).map((note, i, all) => (
-            <span key={note} className="whitespace-nowrap">
-              {note}
-              {i < all.length - 1 && " · "}
-            </span>
+            <Fragment key={note}>
+              <span className="whitespace-nowrap">
+                {note}
+                {i < all.length - 1 && " ·"}
+              </span>
+              {i < all.length - 1 && " "}
+            </Fragment>
           ))}
         </p>
       </section>
 
-      <dl className="mx-5 mt-3 grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1 text-[10.5px] leading-snug">
-        {detailRows(coffee).map(([label, value]) => (
-          <div key={label} className="contents">
-            <dt
-              className={`pt-[1px] text-[8.5px] font-semibold uppercase tracking-[0.2em] opacity-60 ${montserrat.className}`}
-            >
-              {label}
-            </dt>
-            <dd className="font-semibold">{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="flex flex-1 flex-col justify-center px-5 py-3">
+        <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-[11px] leading-snug">
+          {detailRows(coffee).map(([label, value]) => (
+            <div key={label} className="contents">
+              <dt
+                className={`pt-[1px] text-[8.5px] font-semibold uppercase tracking-[0.2em] opacity-60 ${montserrat.className}`}
+              >
+                {label}
+              </dt>
+              <dd className="font-semibold">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
 
       <footer
-        className="mt-auto flex items-end gap-3 border-t-2 px-5 pb-4 pt-3"
+        className="flex items-end gap-3 border-t-2 px-5 pb-4 pt-3"
         style={{ borderColor: BRAND.navy }}
       >
         <QrCode

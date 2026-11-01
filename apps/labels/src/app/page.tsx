@@ -5,7 +5,6 @@ import { twMerge } from "tailwind-merge";
 import { PrototypeSwitcher } from "./_prototype/prototype-switcher";
 import { COFFEE_KEYS, type CoffeeKey, getCoffee } from "./_prototype/shared";
 import * as variantB from "./_prototype/variant-b-brand-poster";
-import * as variantC from "./_prototype/variant-c-seal-and-stub";
 import * as variantD from "./_prototype/variant-d-field-specimen";
 
 type Coffee = {
@@ -25,7 +24,7 @@ const BrandingStylizedFont = MedievalSharp({
   weight: "400",
 });
 
-// PROTOTYPE — label redesign: 4 variants on `/`, switchable via `?variant=A|B|C|D` (+ `?coffee=<KEY>|all`).
+// PROTOTYPE — label redesign: variants on `/`, switchable via `?variant=A|B|D` (+ `?coffee=<KEY>|all`). C ("Seal & stub") was rejected.
 const PROTOTYPE_VARIANTS = [
   {
     key: "A",
@@ -37,13 +36,6 @@ const PROTOTYPE_VARIANTS = [
     name: variantB.name,
     Component: ({ coffee }: { coffee: CoffeeKey }) => (
       <variantB.VariantB coffee={getCoffee(coffee)} />
-    ),
-  },
-  {
-    key: "C",
-    name: variantC.name,
-    Component: ({ coffee }: { coffee: CoffeeKey }) => (
-      <variantC.VariantC coffee={getCoffee(coffee)} />
     ),
   },
   {
