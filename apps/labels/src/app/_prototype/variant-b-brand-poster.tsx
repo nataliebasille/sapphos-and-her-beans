@@ -1,4 +1,4 @@
-// PROTOTYPE — Variant B "Brand poster": brand pink/navy everywhere, coffee colour only as an accent band.
+// PROTOTYPE — Variant B "Brand poster": white (printable) background, brand navy type, coffee colour only as an accent band.
 // Hierarchy: farm name is the hero → flavour band → spec sheet → QR footer.
 import { Fragment } from "react";
 import {
@@ -29,7 +29,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
       className={`flex flex-col ${notoSans.className}`}
       style={{
         ...paletteVars(coffee.color),
-        backgroundColor: BRAND.pink,
+        backgroundColor: "white",
         color: BRAND.navy,
       }}
     >
