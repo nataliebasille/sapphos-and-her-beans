@@ -61,16 +61,10 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
       </aside>
 
       <main className="relative flex flex-1 flex-col px-4 pb-4 pt-3">
-        <header className="flex items-start justify-between">
-          <div className="text-[9px] uppercase leading-tight tracking-[0.2em] text-[var(--c700)]">
-            Field notes
-            <br />
-            specimen no.{" "}
-            <span className="inline-block w-8 border-b border-current" />
-          </div>
+        <header>
           <Logo
             color="var(--c900)"
-            className="aspect-[5/3] w-[84px]"
+            className="aspect-[5/3] w-[110px]"
             style={{ maskPosition: "center 47%" }}
           />
         </header>
