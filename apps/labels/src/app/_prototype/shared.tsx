@@ -6,6 +6,7 @@ import type { CSSProperties, PropsWithChildren } from "react";
 import {
   Antic,
   Courier_Prime,
+  Fraunces,
   MedievalSharp,
   Montserrat,
   Noto_Sans,
@@ -29,6 +30,11 @@ export const medievalSharp = MedievalSharp({
 export const courierPrime = Courier_Prime({
   subsets: ["latin"],
   weight: ["400", "700"],
+});
+export const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["300", "400", "600"],
 });
 
 export const BRAND = {
