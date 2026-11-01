@@ -13,8 +13,11 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { CoffeeCard } from "~/app/shop/_components/coffee-card";
 import { CoffeeCardGrid } from "~/app/shop/_components/coffee-card-layout";
-import { groupByOrigin } from "~/app/shop/_components/catalog-data";
-import { type Coffee, Eyebrow } from "./sections";
+import {
+  type CatalogCoffee,
+  toOriginGroups,
+} from "~/app/shop/_components/catalog-data";
+import { Eyebrow } from "./sections";
 
 /** Gently bouncing chevron — a "scroll for more" cue under the mobile hero card. */
 function ScrollIndicator() {
@@ -137,8 +140,8 @@ export function HomeHero() {
   );
 }
 
-export function HomeFeatured({ coffees }: { coffees: Coffee[] }) {
-  const groups = useMemo(() => groupByOrigin(coffees), [coffees]);
+export function HomeFeatured({ coffees }: { coffees: CatalogCoffee[] }) {
+  const groups = useMemo(() => toOriginGroups(coffees), [coffees]);
 
   return (
     <section className="bg-surface-50 px-6 py-16 md:px-10 md:pt-4 md:pb-24">

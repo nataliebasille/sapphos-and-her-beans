@@ -6,15 +6,15 @@
  */
 
 import { useMemo } from "react";
-import { useProductList } from "~/app/_stores/products";
-import { groupByOrigin } from "./catalog-data";
+import { useCoffeeList } from "~/app/_stores/products";
+import { toOriginGroups } from "./catalog-data";
 import { CoffeeCard } from "./coffee-card";
 import { CoffeeCardGrid } from "./coffee-card-layout";
 import { Eyebrow, FrostCanvas } from "./coffee-label";
 
 export function ShopCatalog() {
-  const products = useProductList();
-  const groups = useMemo(() => groupByOrigin(products), [products]);
+  const coffees = useCoffeeList();
+  const groups = useMemo(() => toOriginGroups(coffees), [coffees]);
 
   return (
     <FrostCanvas>

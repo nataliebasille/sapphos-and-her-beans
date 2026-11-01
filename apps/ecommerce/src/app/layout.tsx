@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { getProducts } from "~/server/products/get_products";
+import { products as modelProducts } from "@models";
 import { Cart } from "./_components/cart";
 import { CartProvider } from "./_stores/cart/cart-provider";
 import { ProductsProvider } from "./_stores/products/products-provider";
@@ -21,7 +22,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const products = await getProducts();
+  const coffees = await getProducts();
+  const products = coffees.flatMap((coffee) =>
+    modelProducts.resolveVariants(coffee),
+  );
   return (
     <html
       lang="en"
@@ -38,7 +42,7 @@ export default async function RootLayout({
         ></Script>
       </head>
       <body className="palette-surface bg-surface-50 text-on-surface-50">
-        <ProductsProvider initialValue={{ products }}>
+        <ProductsProvider initialValue={{ coffees, products }}>
           <CartProvider>
             <Cart />
             <SiteHeader />

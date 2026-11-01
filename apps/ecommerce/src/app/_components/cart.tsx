@@ -144,9 +144,7 @@ const CartItemDisplay = memo(function CartItemDisplay({
 
   const { product } = item;
   const palette = COFFEE_PALETTES[product.color];
-  const nameParts = product.name.split(" - ");
-  const coffeeName =
-    nameParts.length >= 3 ? nameParts.slice(1, -1).join(" - ") : product.name;
+  const coffeeName = product.name;
   const lineTotal = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

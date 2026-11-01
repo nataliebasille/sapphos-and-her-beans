@@ -11,7 +11,7 @@ import type {
   ParcelCreateRequest,
 } from "shippo";
 import { type Stripe, stripe } from "~/server/+utils/stripe";
-import { getProducts } from "~/server/products/get_products";
+import { getProductVariants } from "~/server/products/get_products";
 import { products } from "@models";
 
 const addressFrom = {
@@ -45,7 +45,7 @@ export const updateCheckoutSessionShipping = initActionFactory().action(
       zip: input.shippingDetails.address.postal_code ?? undefined,
     };
 
-    const products = (await getProducts()).reduce((acc, product) => {
+    const products = (await getProductVariants()).reduce((acc, product) => {
       acc.set(product.id, product);
       return acc;
     }, new Map<string, products.Product>());

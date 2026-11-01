@@ -37,13 +37,31 @@ async function main() {
     },
     {} as Record<string, string>,
   );
-  const activeProductsNamesSet = new Set(products.PRODUCTS.map((p) => p.name));
+  const activeVariants = products.PRODUCTS.flatMap((coffee) =>
+    products
+      .resolveVariants(coffee)
+      .map((product) => ({ coffeeId: coffee.id, product })),
+  ).filter(({ product }) => product.active);
 
-  for (const product of products.PRODUCTS.reverse()) {
-    const id = existingStripeNamesToIdsMap[product.name];
+  const sizeLabel = (size: products.Product["size"]) =>
+    size === "singleserve" ? "Single Serve" : size;
+
+  const stripeName = (product: products.Product) =>
+    product.deprecated_stripe_name ??
+    [product.country, product.name, sizeLabel(product.size)]
+      .filter(Boolean)
+      .join(" - ");
+
+  const activeProductsNamesSet = new Set(
+    activeVariants.map(({ product }) => stripeName(product)),
+  );
+
+  for (const { coffeeId, product } of [...activeVariants].reverse()) {
+    const name = stripeName(product);
+    const id = existingStripeNamesToIdsMap[name];
     const stripePrice = product.price * 100;
     const body = {
-      name: product.name,
+      name,
       description: `${product.size} - ${product.tastingNotes}`,
       images: [],
       shippable: true,
@@ -56,6 +74,8 @@ async function main() {
       }),
       metadata: {
         product_type: "coffee",
+        product_id: coffeeId,
+        product_name: product.name,
         country: product.country ?? "",
         ...(product.region && { region: product.region }),
         lot: product.lot ?? "",
@@ -115,7 +135,7 @@ async function main() {
   }
 
   const inactiveProductStripeIds = Object.entries(existingStripeNamesToIdsMap)
-    .filter(([name]) => !activeProductsNamesSet.has(name as any))
+    .filter(([name]) => !activeProductsNamesSet.has(name))
     .map(([_, id]) => id);
 
   for (const productId of inactiveProductStripeIds) {
