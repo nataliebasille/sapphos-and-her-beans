@@ -105,14 +105,14 @@ export const MEXICO = {
       deprecated_stripe_name: "Mexico - Red de Totutla - 250g",
       size: "250g",
       price: 24,
-      active: false,
+      active: true,
     },
     {
       id: "1001",
       deprecated_stripe_name: "Mexico - Red de Totutla - 100g",
       size: "100g",
       price: 12,
-      active: false,
+      active: true,
     },
     {
       id: "1002",
