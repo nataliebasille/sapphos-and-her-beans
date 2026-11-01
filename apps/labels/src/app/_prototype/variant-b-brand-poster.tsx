@@ -45,11 +45,7 @@ export function VariantB({ coffee }: { coffee: Coffee }) {
       }}
     >
       <header className="flex items-center justify-between px-5 pt-4">
-        <Logo
-          color={BRAND.navy}
-          className="aspect-[5/3] w-[118px]"
-          style={{ maskPosition: "center 47%" }}
-        />
+        <Logo className="w-[118px]" />
         <div
           className={`flex flex-col items-end gap-1 ${montserrat.className}`}
         >

@@ -62,11 +62,7 @@ export function VariantD({ coffee }: { coffee: Coffee }) {
 
       <main className="relative flex flex-1 flex-col px-4 pb-4 pt-3">
         <header className="flex justify-center border-b border-[var(--c900)] pb-2">
-          <Logo
-            color="var(--c900)"
-            className="aspect-[5/3] w-[150px]"
-            style={{ maskPosition: "center 47%" }}
-          />
+          <Logo className="w-[150px]" />
         </header>
 
         <h1 className="mt-3 text-balance text-[22px] font-bold leading-tight">

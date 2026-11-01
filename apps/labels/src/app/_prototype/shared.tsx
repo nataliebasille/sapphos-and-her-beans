@@ -146,30 +146,13 @@ export const score = (coffee: Coffee) =>
 export const callout = (coffee: Coffee) =>
   "callout" in coffee ? coffee.callout : undefined;
 
-/** The white-on-black logo recoloured via a luminance mask. */
-export function Logo({
-  color,
-  className,
-  style,
-}: {
-  color: string;
-  className?: string;
-  style?: CSSProperties;
-}) {
+/** Labels always use the black, transparent-background logo (copied from apps/ecommerce/public/images). */
+export function Logo({ className }: { className?: string }) {
   return (
-    <div
-      role="img"
-      aria-label="Sappho & her beans coffee"
-      className={className}
-      style={{
-        backgroundColor: color,
-        maskImage: "url('/sappho_logo.png')",
-        maskMode: "luminance",
-        maskSize: "175%",
-        maskPosition: "center 52%",
-        maskRepeat: "no-repeat",
-        ...style,
-      }}
+    <img
+      src="/sappho black logo cropped.png"
+      alt="Sappho & her beans coffee"
+      className={twMerge("h-auto object-contain", className)}
     />
   );
 }
