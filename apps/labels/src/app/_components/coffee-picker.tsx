@@ -28,7 +28,7 @@ export function CoffeePicker({
     <label className="fixed right-4 top-4 z-[100] flex flex-row items-center gap-2 rounded-full bg-black px-3 py-1.5 font-sans text-xs text-white shadow-2xl ring-2 ring-fuchsia-400 print:hidden">
       Coffee
       <select
-        className="appearance-auto rounded-sm border-0 bg-neutral-800 bg-none px-1 py-0.5 text-white"
+        className="scheme-dark appearance-auto rounded-sm border-0 bg-neutral-800 bg-none px-1 py-0.5 text-white"
         value={current}
         onChange={(e) => select(e.target.value)}
       >
@@ -46,5 +46,6 @@ export function CoffeePicker({
 }
 
 // Overrides Natcore's base option:hover / option:checked colours, which are meant for light selects.
+// Firefox ignores option :hover and uses system highlight colours instead, hence `scheme-dark` on the select.
 const optionClass =
   "bg-neutral-800 text-white hover:bg-neutral-600 hover:text-white checked:bg-neutral-700 checked:text-white";
