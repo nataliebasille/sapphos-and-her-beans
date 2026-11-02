@@ -25,6 +25,14 @@ const courierPrime = Courier_Prime({
  * a white panel with the black logo, product name, fermentation, tasting notes,
  * details and the QR code.
  */
+// The name is the label's headline; longer names step down so they stay within ~3 lines.
+function nameSize(name: string) {
+  if (name.length <= 12) return 36;
+  if (name.length <= 20) return 30;
+  if (name.length <= 28) return 26;
+  return 22;
+}
+
 export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
   const ferment = fermentationInfo(coffee);
   const pts = score(coffee);
@@ -75,7 +83,10 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
           />
         </header>
 
-        <h2 className="mt-3 text-balance text-[22px] font-bold leading-tight">
+        <h2
+          className={`mt-3 text-balance font-black uppercase leading-[0.95] tracking-tight text-[var(--c900)] ${montserrat.className}`}
+          style={{ fontSize: nameSize(coffee.name) }}
+        >
           {coffee.name}
         </h2>
 
