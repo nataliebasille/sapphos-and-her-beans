@@ -32,9 +32,11 @@ export function CoffeePicker({
         value={current}
         onChange={(e) => select(e.target.value)}
       >
-        <option value="all">— All coffees —</option>
+        <option className={optionClass} value="all">
+          — All coffees —
+        </option>
         {coffees.map((c) => (
-          <option key={c} value={c}>
+          <option className={optionClass} key={c} value={c}>
             {c}
           </option>
         ))}
@@ -42,3 +44,7 @@ export function CoffeePicker({
     </label>
   );
 }
+
+// Overrides Natcore's base option:hover / option:checked colours, which are meant for light selects.
+const optionClass =
+  "bg-neutral-800 text-white hover:bg-neutral-600 hover:text-white checked:bg-neutral-700 checked:text-white";
