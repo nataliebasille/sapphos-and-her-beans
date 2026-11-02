@@ -94,16 +94,16 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
         </h2>
 
         {ferment && (
-          <div className="border-700 mt-3 flex items-center gap-2.5 border-y-2 border-dashed py-2">
+          <div className="border-900 mt-3 flex items-center gap-2.5 border-y-2 border-dashed py-2">
             {ferment.anaerobic ?
-              <FlaskRound className="text-700 size-7 shrink-0" />
-            : <Bubbles className="text-700 size-7 shrink-0" />}
+              <FlaskRound className="text-900 size-7 shrink-0" />
+            : <Bubbles className="text-900 size-7 shrink-0" />}
             <div>
-              <div className="text-700 text-[9px] uppercase tracking-[0.2em]">
+              <div className="text-900 text-[9px] uppercase tracking-[0.2em]">
                 {ferment.kicker}
               </div>
               <div
-                className={`text-800 text-[15px] font-extrabold uppercase leading-tight ${montserrat.className}`}
+                className={`text-900 text-[15px] font-extrabold uppercase leading-tight ${montserrat.className}`}
               >
                 {ferment.value}
               </div>
