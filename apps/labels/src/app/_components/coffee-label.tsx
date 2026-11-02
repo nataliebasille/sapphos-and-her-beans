@@ -118,8 +118,16 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
           {detailRows(coffee).map(([label, value]) => (
             <div key={label} className="flex items-baseline gap-1">
               <dt className="shrink-0 uppercase">{label}</dt>
-              <span className="min-w-3 flex-1 border-b border-dotted border-current" />
-              <dd className="max-w-[62%] text-right font-bold">{value}</dd>
+              {/* The dotted leader runs along the value's first line; the text's white background hides it, so the dots always end where the text starts. */}
+              <dd className="relative min-w-0 flex-1 pl-3 text-right font-bold">
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 top-[0.85em] border-b border-dotted border-current"
+                />
+                <span className="relative bg-white pl-1 [box-decoration-break:clone]">
+                  {value}
+                </span>
+              </dd>
             </div>
           ))}
         </dl>
