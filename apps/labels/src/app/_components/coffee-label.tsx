@@ -1,4 +1,4 @@
-import { Courier_Prime, Montserrat } from "next/font/google";
+import { Courier_Prime, MedievalSharp, Montserrat } from "next/font/google";
 import { Bubbles } from "./icons/bubbles";
 import { FlaskRound } from "./icons/flask-round";
 import {
@@ -19,6 +19,8 @@ const courierPrime = Courier_Prime({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
+// Same stylised brand font the shop uses for coffee names (BrandingStylizedFont).
+const medievalSharp = MedievalSharp({ subsets: ["latin"], weight: "400" });
 
 /**
  * 4x6in printable coffee bag label: a coloured spine (score, country, size) beside
@@ -84,7 +86,7 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
         </header>
 
         <h2
-          className={`mt-3 text-balance font-black uppercase leading-[0.95] tracking-tight text-[var(--c900)] ${montserrat.className}`}
+          className={`mt-3 text-balance !font-bold leading-[1.05] tracking-wide text-[var(--c900)] ${medievalSharp.className}`}
           style={{ fontSize: nameSize(coffee.name) }}
         >
           {coffee.name}
