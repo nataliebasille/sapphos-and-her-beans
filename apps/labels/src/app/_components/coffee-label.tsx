@@ -9,6 +9,7 @@ import {
   score,
   tastingNotes,
 } from "./coffee-label-data";
+import { DetailRows } from "./detail-rows";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -114,23 +115,7 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
           ))}
         </ol>
 
-        <dl className="flex flex-col gap-1 text-[10px] leading-tight">
-          {detailRows(coffee).map(([label, value]) => (
-            <div key={label} className="flex items-baseline gap-1">
-              <dt className="shrink-0 uppercase">{label}</dt>
-              {/* The dotted leader runs along the value's first line; the text's white background hides it, so the dots always end where the text starts. */}
-              <dd className="relative min-w-0 flex-1 pl-3 text-right font-bold">
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 top-[0.85em] border-b border-dotted border-current"
-                />
-                <span className="relative bg-white pl-1 [box-decoration-break:clone]">
-                  {value}
-                </span>
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <DetailRows rows={detailRows(coffee)} />
 
         <footer className="mt-3 flex items-center gap-3 border-t border-[var(--c900)] pt-2">
           <img
