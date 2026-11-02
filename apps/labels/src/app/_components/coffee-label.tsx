@@ -5,11 +5,11 @@ import {
   type Coffee,
   detailRows,
   fermentationInfo,
-  paletteVars,
   score,
   tastingNotes,
 } from "./coffee-label-data";
 import { DetailRows } from "./detail-rows";
+import { LABEL_PALETTES } from "./label-palette";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -38,13 +38,15 @@ function nameSize(name: string) {
 export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
   const ferment = fermentationInfo(coffee);
   const pts = score(coffee);
+  const p = LABEL_PALETTES[coffee.color];
 
   return (
     <article
-      className={`relative flex h-[6in] w-[4in] shrink-0 overflow-hidden bg-white text-[var(--c950)] shadow-xl print:break-after-page print:shadow-none ${courierPrime.className}`}
-      style={paletteVars(coffee.color)}
+      className={`relative flex h-[6in] w-[4in] shrink-0 overflow-hidden bg-white ${p.ink} shadow-xl print:break-after-page print:shadow-none ${courierPrime.className}`}
     >
-      <aside className="flex w-[78px] shrink-0 flex-col items-center justify-between bg-[var(--c900)] py-4 text-[var(--c50)]">
+      <aside
+        className={`flex w-[78px] shrink-0 flex-col items-center justify-between py-4 ${p.spine} ${p.spineText}`}
+      >
         {pts !== undefined ?
           <span
             className={`flex flex-col items-center leading-none ${montserrat.className}`}
@@ -70,14 +72,14 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
           {coffee.country}
         </span>
         <span
-          className={`text-sm font-extrabold text-[var(--c200)] ${montserrat.className}`}
+          className={`text-sm font-extrabold ${p.spineMuted} ${montserrat.className}`}
         >
           {coffee.size}
         </span>
       </aside>
 
       <div className="flex flex-1 flex-col px-4 pb-4 pt-3">
-        <header className="flex justify-center border-b border-[var(--c900)] pb-2">
+        <header className={`flex justify-center border-b ${p.rule} pb-2`}>
           <img
             src="/sappho black logo cropped.png"
             alt="Sappho & her beans coffee"
@@ -86,23 +88,27 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
         </header>
 
         <h2
-          className={`mt-3 text-balance !font-bold leading-[1.05] tracking-wide text-[var(--c900)] ${medievalSharp.className}`}
+          className={`mt-3 text-balance !font-bold leading-[1.05] tracking-wide ${p.name} ${medievalSharp.className}`}
           style={{ fontSize: nameSize(coffee.name) }}
         >
           {coffee.name}
         </h2>
 
         {ferment && (
-          <div className="mt-3 flex items-center gap-2.5 border-y-2 border-dashed border-[var(--c700)] py-2">
+          <div
+            className={`mt-3 flex items-center gap-2.5 border-y-2 border-dashed ${p.accentBorder} py-2`}
+          >
             {ferment.anaerobic ?
-              <FlaskRound className="size-7 shrink-0 text-[var(--c700)]" />
-            : <Bubbles className="size-7 shrink-0 text-[var(--c700)]" />}
+              <FlaskRound className={`size-7 shrink-0 ${p.accent}`} />
+            : <Bubbles className={`size-7 shrink-0 ${p.accent}`} />}
             <div>
-              <div className="text-[9px] uppercase tracking-[0.2em] text-[var(--c700)]">
+              <div
+                className={`text-[9px] uppercase tracking-[0.2em] ${p.accent}`}
+              >
                 {ferment.kicker}
               </div>
               <div
-                className={`text-[15px] font-extrabold uppercase leading-tight text-[var(--c800)] ${montserrat.className}`}
+                className={`text-[15px] font-extrabold uppercase leading-tight ${p.strong} ${montserrat.className}`}
               >
                 {ferment.value}
               </div>
@@ -114,9 +120,9 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
           {tastingNotes(coffee).map((note, i) => (
             <li
               key={note}
-              className="flex items-baseline gap-2 border-b border-dotted border-[var(--c300)] pb-0.5"
+              className={`flex items-baseline gap-2 border-b border-dotted ${p.noteRule} pb-0.5`}
             >
-              <span className="text-[10px] text-[var(--c600)]">
+              <span className={`text-[10px] ${p.noteNumber}`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span
@@ -130,7 +136,9 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
 
         <DetailRows rows={detailRows(coffee)} />
 
-        <footer className="mt-3 flex items-center gap-3 border-t border-[var(--c900)] pt-2">
+        <footer
+          className={`mt-3 flex items-center gap-3 border-t ${p.rule} pt-2`}
+        >
           <img
             src="/site qr code.png"
             alt="QR code linking to the Sappho & her beans shop"
@@ -138,7 +146,7 @@ export function CoffeeLabel({ coffee }: { coffee: Coffee }) {
           />
           <div className="flex-1 text-[9px] leading-snug">
             {/* TODO: once the QR points at /shop/[id], say "Scan for this coffee's full story". */}
-            <div className="font-bold uppercase tracking-[0.1em] text-[var(--c800)]">
+            <div className={`font-bold uppercase tracking-[0.1em] ${p.strong}`}>
               ← Scan to visit our shop
             </div>
             <div className="mt-1">traceable to {coffee.traceable}</div>

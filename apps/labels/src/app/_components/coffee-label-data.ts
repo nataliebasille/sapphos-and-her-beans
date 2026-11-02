@@ -1,7 +1,4 @@
-import type { CSSProperties } from "react";
-import twColors from "tailwindcss/colors";
 import * as products from "../../../../../lib/models/products";
-import tailwindConfig from "../../../tailwind.config";
 
 export type CoffeeKey = {
   [K in keyof typeof products]: (typeof products)[K] extends (
@@ -29,40 +26,6 @@ const COFFEE_KEYS = (Object.keys(products) as (keyof typeof products)[]).filter(
 export const ACTIVE_COFFEE_KEYS = COFFEE_KEYS.filter((k) => products[k].active);
 
 export const getCoffee = (key: CoffeeKey): Coffee => products[key];
-
-type Shades = Record<
-  | "50"
-  | "100"
-  | "200"
-  | "300"
-  | "400"
-  | "500"
-  | "600"
-  | "700"
-  | "800"
-  | "900"
-  | "950",
-  string
->;
-
-const customColors = tailwindConfig.theme?.extend?.colors as Record<
-  string,
-  Shades
->;
-
-/**
- * Exposes the coffee's colour ramp as `--c50` … `--c950` so the label can use
- * `bg-[var(--c900)]` etc. (coffee colours are data, so they can't be static Tailwind classes).
- */
-export function paletteVars(color: Coffee["color"]): CSSProperties {
-  const shades =
-    color === "navy" || color === "pumpkin" ?
-      customColors[color]
-    : (twColors[color] as Shades);
-  return Object.fromEntries(
-    Object.entries(shades).map(([k, v]) => [`--c${k}`, v]),
-  ) as CSSProperties;
-}
 
 // Same kicker/value wording as the shop card (apps/ecommerce/src/app/shop/_components/coffee-card.tsx).
 export function fermentationInfo(
