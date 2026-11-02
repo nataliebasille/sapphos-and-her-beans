@@ -11,20 +11,22 @@
     "format:check": "prettier --check . --ignore-path ../../.prettierignore"
   },
   "dependencies": {
+    "@nataliebasille/natcore-design-system": "^2.2.1",
+    "next": "15.0.7",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "next": "15.0.7",
-    "tailwind-merge": "^2.4.0"
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5"
   }
 }

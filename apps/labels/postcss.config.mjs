@@ -1,7 +1,7 @@
-/** @type {import('postcss-load-config').Config} */
 const config = {
   plugins: {
-    tailwindcss: {},
+    "@nataliebasille/natcore-design-system/postcss": {},
+    "@tailwindcss/postcss": {},
   },
 };
 
