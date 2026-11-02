@@ -117,8 +117,11 @@ primary/secondary/tertiary the CSS variable wiring carries it automatically. Kee
 - **Don't** switch the substitute fonts to the licensed originals (Baron, Canva Sans)
   unless the project obtains a license.
 - **Don't** resolve the Sunset Orange hex discrepancy without brand-owner confirmation.
-- **Scope:** this branding applies to `apps/ecommerce` (the storefront). The `apps/admin`
-  app intentionally still uses Natcore **v1** and is not part of this brand system yet.
+- **Scope:** this branding applies to `apps/ecommerce` (the storefront) and `apps/labels`
+  (printable coffee bag labels), which share Natcore v2 and the custom palettes in
+  `styles/palettes.css`. Labels set the coffee's palette (`palette-{color}`) and use
+  shade utilities like `bg-900`. The `apps/admin` app intentionally still uses
+  Natcore **v1** and is not part of this brand system yet.
 
 ---
 

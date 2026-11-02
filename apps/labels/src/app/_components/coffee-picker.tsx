@@ -25,10 +25,10 @@ export function CoffeePicker({
   };
 
   return (
-    <label className="fixed right-4 top-4 z-[100] flex items-center gap-2 rounded-full bg-black px-3 py-1.5 font-sans text-xs text-white shadow-2xl ring-2 ring-fuchsia-400 print:hidden">
+    <label className="fixed right-4 top-4 z-[100] flex flex-row items-center gap-2 rounded-full bg-black px-3 py-1.5 font-sans text-xs text-white shadow-2xl ring-2 ring-fuchsia-400 print:hidden">
       Coffee
       <select
-        className="rounded bg-neutral-800 px-1 py-0.5"
+        className="appearance-auto rounded-sm border-0 bg-neutral-800 bg-none px-1 py-0.5 text-white"
         value={current}
         onChange={(e) => select(e.target.value)}
       >
